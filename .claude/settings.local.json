@@ -3,7 +3,18 @@
     "allow": [
       "WebFetch(domain:dribbble.com)",
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --turbopack)",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --turbopack --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --no-import-alias --turbopack --yes)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx gltf-transform:*)",
+      "Bash(npx @gltf-transform/cli optimize public/models/lamp.glb public/models/lamp-opt.glb --compress draco)",
+      "Bash(mv lamp.glb lamp-original.glb)",
+      "Bash(mv lamp-opt.glb lamp.glb)",
+      "Bash(npx @gltf-transform/cli optimize lamp-original.glb lamp.glb --simplify --weld --join --dedup --prune)",
+      "Bash(npx @gltf-transform/cli optimize lamp-original.glb lamp.glb)",
+      "Bash(npx @gltf-transform/cli simplify lamp-original.glb lamp-simple.glb --ratio 0.3)",
+      "Bash(npx @gltf-transform/cli simplify lamp-simple.glb lamp-final.glb --ratio 0.3)"
     ]
   }
 }
