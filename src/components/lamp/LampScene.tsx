@@ -44,7 +44,7 @@ export function LampScene({
           {/* IMPORTANTE: La telecamera a Z: 8 o 10 previene l'effetto "zoom in faccia" 
             se il modello è molto grande (come quelli di Womp) 
           */}
-          <PerspectiveCamera makeDefault position={[0, 0, 25]} fov={45} />
+          <PerspectiveCamera makeDefault position={[0, 0, 40]} fov={45} />
 
           <GradientBackground opacity={gradientOpacity} />
 
