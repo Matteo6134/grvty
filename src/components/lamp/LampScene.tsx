@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, ContactShadows, PerspectiveCamera } from "@react-three/drei";
 import { GradientBackground } from "./GradientBackground";
@@ -33,6 +33,17 @@ export function LampScene({
   isRGBMode = false,
   scrollProgress = 0,
 }: LampSceneProps) {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div
+        className="fixed inset-0 z-0"
+        style={{ background: "var(--background)" }}
+      />
+    );
+  }
+
   return (
     <div
       className="fixed inset-0 z-0"
@@ -44,8 +55,14 @@ export function LampScene({
           gl={{
             antialias: true,
             alpha: true,
-            powerPreference: "high-performance"
+            powerPreference: "high-performance",
           }}
+          onCreated={(state) => {
+            if (!state.gl.capabilities.isWebGL2) {
+              setHasError(true);
+            }
+          }}
+          onError={() => setHasError(true)}
         >
           <PerspectiveCamera makeDefault position={[0, 0, 40]} fov={45} />
 
