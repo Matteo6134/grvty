@@ -24,19 +24,21 @@ const COLOR_DESCS: Record<string, string> = {
   "#c9a84c": "Warm, timeless. The original grvty glow — gold meets gravity.",
 };
 
-// Half-wheel geometry
-const R = 118;          // arc radius
-const SR = 22;          // swatch radius (half of swatch diameter)
-const W = R * 2 + SR * 2 + 16;   // total container width
-const CX = W / 2;                 // circle center X
-const CY = R + SR + 4;            // circle center Y (near bottom, leaving room for swatches)
-const CONTAINER_H = CY + SR + 8;  // total container height
+// D-shape geometry: flat edge on RIGHT, arc opens to the LEFT
+const R = 108;          // arc radius
+const SR = 21;          // swatch radius
+const PAD = 14;
+const W = R + SR * 2 + PAD * 2;       // total width
+const H = R * 2 + SR * 2 + PAD * 2;  // total height
+const CX = W - SR - PAD;             // circle center X (right side)
+const CY = H / 2;                    // circle center Y (vertical middle)
 
+// angle_i: π/2 (bottom) → 3π/2 (top) going counterclockwise through the left
 function getSwatchPos(index: number, total: number) {
-  const angle = (index / (total - 1)) * Math.PI; // 0 → π (left to right)
+  const angle = Math.PI / 2 + (index / (total - 1)) * Math.PI;
   return {
-    x: CX + -Math.cos(angle) * R,  // cx at left, cx+R at right
-    y: CY - Math.sin(angle) * R,    // cy at baseline, cy-R at apex
+    x: CX + Math.cos(angle) * R,
+    y: CY + Math.sin(angle) * R,
   };
 }
 
@@ -114,7 +116,7 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
         </h2>
       </div>
 
-      {/* Middle: left narrative | lamp center | right half-wheel */}
+      {/* Middle: left narrative | lamp center | right D-wheel */}
       <div className="flex items-center gap-0 w-full flex-1 my-12">
 
         {/* Left: narrative cards */}
@@ -153,46 +155,42 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
         {/* Center: lamp space */}
         <div className="flex-1" />
 
-        {/* Right: half-wheel color picker */}
+        {/* Right: D-shape color wheel */}
         <div
-          className="w-[28%] flex flex-col items-center gap-4 transition-all duration-700 ease-out"
+          className="flex flex-col items-center gap-5 transition-all duration-700 ease-out"
           style={{
             opacity: mounted ? 1 : 0,
             transform: mounted ? "translateX(0)" : "translateX(24px)",
           }}
         >
-          {/* Half-wheel SVG canvas */}
-          <div
-            className="relative select-none"
-            style={{ width: W, height: CONTAINER_H }}
-          >
-            {/* Arc track */}
+          {/* D-wheel canvas */}
+          <div className="relative select-none" style={{ width: W, height: H }}>
+
+            {/* SVG: arc + diameter + spoke */}
             <svg
               width={W}
-              height={CONTAINER_H}
+              height={H}
               className="absolute inset-0 pointer-events-none"
               style={{ overflow: "visible" }}
             >
-              {/* Outer dashed guide arc */}
+              {/* Left arc (the D-curve) */}
               <path
-                d={`M ${CX - R},${CY} A ${R},${R} 0 0,0 ${CX + R},${CY}`}
+                d={`M ${CX},${CY - R} A ${R},${R} 0 0,0 ${CX},${CY + R}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1"
                 strokeDasharray="3 9"
-                style={{ color: "var(--foreground)", opacity: 0.12 }}
+                style={{ color: "var(--foreground)", opacity: 0.14 }}
               />
-              {/* Baseline (diameter) */}
+              {/* Diameter line (flat right edge) */}
               <line
-                x1={CX - R - SR}
-                y1={CY}
-                x2={CX + R + SR}
-                y2={CY}
+                x1={CX} y1={CY - R - SR}
+                x2={CX} y2={CY + R + SR}
                 stroke="currentColor"
                 strokeWidth="1"
-                style={{ color: "var(--foreground)", opacity: 0.07 }}
+                style={{ color: "var(--foreground)", opacity: 0.08 }}
               />
-              {/* Active color spoke — from center to active swatch */}
+              {/* Spoke: center → active swatch */}
               {RGB_COLORS.map((color, i) => {
                 const pos = getSwatchPos(i, RGB_COLORS.length);
                 const isActive =
@@ -203,19 +201,18 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                 return (
                   <line
                     key={color}
-                    x1={CX}
-                    y1={CY}
-                    x2={pos.x}
-                    y2={pos.y}
+                    x1={CX} y1={CY}
+                    x2={pos.x} y2={pos.y}
                     stroke={color}
                     strokeWidth="1.5"
                     opacity="0.35"
+                    strokeDasharray="4 4"
                   />
                 );
               })}
             </svg>
 
-            {/* Swatches positioned along the arc */}
+            {/* Swatches along the arc */}
             {RGB_COLORS.map((color, i) => {
               const pos = getSwatchPos(i, RGB_COLORS.length);
               const isActive =
@@ -229,7 +226,7 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                   onMouseEnter={() => setHoverColor(color as string)}
                   onMouseLeave={() => setHoverColor(null)}
                   onClick={() => handleColorClick(color as string)}
-                  className="absolute transition-all duration-500 outline-none group"
+                  className="absolute outline-none transition-all duration-500"
                   style={{
                     width: SR * 2,
                     height: SR * 2,
@@ -239,63 +236,59 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                   }}
                   aria-label={COLOR_NAMES[color]}
                 >
-                  {/* Outer glow ring */}
+                  {/* Ring */}
                   <span
-                    className="absolute inset-[-6px] rounded-full border transition-all duration-500"
+                    className="absolute inset-[-5px] rounded-full border transition-all duration-500"
                     style={{
                       borderColor: color,
-                      opacity: isActive ? 0.7 : 0,
-                      transform: isActive ? "scale(1)" : "scale(0.6)",
+                      opacity: isActive ? 0.75 : 0,
+                      transform: isActive ? "scale(1)" : "scale(0.5)",
                     }}
                   />
-                  {/* Swatch circle */}
+                  {/* Fill */}
                   <span
                     className="absolute inset-0 rounded-full transition-all duration-500"
                     style={{
                       backgroundColor: color,
-                      boxShadow: isActive ? `0 0 28px 4px ${color}70` : "none",
-                      transform: isActive ? "scale(1.2)" : "scale(0.85)",
-                      filter: isActive ? "brightness(1.15)" : "brightness(0.55) saturate(0.7)",
+                      boxShadow: isActive ? `0 0 26px 6px ${color}60` : "none",
+                      transform: isActive ? "scale(1.2)" : "scale(0.8)",
+                      filter: isActive ? "brightness(1.1)" : "brightness(0.5) saturate(0.6)",
                     }}
                   />
                 </button>
               );
             })}
 
-            {/* Center label — color name at circle origin */}
+            {/* Center dot */}
             <div
-              className="absolute flex flex-col items-center pointer-events-none"
+              className="absolute rounded-full pointer-events-none"
               style={{
-                left: CX,
-                top: CY + 10,
-                transform: "translateX(-50%)",
+                width: 5,
+                height: 5,
+                left: CX - 2.5,
+                top: CY - 2.5,
+                background: "var(--foreground)",
+                opacity: 0.15,
               }}
-            >
-              <span
-                className="text-[10px] uppercase tracking-[0.3em] font-black transition-all duration-700"
-                style={{ color: "var(--foreground)", opacity: 0.25 }}
-              >
-                select
-              </span>
-            </div>
+            />
           </div>
 
-          {/* Color info below the wheel */}
-          <div className="flex flex-col items-center gap-1.5 text-center mt-2">
+          {/* Color label below wheel */}
+          <div className="flex flex-col items-center gap-1">
             <span
               className="font-black font-sans transition-all duration-700"
               style={{
-                fontSize: "1.2rem",
+                fontSize: "1.1rem",
                 letterSpacing: "-0.03em",
                 color: currentColor,
-                textShadow: `0 0 20px ${currentColor}50`,
+                textShadow: `0 0 18px ${currentColor}55`,
               }}
             >
               {COLOR_NAMES[currentColor] || currentColor}
             </span>
             <span
-              className="text-[10px] font-mono uppercase tracking-wider"
-              style={{ color: "var(--foreground)", opacity: 0.3 }}
+              className="text-[9px] font-mono uppercase tracking-wider"
+              style={{ color: "var(--foreground)", opacity: 0.28 }}
             >
               {currentColor}
             </span>
