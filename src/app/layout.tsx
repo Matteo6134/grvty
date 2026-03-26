@@ -1,8 +1,20 @@
 import type { Metadata } from "next";
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { Sora, Syne, Space_Grotesk, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import "./globals.css";
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["300", "400", "700", "800"],
+});
+
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["400", "700", "800"],
+});
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -42,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${spaceGrotesk.variable} antialiased`}
+      className={`${dmSans.variable} ${spaceGrotesk.variable} ${sora.variable} ${syne.variable} antialiased`}
       suppressHydrationWarning
     >
       <body>

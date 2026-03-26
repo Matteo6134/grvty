@@ -3,6 +3,8 @@
 import { RGB_COLORS } from "@/lib/constants";
 import { useState, useEffect } from "react";
 
+import { Watermark } from "../ui/Watermark";
+
 interface RGBShowcaseProps {
   readonly progress: number;
   readonly onManualColor?: (color: string | null) => void;
@@ -11,67 +13,76 @@ interface RGBShowcaseProps {
 export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [hoverColor, setHoverColor] = useState<string | null>(null);
+  const [autoIndex, setAutoIndex] = useState(0);
 
   const isVisible = progress > 0.1 && progress < 0.95;
-  const contentOpacity = isVisible ? 1 : 0;
+
+  // Auto-cycle effect
+  useEffect(() => {
+    if (!isVisible || selectedColor || hoverColor) return;
+    const interval = setInterval(() => {
+      setAutoIndex((prev) => (prev + 1) % RGB_COLORS.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isVisible, selectedColor, hoverColor]);
 
   const scrollColorIndex = Math.min(
     Math.floor(progress * RGB_COLORS.length),
     RGB_COLORS.length - 1
   );
   
-  const currentColor = hoverColor || selectedColor || RGB_COLORS[scrollColorIndex];
+  // Use scroll color when scrolling, auto-cycle when stationary, or manual select
+  const currentColor = hoverColor || selectedColor || (progress > 0 && progress < 1 ? RGB_COLORS[scrollColorIndex] : RGB_COLORS[autoIndex]);
 
   useEffect(() => {
-    onManualColor?.(selectedColor || hoverColor);
-  }, [selectedColor, hoverColor, onManualColor]);
+    onManualColor?.(selectedColor || hoverColor || (isVisible ? currentColor : null));
+  }, [selectedColor, hoverColor, isVisible, currentColor, onManualColor]);
 
   const handleColorClick = (color: string) => {
     setSelectedColor(selectedColor === color ? null : color);
   };
 
   return (
-    <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-6 pointer-events-none">
-      
-      {/* Background Watermark */}
-      <div 
-        className="absolute inset-0 flex items-end justify-center pointer-events-none overflow-hidden pb-8 transition-opacity duration-1000"
-        style={{ opacity: contentOpacity }}
-      >
-        <span className="watermark-text text-center whitespace-nowrap">
-           chroma physics
-        </span>
+    <div className="relative z-20 flex flex-col items-center justify-between min-h-screen px-6 py-32 pointer-events-none overflow-hidden">
+      <Watermark text="infinite tones" index={2} targetId="rgb" />
+
+      {/* Narrative Boxes — Balanced Left/Right */}
+      <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-8 mt-auto pb-12">
+        <div 
+          className="flex flex-col p-6 md:p-8 bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[2rem] transition-all duration-1000 max-w-[280px]"
+          style={{ opacity: isVisible ? 1 : 0, transform: `translateY(${isVisible ? '0' : '40px'})` }}
+        >
+          <h3 className="font-sans text-[10px] font-black text-foreground tracking-[0.4em] uppercase mb-4 opacity-30">
+            chromatic depth
+          </h3>
+          <p className="font-display text-[11px] font-light text-foreground/70 leading-relaxed tracking-wider lowercase">
+            16 million variants. from deep ruby to arctic blue. the matter responds to your mood.
+          </p>
+        </div>
+
+        <div 
+          className="flex flex-col p-6 md:p-8 bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[2rem] transition-all duration-1000 delay-200 max-w-[280px]"
+          style={{ opacity: isVisible ? 1 : 0, transform: `translateY(${isVisible ? '0' : '40px'})` }}
+        >
+          <h3 className="font-sans text-[10px] font-black text-foreground tracking-[0.4em] uppercase mb-4 opacity-30">
+             organic cycles
+          </h3>
+          <p className="font-display text-[11px] font-light text-foreground/70 leading-relaxed tracking-wider lowercase">
+             auto-fading gradients mimic passing time. slow, viscous shifts that feel as natural as bioluminescence.
+          </p>
+        </div>
       </div>
 
-      {/* Main Titles */}
-      <div 
-        className="text-center z-10 transition-all duration-1000"
-        style={{ opacity: contentOpacity, transform: `translateY(${isVisible ? '0' : '20px'})` }}
-      >
-        <p className="font-display text-xs font-light tracking-[0.5em] uppercase text-accent mb-6">
-          Atmospheric moods
-        </p>
-        <h1 className="font-sans text-5xl md:text-8xl font-black text-foreground mb-8 tracking-tighter leading-none lowercase italic opacity-20">
-            Infinite<br />Tones
-        </h1>
-      </div>
-
-      {/* Selettore Colori - iOS 26 Glassmorphism Pill */}
+      {/* Pill Color Selector */}
       <div 
         className={`fixed bottom-12 left-1/2 -translate-x-1/2 pointer-events-auto transition-all duration-1000 ease-in-out ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 focus-within:opacity-100"
         }`}
       >
-        <div className="glass-card rounded-full px-8 py-5 flex items-center gap-8">
-          <div className="hidden md:block">
-            <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/30 whitespace-nowrap">
-                Select mood
-            </span>
-          </div>
-
+        <div className="glass-card rounded-full px-8 py-5 flex items-center gap-8 shadow-2xl scale-90 md:scale-100">
           <div className="flex items-center gap-6 md:gap-8">
             {RGB_COLORS.map((color, i) => {
-              const isActive = (selectedColor === color) || (hoverColor === color) || (!selectedColor && !hoverColor && i === scrollColorIndex);
+              const isActive = (selectedColor === color) || (hoverColor === color) || (!selectedColor && !hoverColor && color === currentColor);
               
               return (
                 <button
@@ -88,26 +99,12 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                   <div
                     className="w-full h-full rounded-full transition-all duration-700 shadow-xl"
                     style={{
-                      backgroundColor: color,
-                      boxShadow: isActive ? `0 0 35px ${color}` : "none",
-                      filter: isActive ? "brightness(1.15)" : "brightness(0.35)",
-                      transform: isActive ? "scale(1.15)" : "scale(1)",
+                       backgroundColor: color,
+                       boxShadow: isActive ? `0 0 35px ${color}` : "none",
+                       filter: isActive ? "brightness(1.2)" : "brightness(0.5)",
+                       transform: isActive ? "scale(1.2)" : "scale(1)",
                     }}
                   />
-                  {/* Label fluttuante stile iOS */}
-                  {(hoverColor === color || selectedColor === color) && (
-                    <div className="absolute -top-14 left-1/2 -translate-x-1/2 pointer-events-none transition-all duration-500 ease-out active:scale-90">
-                        <div className="glass-card px-3 py-1.5 rounded-full flex items-center justify-center">
-                            <span className="text-[9px] font-bold tracking-widest uppercase text-accent">
-                                {color === "#ef4444" && "Ruby"}
-                                {color === "#3b82f6" && "Night"}
-                                {color === "#22c55e" && "Green"}
-                                {color === "#a855f7" && "Deep"}
-                                {color === "#c9a84c" && "Gold"}
-                            </span>
-                        </div>
-                    </div>
-                  )}
                 </button>
               );
             })}

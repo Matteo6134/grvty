@@ -8,6 +8,7 @@ import * as THREE from "three";
 // --- COMPONENTE MODELLO ---
 export interface LampModelProps {
   positionY?: number;
+  positionX?: number;
   lightIntensity?: number;
   emissiveColor?: string;
   isRGBMode?: boolean;
@@ -16,6 +17,7 @@ export interface LampModelProps {
 
 export function LampModel({
   positionY = 0,
+  positionX = 0,
   lightIntensity = 0,
   emissiveColor = "#ffdb58",
   isRGBMode = false,
@@ -78,11 +80,13 @@ export function LampModel({
 
     if (groupRef.current) {
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, positionY, 0.1);
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, positionX * 8, 0.08);
     }
 
     // --- LOGICA DI ROTAZIONE DINAMICA ---
     if (rotationGroupRef.current) {
       let targetRotation = Math.PI;
+      
       if (scrollProgress < 0.3) {
         const t = scrollProgress / 0.3;
         targetRotation = Math.PI + (t * 0.35);
@@ -93,13 +97,16 @@ export function LampModel({
         const t = (scrollProgress - 0.5) / 0.35;
         targetRotation = (Math.PI + 0.85) - (t * 0.15);
       } else {
+        // ONE-TIME 360 Rotation during CTA transition
         const t = (scrollProgress - 0.85) / 0.15;
-        targetRotation = (Math.PI + 0.70) - (t * 0.70);
+        // Start at 0.7 offset and add 360 degrees (2*PI) over the progress t
+        targetRotation = (Math.PI + 0.7) - (t * Math.PI * 2); 
       }
+
       rotationGroupRef.current.rotation.y = THREE.MathUtils.lerp(
         rotationGroupRef.current.rotation.y,
         targetRotation,
-        0.04
+        0.05
       );
     }
 

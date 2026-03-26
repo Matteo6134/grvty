@@ -6,65 +6,64 @@ import { useEffect, useState } from "react";
 
 export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+    <nav className="fixed top-8 right-8 md:top-12 md:right-12 z-[150] pointer-events-auto">
       <div
-        className={`flex items-center gap-1 px-1.5 py-1.5 rounded-full transition-all duration-500 ${
-          scrolled
-            ? "bg-foreground/8 dark:bg-foreground/10 backdrop-blur-2xl shadow-lg shadow-black/5 border border-foreground/[0.06]"
-            : "bg-foreground/5 dark:bg-foreground/8 backdrop-blur-xl border border-foreground/[0.04]"
-        }`}
-        style={{
-          WebkitBackdropFilter: "blur(40px) saturate(180%)",
-          backdropFilter: "blur(40px) saturate(180%)",
-        }}
+        className="group relative flex items-center justify-center bg-white/[0.03] dark:bg-white/[0.05] backdrop-blur-3xl border border-white/10 rounded-full px-5 h-12 md:h-14 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover:px-8 hover:shadow-2xl overflow-hidden min-w-[60px] md:min-w-[64px] hover:min-w-[480px]"
       >
         {/* Logo */}
-        <Link
-          href="/"
-          className="px-4 py-2 rounded-full text-sm font-semibold text-foreground hover:bg-foreground/5 transition-colors"
+        <button
+          onClick={() => scrollTo("hero")}
+          className="font-sans text-sm font-black text-foreground tracking-tighter shrink-0 z-10"
         >
           grvty
-        </Link>
-
-        {/* Divider */}
-        <div className="w-px h-4 bg-foreground/10" />
-
-        {/* Shop */}
-        <Link
-          href="/shop"
-          className="px-4 py-2 rounded-full font-display text-xs font-light text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-all"
-        >
-          Shop
-        </Link>
-
-        {/* Divider */}
-        <div className="w-px h-4 bg-foreground/10" />
-
-        {/* Theme toggle */}
-        <button
-          onClick={toggleTheme}
-          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-foreground/5 transition-all duration-300"
-          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          <div
-            className="w-4 h-4 rounded-full transition-all duration-500"
-            style={{
-              background: isDark
-                ? "linear-gradient(135deg, #f0ebe5 50%, transparent 50%)"
-                : "linear-gradient(135deg, #1a1a1a 50%, transparent 50%)",
-              border: `1.5px solid ${isDark ? "#f0ebe5" : "#1a1a1a"}`,
-            }}
-          />
         </button>
+
+        {/* Expanded Menu Content */}
+        <div className="flex items-center justify-center gap-6 w-0 opacity-0 translate-x-4 group-hover:w-auto group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-700 delay-75 group-hover:ml-8">
+          <button
+            onClick={() => scrollTo("details")}
+            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            specifications
+          </button>
+          <button
+            onClick={() => scrollTo("rgb")}
+            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            light
+          </button>
+          <button
+            onClick={() => scrollTo("cta")}
+            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            contact
+          </button>
+
+          {/* Theme toggle integrated */}
+          <button
+            onClick={toggleTheme}
+            className="w-6 h-6 flex items-center justify-center rounded-full border border-foreground/10 hover:border-foreground/30 transition-all duration-300 ml-2"
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <div
+              className="w-2.5 h-2.5 rounded-full transition-all duration-500"
+              style={{
+                background: isDark
+                  ? "linear-gradient(135deg, #f0ebe5 50%, transparent 50%)"
+                  : "linear-gradient(135deg, #1a1a1a 50%, transparent 50%)",
+              }}
+            />
+          </button>
+        </div>
       </div>
     </nav>
   );

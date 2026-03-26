@@ -9,6 +9,7 @@ import { LampModel } from "./LampModel";
 
 interface LampSceneProps {
   readonly lampPositionY?: number;
+  readonly lampPositionX?: number;
   readonly lightIntensity?: number;
   readonly emissiveColor?: string;
   readonly gradientOpacity?: number;
@@ -26,6 +27,7 @@ function LoadingFallback() {
 
 export function LampScene({
   lampPositionY = 0,
+  lampPositionX = 0,
   lightIntensity = 0,
   emissiveColor = "#d4b055",
   gradientOpacity = 1,
@@ -66,6 +68,7 @@ export function LampScene({
 
           <LampModel
             positionY={lampPositionY}
+            positionX={lampPositionX}
             lightIntensity={lightIntensity}
             emissiveColor={emissiveColor}
             isRGBMode={isRGBMode}

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 interface ScrollState {
   readonly progress: number;
   readonly lampY: number;
+  readonly lampX: number;
   readonly lightIntensity: number;
   readonly gradientOpacity: number;
   readonly rgbProgress: number;
@@ -15,6 +16,7 @@ export function useScrollTimeline(): ScrollState {
   const [state, setState] = useState<ScrollState>({
     progress: 0,
     lampY: 0,
+    lampX: 0,
     lightIntensity: 0,
     gradientOpacity: 0,
     rgbProgress: 0,
@@ -27,52 +29,54 @@ export function useScrollTimeline(): ScrollState {
       const progress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
 
       let lampY = 0;
+      let lampX = 0;
       let lightIntensity = 0;
       let gradientOpacity = 0;
       let rgbProgress = 0;
       let phase: ScrollState["phase"] = "hero";
 
-      // The user wants it "sempre centrato" (always centered).
-      // We will keep lampY close to 0 but drive the transitions via lightIntensity and phase.
-
       if (progress < 0.15) {
-        // Hero
         phase = "hero";
         lampY = 0;
+        lampX = 0;
         gradientOpacity = 0;
-      } else if (progress < 0.3) {
-        // Levitation (visual transition)
+        lightIntensity = 0;
+      } else if (progress < 0.40) {
         phase = "levitation";
-        const t = (progress - 0.15) / 0.15;
-        // Keep it centered but maybe a tiny bit of subtle vertical drift to show movement
+        const t = (progress - 0.15) / 0.25;
         lampY = t * 0.2; 
+        lampX = 0;
         gradientOpacity = 0;
+        lightIntensity = Math.pow(Math.max(0, (t - 0.15) * 1.18), 1.8) * 0.5;
       } else if (progress < 0.65) {
-        // Details
         phase = "details";
         lampY = 0.2;
-        const t = (progress - 0.3) / 0.35;
-        lightIntensity = t;
-        gradientOpacity = t;
+        lampX = 0;
+        const t = (progress - 0.40) / 0.25;
+        const baseLight = 0.5 + t * 0.5;
+        lightIntensity = Math.min(1, baseLight);
+        gradientOpacity = t * 0.9;
       } else if (progress < 0.85) {
-        // RGB showcase
         phase = "rgb";
         lampY = 0.2;
+        lampX = 0;
         gradientOpacity = 1;
         lightIntensity = 1;
         rgbProgress = (progress - 0.65) / 0.2;
       } else {
-        // CTA
         phase = "cta";
         const t = (progress - 0.85) / 0.15;
-        // Even during CTA, we can keep it centered or slide it out slowly
-        lampY = 0.2 + t * 0.5;
-        gradientOpacity = 1 - t;
-        lightIntensity = 1 - t;
+        // Move to the left significantly
+        lampX = t * -3.5; 
+        lampY = 0.2 + t * 0.1;
+        
+        // Keep the lamp lit so it remains "white" and visible
+        lightIntensity = 0.65;
+        gradientOpacity = Math.max(0.3, 1 - t);
         rgbProgress = 1;
       }
 
-      setState({ progress, lampY, lightIntensity, gradientOpacity, rgbProgress, phase });
+      setState({ progress, lampY, lampX, lightIntensity, gradientOpacity, rgbProgress, phase });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
