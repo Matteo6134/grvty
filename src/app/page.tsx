@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
@@ -14,22 +14,6 @@ const LampScene = dynamic(
   { ssr: false }
 );
 
-function useFadeIn(threshold = 0.15) {
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [threshold]);
-  return { ref, visible };
-}
-
 export default function Home() {
   const [manualColor, setManualColor] = useState<string | null>(null);
   const scroll = useScrollTimeline();
@@ -39,15 +23,11 @@ export default function Home() {
     RGB_COLORS.length - 1
   );
 
-  const currentEmissiveColor = manualColor || (
-    scroll.phase === "rgb" || scroll.phase === "cta"
+  const currentEmissiveColor =
+    manualColor ||
+    (scroll.phase === "rgb" || scroll.phase === "cta"
       ? RGB_COLORS[colorIndex]
-      : "#d4b055"
-  );
-
-  const details = useFadeIn(0.1);
-  const rgb = useFadeIn(0.1);
-  const cta = useFadeIn(0.05);
+      : "#d4b055");
 
   const heroAlpha = Math.max(0, 1 - Math.max(0, scroll.progress - 0.08) / 0.1);
 
@@ -63,13 +43,11 @@ export default function Home() {
         scrollProgress={scroll.progress}
       />
 
-      {/* Card frame — creates the glass card / rocky-outside aesthetic */}
       <div className="card-frame" aria-hidden />
-
       <div className="noise-overlay" />
 
       <div className="relative z-10">
-        {/* Hero section */}
+        {/* Hero */}
         <section
           id="hero"
           className="relative h-screen flex items-center justify-center"
@@ -78,51 +56,24 @@ export default function Home() {
           <HeroText opacity={1} />
         </section>
 
-        {/* Scroll spacer so the 3D object animates before details appear */}
-        <section className="h-[50vh]" aria-hidden />
+        {/* Spacer — lets the 3D object levitate before details section */}
+        <div className="h-[60vh]" aria-hidden />
 
-        {/* Details / Specifications section */}
-        <section
-          id="details"
-          ref={details.ref}
-          className="min-h-[180vh] flex flex-col justify-center"
-          style={{
-            opacity: details.visible ? 1 : 0,
-            transform: details.visible ? "translateY(0)" : "translateY(32px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
-          }}
-        >
+        {/* Specifications */}
+        <section id="details" className="min-h-screen">
           <DetailsSection />
         </section>
 
-        {/* RGB Showcase section */}
-        <section
-          id="rgb"
-          ref={rgb.ref}
-          className="min-h-screen flex items-center justify-center"
-          style={{
-            opacity: rgb.visible ? 1 : 0,
-            transform: rgb.visible ? "translateY(0)" : "translateY(32px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
-          }}
-        >
+        {/* RGB Showcase */}
+        <section id="rgb" className="min-h-screen">
           <RGBShowcase
             progress={scroll.rgbProgress}
             onManualColor={(color) => setManualColor(color)}
           />
         </section>
 
-        {/* CTA section */}
-        <section
-          id="cta"
-          ref={cta.ref}
-          className="min-h-screen"
-          style={{
-            opacity: cta.visible ? 1 : 0,
-            transform: cta.visible ? "translateY(0)" : "translateY(32px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
-          }}
-        >
+        {/* CTA */}
+        <section id="cta" className="min-h-screen">
           <ShopCTA />
         </section>
       </div>

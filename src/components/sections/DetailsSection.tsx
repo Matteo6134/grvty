@@ -1,99 +1,227 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Watermark } from "../ui/Watermark";
-import { LightSelector } from "./LightSelector";
 
-interface SpecItemProps {
+function useFadeIn(delay = 0) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setTimeout(() => setVisible(true), delay); },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+  return { ref, visible };
+}
+
+interface SpecRowProps {
   readonly number: string;
   readonly title: string;
   readonly description: string;
   readonly delay?: number;
 }
 
-function SpecItem({ title, description, delay = 0 }: SpecItemProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setTimeout(() => setVisible(true), delay);
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [delay]);
-
+function SpecRow({ number, title, description, delay = 0 }: SpecRowProps) {
+  const { ref, visible } = useFadeIn(delay);
   return (
     <div
       ref={ref}
-      className={`group relative flex flex-col p-6 bg-white/[0.02] backdrop-blur-3xl rounded-[1.5rem] border border-white/5 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white/[0.05] hover:-translate-y-1 w-full max-w-[280px] ${
-        visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"
-      }`}
+      className="flex gap-5 py-5 border-b transition-all duration-700 ease-out"
+      style={{
+        borderColor: "rgba(var(--foreground-rgb,26,26,26),0.07)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateX(0)" : "translateX(-20px)",
+      }}
     >
-      <h3 className="font-sans text-xs font-black text-foreground tracking-[0.2em] uppercase mb-2 opacity-60">
-        {title}
-      </h3>
-      <p className="font-display text-[11px] font-light text-foreground/70 leading-relaxed tracking-wider lowercase">
-        {description}
-      </p>
+      <span
+        className="text-[10px] font-black font-sans mt-0.5 shrink-0 w-6"
+        style={{ color: "var(--foreground)", opacity: 0.25, letterSpacing: "0.15em" }}
+      >
+        {number}
+      </span>
+      <div className="flex flex-col gap-1.5">
+        <h3
+          className="text-[11px] font-black font-sans uppercase"
+          style={{ color: "var(--foreground)", opacity: 0.55, letterSpacing: "0.25em" }}
+        >
+          {title}
+        </h3>
+        <p
+          className="text-[12px] font-light leading-relaxed"
+          style={{ color: "var(--foreground)", opacity: 0.38 }}
+        >
+          {description}
+        </p>
+      </div>
     </div>
   );
 }
 
 export function DetailsSection() {
-  return (
-    <div className="relative z-10 px-8 md:px-12 py-20 min-h-[150vh] flex flex-col items-center">
-      <Watermark text="specifications" index={1} targetId="details" />
+  const headline = useFadeIn(0);
+  const dataCard = useFadeIn(150);
+  const statsBar = useFadeIn(200);
 
-      {/* Primary Design Idea — Positioned at the Top Center to clear the object */}
-      <div className="relative mt-12 mb-24 text-center max-w-4xl mx-auto px-4">
-        <h2 className="font-sans text-5xl md:text-7xl font-black text-foreground leading-[1] tracking-tighter lowercase italic opacity-80 mix-blend-difference select-none">
-          pyramids looks cool<br />so why not make a<br />lamp out of it?
+  const specs = [
+    {
+      number: "01",
+      title: "Additive Precision",
+      description: "Layer by layer geometric integrity. Each surface shaped with additive intent for absolute dimensional clarity.",
+    },
+    {
+      number: "02",
+      title: "Balanced Gravity",
+      description: "Softened edges meet deliberate mass. A rounded pyramidal form that commands its space without demanding it.",
+    },
+    {
+      number: "03",
+      title: "Matter Honesty",
+      description: "Raw texture meets refined post-processing. Substantial yet lightweight — tactile gravity in every surface.",
+    },
+  ];
+
+  const technicalData = [
+    { label: "Form", value: "Pyramid" },
+    { label: "Colors", value: "16 Million" },
+    { label: "Method", value: "FDM 3D Print" },
+    { label: "Finish", value: "Sanded + Sealed" },
+    { label: "Light Source", value: "RGB LED Strip" },
+  ];
+
+  const stats = [
+    { label: "Lumens", value: "800" },
+    { label: "Height", value: "~32cm" },
+    { label: "Colors", value: "16M RGB" },
+    { label: "Weight", value: "~1.2kg" },
+    { label: "Shipping", value: "Worldwide" },
+  ];
+
+  return (
+    <div className="relative z-10 w-full min-h-screen flex flex-col justify-between px-10 md:px-16 py-20">
+
+      {/* Top: label + headline */}
+      <div
+        ref={headline.ref}
+        className="transition-all duration-1000 ease-out"
+        style={{
+          opacity: headline.visible ? 1 : 0,
+          transform: headline.visible ? "translateY(0)" : "translateY(24px)",
+        }}
+      >
+        <span
+          className="text-[10px] font-black uppercase tracking-[0.45em] mb-5 block"
+          style={{ color: "var(--foreground)", opacity: 0.3 }}
+        >
+          01 — Specifications
+        </span>
+        <h2
+          className="font-sans font-black leading-[1.0] lowercase"
+          style={{
+            fontSize: "clamp(2.2rem, 4.5vw, 4rem)",
+            letterSpacing: "-0.04em",
+            color: "var(--foreground)",
+          }}
+        >
+          geometry is the
+          <br />
+          <span style={{ opacity: 0.3 }}>language of light</span>
         </h2>
       </div>
 
-      {/* Symmetrical Lateral Layout — Leaves the center clear for the object */}
-      <div className="flex-1 w-full max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center md:items-stretch gap-12 md:gap-0 pb-24">
-        
-        {/* Left Flank — Technical Specs */}
-        <div className="flex flex-col justify-start gap-12 w-full md:w-auto">
-          <SpecItem
-            number="01"
-            title="additive precisely"
-            description="layer by layer geometric precision. each surface shaped with additive intent for absolute clarity."
-            delay={0}
-          />
-          <SpecItem
-            number="02"
-            title="balanced gravity"
-            description="softened edges meet deliberate weight. a rounded pyramid form that commands its space."
-            delay={150}
-          />
+      {/* Middle: left specs | center lamp | right data card */}
+      <div className="flex items-end gap-0 w-full my-12">
+
+        {/* Left: numbered spec rows */}
+        <div className="w-[32%]">
+          {specs.map((spec, i) => (
+            <SpecRow
+              key={spec.number}
+              number={spec.number}
+              title={spec.title}
+              description={spec.description}
+              delay={i * 120}
+            />
+          ))}
         </div>
 
-        {/* Center Buffer — Clear for the fixed 3D Object */}
-        <div className="hidden md:block flex-1 pointer-events-none" />
+        {/* Center: empty lamp space */}
+        <div className="flex-1" />
 
-        {/* Right Flank — Material & Philosophy */}
-        <div className="flex flex-col justify-end gap-12 w-full md:w-auto items-end">
-          <SpecItem
-            number="03"
-            title="matter honesty"
-            description="raw texture meets refined post-processing. substantial yet lightweight — tactile gravity."
-            delay={300}
-          />
-          
-          <div className="group relative flex flex-col p-6 md:p-8 bg-white/[0.02] backdrop-blur-3xl rounded-[2rem] border border-white/5 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-white/[0.05] max-w-[280px] text-right">
-             <p className="font-display text-[11px] font-light text-foreground/60 leading-relaxed tracking-wider lowercase">
-                considered form is inevitability. 16m colors contained within a structure that simply belongs across every space and timeframe.
-             </p>
+        {/* Right: technical data card */}
+        <div
+          ref={dataCard.ref}
+          className="w-[28%] flex flex-col gap-5 items-end transition-all duration-1000 ease-out"
+          style={{
+            opacity: dataCard.visible ? 1 : 0,
+            transform: dataCard.visible ? "translateX(0)" : "translateX(20px)",
+          }}
+        >
+          <div className="glass-info w-full rounded-[1.75rem] overflow-hidden">
+            {technicalData.map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center justify-between px-5 py-3.5 border-b last:border-b-0"
+                style={{ borderColor: "rgba(var(--foreground-rgb,26,26,26),0.07)" }}
+              >
+                <span
+                  className="text-[10px] uppercase tracking-[0.28em] font-medium"
+                  style={{ color: "var(--foreground)", opacity: 0.35 }}
+                >
+                  {item.label}
+                </span>
+                <span
+                  className="text-[13px] font-black font-sans"
+                  style={{ color: "var(--foreground)", letterSpacing: "-0.02em" }}
+                >
+                  {item.value}
+                </span>
+              </div>
+            ))}
           </div>
+
+          <p
+            className="text-[11px] leading-relaxed text-right pr-1"
+            style={{ color: "var(--foreground)", opacity: 0.3, maxWidth: "200px" }}
+          >
+            Considered form is inevitability. A structure that simply belongs.
+          </p>
         </div>
+      </div>
+
+      {/* Bottom: horizontal stats bar */}
+      <div
+        ref={statsBar.ref}
+        className="mt-auto flex items-end justify-between pt-6 border-t transition-all duration-1000 ease-out"
+        style={{
+          borderColor: "rgba(var(--foreground-rgb,26,26,26),0.1)",
+          opacity: statsBar.visible ? 1 : 0,
+          transform: statsBar.visible ? "translateY(0)" : "translateY(16px)",
+        }}
+      >
+        {stats.map((stat) => (
+          <div key={stat.label} className="flex flex-col gap-1.5">
+            <span
+              className="text-[9px] uppercase tracking-[0.35em] font-medium"
+              style={{ color: "var(--foreground)", opacity: 0.28 }}
+            >
+              {stat.label}
+            </span>
+            <span
+              className="font-black font-sans"
+              style={{
+                fontSize: "clamp(1rem, 1.8vw, 1.4rem)",
+                color: "var(--foreground)",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              {stat.value}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
