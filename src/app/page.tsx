@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
@@ -13,6 +13,22 @@ const LampScene = dynamic(
   () => import("@/components/lamp/LampScene").then((mod) => ({ default: mod.LampScene })),
   { ssr: false }
 );
+
+function useFadeIn(threshold = 0.15) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+  return { ref, visible };
+}
 
 export default function Home() {
   const [manualColor, setManualColor] = useState<string | null>(null);
@@ -29,18 +45,11 @@ export default function Home() {
       : "#d4b055"
   );
 
-  const getSectionOpacity = (start: number, peakStart: number, peakEnd: number, end: number) => {
-    if (scroll.progress < start) return 0;
-    if (scroll.progress < peakStart) return (scroll.progress - start) / (peakStart - start);
-    if (scroll.progress < peakEnd) return 1;
-    if (scroll.progress < end) return 1 - (scroll.progress - peakEnd) / (end - peakEnd);
-    return 0;
-  };
+  const details = useFadeIn(0.1);
+  const rgb = useFadeIn(0.1);
+  const cta = useFadeIn(0.05);
 
-  const heroAlpha = getSectionOpacity(-0.1, 0, 0.15, 0.25);
-  const detailsAlpha = getSectionOpacity(0.35, 0.45, 0.6, 0.7);
-  const rgbAlpha = getSectionOpacity(0.65, 0.75, 0.85, 0.9);
-  const ctaAlpha = getSectionOpacity(0.85, 0.95, 1.1, 1.2);
+  const heroAlpha = Math.max(0, 1 - Math.max(0, scroll.progress - 0.08) / 0.1);
 
   return (
     <main className="relative">
@@ -60,28 +69,42 @@ export default function Home() {
       <div className="noise-overlay" />
 
       <div className="relative z-10">
+        {/* Hero section */}
         <section
           id="hero"
-          className="relative h-screen flex items-center justify-center transition-opacity duration-300"
-          style={{ opacity: heroAlpha }}
+          className="relative h-screen flex items-center justify-center"
+          style={{ opacity: heroAlpha, transition: "opacity 0.4s ease" }}
         >
           <HeroText opacity={1} />
         </section>
 
-        <section className="h-screen" />
+        {/* Scroll spacer so the 3D object animates before details appear */}
+        <section className="h-[50vh]" aria-hidden />
 
+        {/* Details / Specifications section */}
         <section
           id="details"
-          className="min-h-[200vh] flex flex-col justify-center transition-opacity duration-300"
-          style={{ opacity: detailsAlpha }}
+          ref={details.ref}
+          className="min-h-[180vh] flex flex-col justify-center"
+          style={{
+            opacity: details.visible ? 1 : 0,
+            transform: details.visible ? "translateY(0)" : "translateY(32px)",
+            transition: "opacity 0.8s ease, transform 0.8s ease",
+          }}
         >
           <DetailsSection />
         </section>
 
+        {/* RGB Showcase section */}
         <section
           id="rgb"
-          className="min-h-screen flex items-center justify-center transition-opacity duration-300"
-          style={{ opacity: rgbAlpha }}
+          ref={rgb.ref}
+          className="min-h-screen flex items-center justify-center"
+          style={{
+            opacity: rgb.visible ? 1 : 0,
+            transform: rgb.visible ? "translateY(0)" : "translateY(32px)",
+            transition: "opacity 0.8s ease, transform 0.8s ease",
+          }}
         >
           <RGBShowcase
             progress={scroll.rgbProgress}
@@ -89,10 +112,16 @@ export default function Home() {
           />
         </section>
 
+        {/* CTA section */}
         <section
           id="cta"
-          className="min-h-screen transition-opacity duration-300"
-          style={{ opacity: ctaAlpha }}
+          ref={cta.ref}
+          className="min-h-screen"
+          style={{
+            opacity: cta.visible ? 1 : 0,
+            transform: cta.visible ? "translateY(0)" : "translateY(32px)",
+            transition: "opacity 0.8s ease, transform 0.8s ease",
+          }}
         >
           <ShopCTA />
         </section>
