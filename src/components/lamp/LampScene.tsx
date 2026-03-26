@@ -13,6 +13,7 @@ interface LampSceneProps {
   readonly emissiveColor?: string;
   readonly gradientOpacity?: number;
   readonly isRGBMode?: boolean;
+  readonly scrollProgress?: number;
 }
 
 function LoadingFallback() {
@@ -29,6 +30,7 @@ export function LampScene({
   emissiveColor = "#d4b055",
   gradientOpacity = 1,
   isRGBMode = false,
+  scrollProgress = 0,
 }: LampSceneProps) {
   return (
     <div className="fixed inset-0 z-0">
@@ -46,7 +48,11 @@ export function LampScene({
           */}
           <PerspectiveCamera makeDefault position={[0, 0, 40]} fov={45} />
 
-          <GradientBackground opacity={gradientOpacity} />
+          <GradientBackground 
+            opacity={gradientOpacity} 
+            emissiveColor={emissiveColor}
+            isRGBMode={isRGBMode}
+          />
 
           {/* Luci bilanciate per il 3D reale */}
           <ambientLight intensity={0.5} />
@@ -63,6 +69,7 @@ export function LampScene({
             lightIntensity={lightIntensity}
             emissiveColor={emissiveColor}
             isRGBMode={isRGBMode}
+            scrollProgress={scrollProgress}
           />
 
           {/* Ombra a terra per "radicare" l'oggetto nello spazio */}

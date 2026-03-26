@@ -72,3 +72,14 @@ html.transitioning * {
 .dark .watermark-text {
   opacity: 0.08;
 }
+
+/* Custom Text Selection */
+::selection {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+::-moz-selection {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}

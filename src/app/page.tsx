@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
@@ -15,6 +16,7 @@ const LampScene = dynamic(
 );
 
 export default function Home() {
+  const [manualColor, setManualColor] = useState<string | null>(null);
   const scroll = useScrollTimeline();
 
   // Map RGB progress to color
@@ -22,10 +24,13 @@ export default function Home() {
     Math.floor(scroll.rgbProgress * RGB_COLORS.length),
     RGB_COLORS.length - 1
   );
-  const emissiveColor =
+  
+  // Se l'utente sta interagendo manualmente, usiamo quel colore, altrimenti quello dello scroll
+  const currentEmissiveColor = manualColor || (
     scroll.phase === "rgb" || scroll.phase === "cta"
       ? RGB_COLORS[colorIndex]
-      : "#d4b055";
+      : "#d4b055"
+  );
 
   // Hero text fades out during levitation
   const heroOpacity =
@@ -40,9 +45,10 @@ export default function Home() {
       <LampScene
         lampPositionY={scroll.lampY}
         lightIntensity={scroll.lightIntensity}
-        emissiveColor={emissiveColor}
+        emissiveColor={currentEmissiveColor}
         gradientOpacity={scroll.gradientOpacity}
         isRGBMode={scroll.phase === "rgb"}
+        scrollProgress={scroll.progress}
       />
 
       {/* Scroll container — drives the timeline */}
@@ -61,9 +67,12 @@ export default function Home() {
           <DetailsSection />
         </section>
 
-        {/* RGB showcase */}
+        {/* RGB showcase - Passiamo manualColor come state fisso */}
         <section className="min-h-screen">
-          <RGBShowcase progress={scroll.rgbProgress} />
+          <RGBShowcase 
+            progress={scroll.rgbProgress} 
+            onManualColor={(color) => setManualColor(color)}
+          />
         </section>
 
         {/* CTA */}
