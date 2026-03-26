@@ -12,7 +12,6 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [hoverColor, setHoverColor] = useState<string | null>(null);
 
-  // Visibilità della barra basata sulla sezione
   const isVisible = progress > 0.1 && progress < 0.95;
   const contentOpacity = isVisible ? 1 : 0;
 
@@ -34,7 +33,7 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
   return (
     <div className="relative z-20 flex flex-col items-center justify-center min-h-screen px-6 pointer-events-none">
       
-      {/* Background Watermark - Stesso stile Hero/Details */}
+      {/* Background Watermark */}
       <div 
         className="absolute inset-0 flex items-end justify-center pointer-events-none overflow-hidden pb-8 transition-opacity duration-1000"
         style={{ opacity: contentOpacity }}
@@ -57,13 +56,13 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
         </h1>
       </div>
 
-      {/* Selettore Colori - Pills Bottom Interface (Molto più pulito e premium) */}
+      {/* Selettore Colori - iOS 26 Glassmorphism Pill */}
       <div 
         className={`fixed bottom-12 left-1/2 -translate-x-1/2 pointer-events-auto transition-all duration-1000 ease-in-out ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
         }`}
       >
-        <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-full px-8 py-5 flex items-center gap-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        <div className="glass-card rounded-full px-8 py-5 flex items-center gap-8">
           <div className="hidden md:block">
             <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-white/30 whitespace-nowrap">
                 Select mood
@@ -87,24 +86,26 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                     style={{ borderColor: color }}
                   />
                   <div
-                    className="w-full h-full rounded-full transition-all duration-700 shadow-md"
+                    className="w-full h-full rounded-full transition-all duration-700 shadow-xl"
                     style={{
                       backgroundColor: color,
-                      boxShadow: isActive ? `0 0 30px ${color}` : "none",
-                      filter: isActive ? "brightness(1.1)" : "brightness(0.35)",
-                      transform: isActive ? "scale(1.1)" : "scale(1)",
+                      boxShadow: isActive ? `0 0 35px ${color}` : "none",
+                      filter: isActive ? "brightness(1.15)" : "brightness(0.35)",
+                      transform: isActive ? "scale(1.15)" : "scale(1)",
                     }}
                   />
-                  {/* Label fluttuante */}
+                  {/* Label fluttuante stile iOS */}
                   {(hoverColor === color || selectedColor === color) && (
-                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none transition-all duration-300">
-                        <span className="text-[9px] font-black tracking-widest uppercase text-accent">
-                            {color === "#ef4444" && "Ruby"}
-                            {color === "#3b82f6" && "Night"}
-                            {color === "#22c55e" && "Green"}
-                            {color === "#a855f7" && "Deep"}
-                            {color === "#c9a84c" && "Gold"}
-                        </span>
+                    <div className="absolute -top-14 left-1/2 -translate-x-1/2 pointer-events-none transition-all duration-500 ease-out active:scale-90">
+                        <div className="glass-card px-3 py-1.5 rounded-full flex items-center justify-center">
+                            <span className="text-[9px] font-bold tracking-widest uppercase text-accent">
+                                {color === "#ef4444" && "Ruby"}
+                                {color === "#3b82f6" && "Night"}
+                                {color === "#22c55e" && "Green"}
+                                {color === "#a855f7" && "Deep"}
+                                {color === "#c9a84c" && "Gold"}
+                            </span>
+                        </div>
                     </div>
                   )}
                 </button>
