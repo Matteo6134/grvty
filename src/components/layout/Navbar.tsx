@@ -1,69 +1,110 @@
 "use client";
 
 import { useTheme } from "@/hooks/useTheme";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+
+const NAV_LINKS = [
+  { label: "Discover", id: "details" },
+  { label: "Colors", id: "rgb" },
+  { label: "Shop", id: "cta" },
+];
 
 export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
-  
+
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav className="fixed top-8 right-8 md:top-12 md:right-12 z-[150] pointer-events-auto">
-      <div
-        className="group relative flex items-center justify-center bg-white/[0.03] dark:bg-white/[0.05] backdrop-blur-3xl border border-white/10 rounded-full px-5 h-12 md:h-14 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover:px-8 hover:shadow-2xl overflow-hidden min-w-[60px] md:min-w-[64px] hover:min-w-[480px]"
+    <nav className="fixed top-8 left-0 right-0 z-50 flex items-center justify-between px-10 md:px-16 pointer-events-none">
+
+      {/* Left — logo circle */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+        style={{
+          background: "var(--foreground)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+        }}
+        aria-label="Back to top"
       >
-        {/* Logo */}
-        <button
-          onClick={() => scrollTo("hero")}
-          className="font-sans text-sm font-black text-foreground tracking-tighter shrink-0 z-10"
+        <span
+          className="text-[11px] font-black tracking-tighter"
+          style={{ color: "var(--background)" }}
         >
-          grvty
+          g
+        </span>
+      </button>
+
+      {/* Center — pill tabs */}
+      <div
+        className="glass-pill pointer-events-auto flex items-center gap-0.5 px-1.5 py-1.5 rounded-full"
+      >
+        {/* Active tab */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold transition-all duration-300 hover:opacity-90 active:scale-95"
+          style={{
+            background: "var(--foreground)",
+            color: "var(--background)",
+          }}
+        >
+          <span className="text-[13px] leading-none opacity-70">≡</span>
+          <span>grvty</span>
         </button>
 
-        {/* Expanded Menu Content */}
-        <div className="flex items-center justify-center gap-6 w-0 opacity-0 translate-x-4 group-hover:w-auto group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-700 delay-75 group-hover:ml-8">
+        {/* Secondary tabs */}
+        {NAV_LINKS.map((link) => (
           <button
-            onClick={() => scrollTo("details")}
-            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
+            key={link.id}
+            onClick={() => scrollTo(link.id)}
+            className="px-4 py-2 rounded-full text-[11px] font-medium transition-all duration-200 hover:bg-black/5 active:scale-95"
+            style={{ color: "var(--foreground)", opacity: 0.55 }}
           >
-            specifications
+            {link.label}
           </button>
-          <button
-            onClick={() => scrollTo("rgb")}
-            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
-          >
-            light
-          </button>
-          <button
-            onClick={() => scrollTo("cta")}
-            className="text-[10px] font-sans font-bold uppercase tracking-[0.3em] text-foreground/40 hover:text-foreground transition-colors whitespace-nowrap"
-          >
-            contact
-          </button>
+        ))}
+      </div>
 
-          {/* Theme toggle integrated */}
-          <button
-            onClick={toggleTheme}
-            className="w-6 h-6 flex items-center justify-center rounded-full border border-foreground/10 hover:border-foreground/30 transition-all duration-300 ml-2"
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      {/* Right — CTA + theme toggle */}
+      <div className="pointer-events-auto flex items-center gap-2.5">
+        <button
+          onClick={toggleTheme}
+          className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+          style={{
+            background: "rgba(255,255,255,0.5)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.7)",
+          }}
+          aria-label={isDark ? "Switch to light" : "Switch to dark"}
+        >
+          <div
+            className="w-3 h-3 rounded-full transition-all duration-500"
+            style={{
+              background: isDark
+                ? "linear-gradient(135deg, #f0ebe5 50%, transparent 50%)"
+                : "linear-gradient(135deg, #1a1a1a 50%, transparent 50%)",
+            }}
+          />
+        </button>
+
+        <a
+          href="#cta"
+          onClick={(e) => { e.preventDefault(); scrollTo("cta"); }}
+          className="glass-pill pointer-events-auto flex items-center gap-2.5 pl-2 pr-4 py-2 rounded-full text-[11px] font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+          style={{ color: "var(--foreground)" }}
+        >
+          <span
+            className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold"
+            style={{
+              background: "var(--foreground)",
+              color: "var(--background)",
+            }}
           >
-            <div
-              className="w-2.5 h-2.5 rounded-full transition-all duration-500"
-              style={{
-                background: isDark
-                  ? "linear-gradient(135deg, #f0ebe5 50%, transparent 50%)"
-                  : "linear-gradient(135deg, #1a1a1a 50%, transparent 50%)",
-              }}
-            />
-          </button>
-        </div>
+            →
+          </span>
+          <span className="hidden md:inline whitespace-nowrap">Order yours</span>
+        </a>
       </div>
     </nav>
   );

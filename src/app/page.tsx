@@ -4,7 +4,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
-import { ScrollIndicator } from "@/components/sections/ScrollIndicator";
 import { DetailsSection } from "@/components/sections/DetailsSection";
 import { RGBShowcase } from "@/components/sections/RGBShowcase";
 import { ShopCTA } from "@/components/sections/ShopCTA";
@@ -19,20 +18,17 @@ export default function Home() {
   const [manualColor, setManualColor] = useState<string | null>(null);
   const scroll = useScrollTimeline();
 
-  // Map RGB progress to color
   const colorIndex = Math.min(
     Math.floor(scroll.rgbProgress * RGB_COLORS.length),
     RGB_COLORS.length - 1
   );
-  
-  // Se l'utente sta interagendo manualmente, usiamo quel colore, altrimenti quello dello scroll
+
   const currentEmissiveColor = manualColor || (
     scroll.phase === "rgb" || scroll.phase === "cta"
       ? RGB_COLORS[colorIndex]
       : "#d4b055"
   );
 
-  // Section Fade Logic
   const getSectionOpacity = (start: number, peakStart: number, peakEnd: number, end: number) => {
     if (scroll.progress < start) return 0;
     if (scroll.progress < peakStart) return (scroll.progress - start) / (peakStart - start);
@@ -46,9 +42,6 @@ export default function Home() {
   const rgbAlpha = getSectionOpacity(0.65, 0.75, 0.85, 0.9);
   const ctaAlpha = getSectionOpacity(0.85, 0.95, 1.1, 1.2);
 
-  // Scroll indicator fades early
-  const scrollIndicatorOpacity = Math.max(0, 1 - scroll.progress / 0.1);
-
   return (
     <main className="relative">
       <LampScene
@@ -61,28 +54,46 @@ export default function Home() {
         scrollProgress={scroll.progress}
       />
 
+      {/* Card frame — creates the glass card / rocky-outside aesthetic */}
+      <div className="card-frame" aria-hidden />
+
       <div className="noise-overlay" />
 
       <div className="relative z-10">
-        <section id="hero" className="relative h-screen flex items-center justify-center transition-opacity duration-300" style={{ opacity: heroAlpha }}>
+        <section
+          id="hero"
+          className="relative h-screen flex items-center justify-center transition-opacity duration-300"
+          style={{ opacity: heroAlpha }}
+        >
           <HeroText opacity={1} />
-          <ScrollIndicator opacity={scrollIndicatorOpacity} />
         </section>
 
         <section className="h-screen" />
 
-        <section id="details" className="min-h-[200vh] flex flex-col justify-center transition-opacity duration-300" style={{ opacity: detailsAlpha }}>
+        <section
+          id="details"
+          className="min-h-[200vh] flex flex-col justify-center transition-opacity duration-300"
+          style={{ opacity: detailsAlpha }}
+        >
           <DetailsSection />
         </section>
 
-        <section id="rgb" className="min-h-screen flex items-center justify-center transition-opacity duration-300" style={{ opacity: rgbAlpha }}>
-          <RGBShowcase 
-            progress={scroll.rgbProgress} 
+        <section
+          id="rgb"
+          className="min-h-screen flex items-center justify-center transition-opacity duration-300"
+          style={{ opacity: rgbAlpha }}
+        >
+          <RGBShowcase
+            progress={scroll.rgbProgress}
             onManualColor={(color) => setManualColor(color)}
           />
         </section>
 
-        <section id="cta" className="min-h-screen transition-opacity duration-300" style={{ opacity: ctaAlpha }}>
+        <section
+          id="cta"
+          className="min-h-screen transition-opacity duration-300"
+          style={{ opacity: ctaAlpha }}
+        >
           <ShopCTA />
         </section>
       </div>
