@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
@@ -17,7 +17,20 @@ const LampScene = dynamic(
 
 export default function Home() {
   const [manualColor, setManualColor] = useState<string | null>(null);
+  const [photosVisible, setPhotosVisible] = useState(false);
   const scroll = useScrollTimeline();
+
+  // Hide lamp when gallery section is active
+  useEffect(() => {
+    const el = document.getElementById("photos");
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setPhotosVisible(entry.isIntersecting),
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const colorIndex = Math.min(
     Math.floor(scroll.rgbProgress * RGB_COLORS.length),
@@ -42,6 +55,7 @@ export default function Home() {
         gradientOpacity={scroll.gradientOpacity}
         isRGBMode={scroll.phase === "rgb"}
         scrollProgress={scroll.progress}
+        hidden={photosVisible}
       />
 
       <div className="card-frame" aria-hidden />

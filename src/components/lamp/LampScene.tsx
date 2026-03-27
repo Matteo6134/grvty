@@ -14,6 +14,7 @@ interface LampSceneProps {
   readonly gradientOpacity?: number;
   readonly isRGBMode?: boolean;
   readonly scrollProgress?: number;
+  readonly hidden?: boolean;
 }
 
 function LoadingFallback() {
@@ -32,6 +33,7 @@ export function LampScene({
   gradientOpacity = 1,
   isRGBMode = false,
   scrollProgress = 0,
+  hidden = false,
 }: LampSceneProps) {
   const [hasError, setHasError] = useState(false);
 
@@ -47,7 +49,12 @@ export function LampScene({
   return (
     <div
       className="fixed inset-0 z-0"
-      style={{ background: "var(--background)" }}
+      style={{
+        background: "var(--background)",
+        opacity: hidden ? 0 : 1,
+        transition: "opacity 0.7s ease",
+        pointerEvents: hidden ? "none" : "auto",
+      }}
     >
       <Suspense fallback={<LoadingFallback />}>
         <Canvas

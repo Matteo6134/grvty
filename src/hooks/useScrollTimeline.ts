@@ -54,22 +54,22 @@ export function useScrollTimeline(): ScrollState {
         lampX = 0;
         const t = (progress - 0.40) / 0.25;
         lightIntensity = Math.min(1, 0.5 + t * 0.5);
-        gradientOpacity = t * 0.9;
+        // Gradient only in specs — fades in then back out
+        gradientOpacity = t < 0.5 ? t * 1.8 : Math.max(0, 1 - (t - 0.5) * 2);
       } else if (progress < 0.85) {
         phase = "rgb";
         lampY = 0.2;
         lampX = 0;
-        gradientOpacity = 1;
+        gradientOpacity = 0; // No yellow gradient in rgb section
         lightIntensity = 1;
         rgbProgress = (progress - 0.65) / 0.2;
       } else {
         phase = "cta";
         const t = (progress - 0.85) / 0.15;
-        // Reduced from -3.5 → -1.5 so lamp stays on screen
         lampX = t * -1.5;
         lampY = 0.2 + t * 0.05;
         lightIntensity = 0.65;
-        gradientOpacity = Math.max(0.3, 1 - t);
+        gradientOpacity = 0;
         rgbProgress = 1;
       }
 

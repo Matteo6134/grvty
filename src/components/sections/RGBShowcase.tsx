@@ -76,17 +76,18 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
       ref={sectionRef}
       className="relative z-20 w-full min-h-screen flex flex-col justify-between px-10 md:px-16 py-24 overflow-hidden"
     >
-      {/* Live ambient gradient background — the main visual */}
+      {/* Sphere-like ambient gradient — breathes like the bulb inside the lamp */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 55% 55% at 50% 50%, ${currentColor}22 0%, transparent 70%)`,
-          transition: "background 1.8s ease",
+          inset: 0,
+          background: `radial-gradient(circle 38% at 50% 50%, ${currentColor}30 0%, ${currentColor}10 45%, transparent 70%)`,
+          transition: "background 1.6s ease",
           animation: "rgb-breathe 5s ease-in-out infinite",
         }}
       />
 
-      {/* Top: label + big number */}
+      {/* Top: section label + headline */}
       <div
         style={{
           opacity: mounted ? 1 : 0,
@@ -95,29 +96,29 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
         }}
       >
         <span
-          className="text-[10px] font-black uppercase block mb-6"
-          style={{ color: "var(--foreground)", opacity: 0.3, letterSpacing: "0.4em" }}
+          className="text-[10px] font-black uppercase block mb-5"
+          style={{ color: "var(--foreground)", opacity: 0.28, letterSpacing: "0.4em" }}
         >
-          02 — Chromatic Spectrum
+          Chromatic Spectrum
         </span>
         <div
           className="font-black font-sans leading-none lowercase"
           style={{
-            fontSize: "clamp(5rem, 14vw, 11rem)",
+            fontSize: "clamp(3.5rem, 8vw, 7rem)",
             letterSpacing: "-0.06em",
             color: "var(--foreground)",
-            opacity: 0.08,
+            opacity: 0.07,
             userSelect: "none",
           }}
         >
-          16M
+          Custom color
         </div>
       </div>
 
-      {/* Middle: lamp center | D-wheel right */}
+      {/* Middle: left text | lamp center | D-wheel right */}
       <div className="flex items-center justify-between w-full flex-1">
 
-        {/* Left: minimal text */}
+        {/* Left: minimal descriptor */}
         <div
           style={{
             opacity: mounted ? 1 : 0,
@@ -127,18 +128,33 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
           <p
             className="font-sans lowercase font-bold"
             style={{
-              fontSize: "clamp(1rem, 1.6vw, 1.3rem)",
+              fontSize: "clamp(0.95rem, 1.5vw, 1.2rem)",
               letterSpacing: "-0.03em",
               color: "var(--foreground)",
-              opacity: 0.5,
-              maxWidth: 220,
-              lineHeight: 1.4,
+              opacity: 0.45,
+              maxWidth: 200,
+              lineHeight: 1.5,
             }}
           >
-            16 million colors.
+            Custom color.
             <br />
-            <span style={{ opacity: 0.5 }}>Any mood. Any room.</span>
+            <span style={{ opacity: 0.55 }}>Any mood. Any room.</span>
           </p>
+
+          {/* Active color name */}
+          <div className="mt-6">
+            <span
+              className="font-black font-sans lowercase transition-all duration-700"
+              style={{
+                fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
+                letterSpacing: "-0.03em",
+                color: currentColor,
+                textShadow: `0 0 24px ${currentColor}60`,
+              }}
+            >
+              {COLOR_NAMES[currentColor] || currentColor}
+            </span>
+          </div>
         </div>
 
         {/* Center: lamp space */}
@@ -146,7 +162,7 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
 
         {/* Right: D-wheel */}
         <div
-          className="flex flex-col items-center gap-5"
+          className="flex flex-col items-center gap-4"
           style={{
             opacity: mounted ? 1 : 0,
             transform: mounted ? "none" : "translateX(20px)",
@@ -155,21 +171,18 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
         >
           <div className="relative select-none" style={{ width: W, height: H }}>
             <svg width={W} height={H} className="absolute inset-0 pointer-events-none" style={{ overflow: "visible" }}>
-              {/* Arc */}
               <path
                 d={`M ${CX},${CY - R} A ${R},${R} 0 0,0 ${CX},${CY + R}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1"
                 strokeDasharray="2 8"
-                style={{ color: "var(--foreground)", opacity: 0.12 }}
+                style={{ color: "var(--foreground)", opacity: 0.1 }}
               />
-              {/* Diameter line */}
               <line x1={CX} y1={CY - R - SR} x2={CX} y2={CY + R + SR}
-                stroke="currentColor" strokeWidth="1"
-                style={{ color: "var(--foreground)", opacity: 0.06 }}
+                stroke="currentColor" strokeWidth="0.75"
+                style={{ color: "var(--foreground)", opacity: 0.05 }}
               />
-              {/* Spoke to active */}
               {RGB_COLORS.map((color, i) => {
                 const pos = getSwatchPos(i, RGB_COLORS.length);
                 const isActive = hoverColor === color || selectedColor === color ||
@@ -177,13 +190,12 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                 if (!isActive) return null;
                 return (
                   <line key={color} x1={CX} y1={CY} x2={pos.x} y2={pos.y}
-                    stroke={color} strokeWidth="1" opacity="0.4" strokeDasharray="3 4"
+                    stroke={color} strokeWidth="1" opacity="0.4" strokeDasharray="3 5"
                   />
                 );
               })}
             </svg>
 
-            {/* Swatches */}
             {RGB_COLORS.map((color, i) => {
               const pos = getSwatchPos(i, RGB_COLORS.length);
               const isActive = hoverColor === color || selectedColor === color ||
@@ -203,61 +215,41 @@ export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
                   aria-label={COLOR_NAMES[color]}
                 >
                   <span className="absolute inset-[-5px] rounded-full border transition-all duration-500"
-                    style={{ borderColor: color, opacity: isActive ? 0.65 : 0, transform: isActive ? "scale(1)" : "scale(0.4)" }}
+                    style={{ borderColor: color, opacity: isActive ? 0.6 : 0, transform: isActive ? "scale(1)" : "scale(0.3)" }}
                   />
                   <span className="absolute inset-0 rounded-full transition-all duration-500"
                     style={{
                       backgroundColor: color,
-                      boxShadow: isActive ? `0 0 28px 8px ${color}55` : "none",
-                      transform: isActive ? "scale(1.25)" : "scale(0.75)",
-                      filter: isActive ? "brightness(1.1)" : "brightness(0.45) saturate(0.5)",
+                      boxShadow: isActive ? `0 0 32px 10px ${color}55` : "none",
+                      transform: isActive ? "scale(1.3)" : "scale(0.7)",
+                      filter: isActive ? "brightness(1.1)" : "brightness(0.4) saturate(0.4)",
                     }}
                   />
                 </button>
               );
             })}
 
-            {/* Center dot */}
             <div className="absolute rounded-full pointer-events-none"
-              style={{ width: 4, height: 4, left: CX - 2, top: CY - 2, background: "var(--foreground)", opacity: 0.12 }}
+              style={{ width: 4, height: 4, left: CX - 2, top: CY - 2, background: "var(--foreground)", opacity: 0.1 }}
             />
           </div>
-
-          {/* Color name — clean, no hex */}
-          <span
-            className="font-black font-sans lowercase transition-all duration-700"
-            style={{
-              fontSize: "1rem",
-              letterSpacing: "-0.02em",
-              color: currentColor,
-              textShadow: `0 0 16px ${currentColor}50`,
-            }}
-          >
-            {COLOR_NAMES[currentColor] || currentColor}
-          </span>
         </div>
       </div>
 
-      {/* Bottom: simple line */}
+      {/* Bottom: thin divider only */}
       <div
-        className="flex items-center justify-between pt-5 border-t"
+        className="pt-5 border-t"
         style={{
-          borderColor: "rgba(var(--foreground-rgb,26,26,26),0.08)",
+          borderColor: "rgba(var(--foreground-rgb,26,26,26),0.07)",
           opacity: mounted ? 1 : 0,
           transition: "opacity 1s ease 0.5s",
         }}
       >
         <span
-          className="text-[10px] uppercase tracking-[0.3em]"
-          style={{ color: "var(--foreground)", opacity: 0.25 }}
+          className="text-[10px] uppercase tracking-[0.4em]"
+          style={{ color: "var(--foreground)", opacity: 0.18 }}
         >
-          Select a color — it changes the lamp in real time
-        </span>
-        <span
-          className="font-black font-sans transition-all duration-700"
-          style={{ fontSize: "0.9rem", letterSpacing: "-0.02em", color: currentColor }}
-        >
-          {COLOR_NAMES[currentColor]}
+          Color
         </span>
       </div>
     </div>
