@@ -3,9 +3,13 @@ export const COLORS = {
     background: "#f5f0eb",
     foreground: "#1a1a1a",
     accent: "#c9a84c",
-    gradientStart: [0.79, 0.66, 0.30] as [number, number, number],
-    gradientMid: [0.91, 0.84, 0.63] as [number, number, number],
-    gradientEnd: [0.96, 0.94, 0.92] as [number, number, number],
+    // Gradiente light: toni caldi ambrati, mai troppo chiari
+    // gradientStart = nucleo centrale (più saturo)
+    // gradientMid   = anello medio
+    // gradientEnd   = sfondo periferico (questo diventa bgColor nel shader)
+    gradientStart: [0.72, 0.55, 0.18] as [number, number, number], // ambra scura
+    gradientMid: [0.82, 0.70, 0.42] as [number, number, number], // oro caldo
+    gradientEnd: [0.94, 0.91, 0.86] as [number, number, number], // crema - NON bianco puro
     lampGlow: "#d4b055",
   },
   dark: {

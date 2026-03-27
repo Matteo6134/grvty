@@ -19,8 +19,8 @@ function useFadeIn(delay = 0, threshold = 0.15) {
 }
 
 const SPECS = [
-  { label: "Height", value: "32", unit: "cm" },
-  { label: "Base width", value: "22", unit: "cm" },
+  { label: "Height", value: "220", unit: "mm" },
+  { label: "Base width", value: "220", unit: "mm" },
   { label: "Cord length", value: "2", unit: "m" },
   { label: "Socket", value: "E27", unit: "" },
   { label: "Voltage", value: "110–240", unit: "V" },
@@ -36,229 +36,171 @@ export function DetailsSection() {
   useEffect(() => {
     const el = linesRef.current;
     if (!el) return;
+    let timeout: NodeJS.Timeout;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setTimeout(() => setLinesVisible(true), 400); },
-      { threshold: 0.2 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          timeout = setTimeout(() => setLinesVisible(true), 150);
+        } else {
+          clearTimeout(timeout);
+          setLinesVisible(false);
+        }
+      },
+      { threshold: 0.45 }
     );
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => {
+      clearTimeout(timeout);
+      obs.disconnect();
+    };
   }, []);
 
   return (
-    <div className="relative z-10 w-full min-h-screen flex flex-col justify-between px-10 md:px-16 py-24">
-
-      {/* Top: claim text */}
-      <div
-        ref={claim.ref}
-        style={{
-          opacity: claim.visible ? 1 : 0,
-          transform: claim.visible ? "none" : "translateY(20px)",
-          transition: "opacity 1s ease, transform 1s ease",
-        }}
-      >
-        <p
-          className="font-sans leading-tight lowercase"
-          style={{
-            fontSize: "clamp(1rem, 1.6vw, 1.3rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            color: "var(--foreground)",
-          }}
-        >
-          Form follows function.
-          <br />
-          <span style={{ opacity: 0.3 }}>The pyramid, re-imagined as light.</span>
-        </p>
-      </div>
-
-      {/* Middle: left stats | lamp center with measurement lines | right stats */}
-      <div className="flex items-center justify-between w-full">
-
-        {/* Left: big height number */}
+    <div className="relative z-10 w-full min-h-screen flex flex-col justify-center px-6 md:px-16 md:pt-36 pb-24">
+      {/* ── CENTRAL HUD AREA (Pushes text away from the center) ── */}
+      <div className="absolute inset-0 md:relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[40vh] md:min-h-0 py-8 md:py-0">
         <div
-          ref={statsLeft.ref}
-          className="w-[28%]"
-          style={{
-            opacity: statsLeft.visible ? 1 : 0,
-            transform: statsLeft.visible ? "none" : "translateY(24px)",
-            transition: "opacity 1s ease, transform 1s ease",
+          ref={linesRef}
+          className="relative pointer-events-none flex items-center justify-center mt-[-10vh] md:mt-0"
+          style={{ 
+            width: "clamp(200px, 48vw, 420px)",  // Scaled down to guarantee no cutoffs
+            height: "clamp(200px, 48vw, 420px)",
+            transform: "translateY(0)" 
           }}
         >
-          {SPECS.slice(0, 2).map((s) => (
-            <div key={s.label} className="mb-8">
+          {/* ── Height Glass Pill (vertical, left side) ── */}
+          <div className="absolute left-[-2%] md:left-[-15%] bottom-[5%] w-[5px] md:w-[6px] h-[90%] pointer-events-none flex flex-col justify-end z-20">
+            <div
+              className="w-full relative overflow-hidden rounded-full backdrop-blur-3xl"
+              style={{
+                height: linesVisible ? "100%" : "0%",
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                transition: linesVisible ? "height 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s" : "height 0.5s ease 0s",
+                boxShadow: linesVisible ? "0 0 30px rgba(201, 168, 76, 0.2)" : "none",
+              }}
+            >
               <div
-                className="font-black font-sans leading-none lowercase"
+                className="absolute bottom-0 left-0 w-full h-full"
                 style={{
-                  fontSize: s.label === "Height" ? "clamp(3.5rem, 6vw, 5rem)" : "clamp(2rem, 3.5vw, 3rem)",
+                  background: "linear-gradient(to top, rgba(201, 168, 76, 0) 0%, rgba(201, 168, 76, 0.4) 50%, var(--accent) 100%)",
+                }}
+              />
+            </div>
+
+            {/* Anchored Height Label */}
+            <div
+              className="absolute top-1/2 right-[100%] mr-4 md:mr-8 -translate-y-1/2 whitespace-nowrap z-30 pointer-events-auto"
+              style={{
+                opacity: linesVisible ? 1 : 0,
+                transition: linesVisible ? "opacity 1s ease 1s" : "opacity 0.3s ease",
+              }}
+            >
+              <div
+                className="font-black font-sans leading-none shadow-xl rounded-full bg-[var(--background)]/80 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/5"
+                style={{
+                  fontSize: "clamp(1rem, 4.5vw, 1.8rem)",
                   letterSpacing: "-0.05em",
                   color: "var(--foreground)",
                 }}
               >
-                {s.value}
-                <span style={{ fontSize: "0.45em", opacity: 0.4 }}>{s.unit}</span>
+                {SPECS[0].value}
+                <span style={{ fontSize: "0.45em", opacity: 0.6, paddingLeft: "4px" }}>{SPECS[0].unit}</span>
               </div>
-              <span
-                className="text-[10px] uppercase tracking-[0.35em]"
-                style={{ color: "var(--foreground)", opacity: 0.28 }}
-              >
-                {s.label}
-              </span>
             </div>
-          ))}
-        </div>
 
-        {/* Center: measurement lines SVG overlay */}
-        <div
-          ref={linesRef}
-          className="flex-1 flex items-center justify-center relative"
-          style={{ height: 320 }}
-        >
-          <svg
-            viewBox="0 0 260 320"
-            width="260"
-            height="320"
-            fill="none"
-            className="absolute"
-            style={{ overflow: "visible" }}
-          >
-            {/* ── Height line (vertical, left of lamp) ── */}
-            <line
-              x1="60" y1="20" x2="60" y2="300"
-              stroke="currentColor"
-              strokeWidth="0.75"
-              strokeDasharray="4 4"
+            {/* Start/End Dots */}
+            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0s" }}>
+              <div className="w-[4px] h-[4px] rounded-full bg-[var(--accent)]" />
+            </div>
+            <div className="absolute -left-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ bottom: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "bottom 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, opacity 0.4s 0.8s", transform: "translateY(50%)" }}>
+              <div className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]" />
+            </div>
+          </div>
+
+          {/* ── Width Glass Pill (horizontal) ── */}
+          <div className="absolute bottom-[-5%] md:bottom-[-15%] left-[5%] w-[90%] h-[5px] md:h-[6px] pointer-events-none flex items-center z-20">
+            <div
+              className="h-full relative overflow-hidden rounded-full backdrop-blur-3xl"
               style={{
-                color: "var(--foreground)",
-                opacity: linesVisible ? 0.22 : 0,
-                transition: "opacity 1.2s ease",
-              }}
-            />
-            {/* Top tick */}
-            <line x1="52" y1="20" x2="68" y2="20"
-              stroke="currentColor" strokeWidth="0.75"
-              style={{ color: "var(--foreground)", opacity: linesVisible ? 0.3 : 0, transition: "opacity 1.2s ease 0.2s" }}
-            />
-            {/* Bottom tick */}
-            <line x1="52" y1="300" x2="68" y2="300"
-              stroke="currentColor" strokeWidth="0.75"
-              style={{ color: "var(--foreground)", opacity: linesVisible ? 0.3 : 0, transition: "opacity 1.2s ease 0.2s" }}
-            />
-            {/* Height label */}
-            <text
-              x="38" y="165"
-              textAnchor="middle"
-              fontSize="8"
-              fontWeight="700"
-              letterSpacing="0.12em"
-              transform="rotate(-90, 38, 165)"
-              style={{
-                fill: "var(--foreground)",
-                opacity: linesVisible ? 0.3 : 0,
-                transition: "opacity 1.4s ease 0.4s",
-                fontFamily: "system-ui, sans-serif",
-                textTransform: "uppercase",
+                width: linesVisible ? "100%" : "0%",
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                transition: linesVisible ? "width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s" : "width 0.5s ease 0s",
+                boxShadow: linesVisible ? "0 0 30px rgba(201, 168, 76, 0.2)" : "none",
               }}
             >
-              32cm
-            </text>
-
-            {/* ── Width line (horizontal, bottom of lamp) ── */}
-            <line
-              x1="80" y1="295" x2="220" y2="295"
-              stroke="currentColor"
-              strokeWidth="0.75"
-              strokeDasharray="4 4"
-              style={{
-                color: "var(--foreground)",
-                opacity: linesVisible ? 0.22 : 0,
-                transition: "opacity 1.2s ease 0.3s",
-              }}
-            />
-            {/* Left tick */}
-            <line x1="80" y1="287" x2="80" y2="303"
-              stroke="currentColor" strokeWidth="0.75"
-              style={{ color: "var(--foreground)", opacity: linesVisible ? 0.3 : 0, transition: "opacity 1.2s ease 0.5s" }}
-            />
-            {/* Right tick */}
-            <line x1="220" y1="287" x2="220" y2="303"
-              stroke="currentColor" strokeWidth="0.75"
-              style={{ color: "var(--foreground)", opacity: linesVisible ? 0.3 : 0, transition: "opacity 1.2s ease 0.5s" }}
-            />
-            {/* Width label */}
-            <text
-              x="150" y="315"
-              textAnchor="middle"
-              fontSize="8"
-              fontWeight="700"
-              letterSpacing="0.12em"
-              style={{
-                fill: "var(--foreground)",
-                opacity: linesVisible ? 0.3 : 0,
-                transition: "opacity 1.4s ease 0.6s",
-                fontFamily: "system-ui, sans-serif",
-                textTransform: "uppercase",
-              }}
-            >
-              22cm
-            </text>
-
-            {/* Corner crosshair dots */}
-            {linesVisible && [
-              [60, 20], [60, 300], [80, 295], [220, 295],
-            ].map(([cx, cy], i) => (
-              <circle key={i} cx={cx} cy={cy} r="2.5"
-                fill="var(--foreground)"
-                style={{ opacity: 0.25 }}
-              />
-            ))}
-          </svg>
-        </div>
-
-        {/* Right: remaining specs */}
-        <div
-          ref={statsRight.ref}
-          className="w-[24%] flex flex-col items-end gap-6"
-          style={{
-            opacity: statsRight.visible ? 1 : 0,
-            transform: statsRight.visible ? "none" : "translateY(24px)",
-            transition: "opacity 1s ease, transform 1s ease",
-          }}
-        >
-          {SPECS.slice(2).map((s) => (
-            <div key={s.label} className="text-right">
               <div
-                className="font-black font-sans leading-none"
+                className="absolute top-0 left-0 w-full h-full"
                 style={{
-                  fontSize: "clamp(1.8rem, 2.8vw, 2.5rem)",
-                  letterSpacing: "-0.04em",
+                  background: "linear-gradient(to right, rgba(201, 168, 76, 0) 0%, rgba(201, 168, 76, 0.4) 50%, var(--accent) 100%)",
+                }}
+              />
+            </div>
+
+            {/* Anchored Width Label */}
+            <div
+              className="absolute top-[100%] left-1/2 -translate-x-1/2 mt-4 md:mt-8 whitespace-nowrap z-30 pointer-events-auto"
+              style={{
+                opacity: linesVisible ? 1 : 0,
+                transition: linesVisible ? "opacity 1s ease 1.4s" : "opacity 0.3s ease",
+              }}
+            >
+              <div
+                className="font-black font-sans leading-none shadow-xl rounded-full bg-[var(--background)]/80 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/5"
+                style={{
+                  fontSize: "clamp(1rem, 4.5vw, 1.8rem)",
+                  letterSpacing: "-0.05em",
                   color: "var(--foreground)",
                 }}
               >
-                {s.value}
-                <span style={{ fontSize: "0.42em", opacity: 0.4 }}>{s.unit}</span>
+                {SPECS[1].value}
+                <span style={{ fontSize: "0.45em", opacity: 0.6, paddingLeft: "4px" }}>{SPECS[1].unit}</span>
               </div>
-              <span
-                className="text-[10px] uppercase tracking-[0.28em]"
-                style={{ color: "var(--foreground)", opacity: 0.28 }}
+            </div>
+
+            {/* Start/End Dots */}
+            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0.3s" }}>
+              <div className="w-[4px] h-[4px] rounded-full bg-[var(--accent)]" />
+            </div>
+            <div className="absolute -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ left: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "left 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s, opacity 0.4s 1.2s", transform: "translateX(-50%)" }}>
+              <div className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── BOTTOM CONTENT AREA (Specs ONLY) ── */}
+      <div className="relative w-full flex flex-col justify-end pointer-events-auto z-10 mt-auto md:absolute md:bottom-24 md:left-16 md:right-16 md:flex-row md:items-end md:justify-between">
+        <div
+          ref={statsRight.ref}
+          className="w-full flex flex-row flex-wrap md:flex-col justify-center md:justify-start items-center md:items-start gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0"
+          style={{
+            opacity: statsRight.visible ? 1 : 0,
+            transform: statsRight.visible ? "none" : "translateY(24px)",
+            transition: "opacity 1s ease, transform 1s ease 0.1s",
+          }}
+        >
+          {SPECS.slice(2).map((s) => (
+            <div key={s.label} className="text-center md:text-left flex flex-col items-center md:items-start min-w-[28%] md:min-w-0">
+              <div
+                className="font-black font-sans leading-none whitespace-nowrap"
+                style={{
+                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  letterSpacing: "-0.04em",
+                  color: "var(--foreground)",
+                  fontFamily: "var(--font-sora), system-ui, sans-serif"
+                }}
               >
+                {s.value}
+                <span style={{ fontSize: "0.42em", opacity: 0.4, paddingLeft: "1.5px" }}>{s.unit}</span>
+              </div>
+              <span className="hud-label mt-1 text-center md:text-left text-[9px] md:text-[10px]" style={{ fontFamily: "var(--font-sora), sans-serif", letterSpacing: "0.15em", color: "var(--foreground)", opacity: 0.5 }}>
                 {s.label}
               </span>
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Bottom: thin border line only */}
-      <div
-        className="pt-5 border-t"
-        style={{ borderColor: "rgba(var(--foreground-rgb,26,26,26),0.06)" }}
-      >
-        <span
-          className="text-[10px] uppercase tracking-[0.4em]"
-          style={{ color: "var(--foreground)", opacity: 0.18 }}
-        >
-          Specifications
-        </span>
       </div>
     </div>
   );

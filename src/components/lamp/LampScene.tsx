@@ -1,8 +1,10 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Environment, ContactShadows, PerspectiveCamera } from "@react-three/drei";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Environment, PerspectiveCamera } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
 import { GradientBackground } from "./GradientBackground";
 import { LampModel } from "./LampModel";
 
@@ -25,6 +27,30 @@ function LoadingFallback() {
   );
 }
 
+function ResponsiveCamera() {
+  const { size, camera } = useThree();
+
+  // Baseline ottimizzata per vedere bene il fronte della lampada
+  let targetZ = 32;
+  if (size.width < 1200) {
+    // Interpolazione fluida tra mobile (70) e desktop (32)
+    const progress = Math.max(0, (size.width - 320) / (1200 - 320));
+    targetZ = 70 - progress * (70 - 32);
+  }
+
+  let targetY = 0;
+  if (size.width < 768) {
+    targetY = -1.2; // Offset verticale ridotto per mobile (prima era -2.8, ora più centrato)
+  }
+
+  // Movimento fluido della camera verso il target
+  camera.position.lerp(new THREE.Vector3(0, targetY, targetZ), 0.1);
+  camera.lookAt(0, 0, 0);
+  camera.updateProjectionMatrix();
+
+  return null;
+}
+
 export function LampScene({
   lampPositionY = 0,
   lampPositionX = 0,
@@ -37,6 +63,7 @@ export function LampScene({
 }: LampSceneProps) {
   const [hasError, setHasError] = useState(false);
 
+  // Fallback in caso di errore WebGL
   if (hasError) {
     return (
       <div
@@ -58,11 +85,13 @@ export function LampScene({
     >
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
-          dpr={[1, 2]}
+          dpr={[1, 2]} // Supporto Retina
           gl={{
-            antialias: true,
+            antialias: false, // Disabilitato per massime prestazioni con Bloom
             alpha: true,
             powerPreference: "high-performance",
+            stencil: false,
+            depth: true,
           }}
           onCreated={(state) => {
             if (!state.gl.capabilities.isWebGL2) {
@@ -71,41 +100,47 @@ export function LampScene({
           }}
           onError={() => setHasError(true)}
         >
-          <PerspectiveCamera makeDefault position={[0, 0, 40]} fov={45} />
+          {/* Camera Setup */}
+          <PerspectiveCamera makeDefault fov={45} />
+          <ResponsiveCamera />
 
+          {/* Sfondo dinamico */}
           <GradientBackground
             opacity={gradientOpacity}
             emissiveColor={emissiveColor}
             isRGBMode={isRGBMode}
           />
 
-          <ambientLight intensity={0.5} />
-          <spotLight
-            position={[10, 10, 10]}
-            angle={0.15}
-            penumbra={1}
-            intensity={2}
-            castShadow
-          />
+          {/* Illuminazione Ambientale */}
+          <ambientLight intensity={0.4} />
 
+          {/* Photo Fill Lights — Highlights the product edges */}
+          <directionalLight position={[10, 10, 8]} intensity={1.2} />
+          <directionalLight position={[-10, 5, 5]} intensity={0.5} />
+
+          {/* Il Modello 3D della Lampada */}
           <LampModel
             positionY={lampPositionY}
             positionX={lampPositionX}
             lightIntensity={lightIntensity}
             emissiveColor={emissiveColor}
-            isRGBMode={isRGBMode}
             scrollProgress={scrollProgress}
+            isRGBMode={isRGBMode}
           />
 
-          <ContactShadows
-            position={[0, -2.8, 0]}
-            opacity={0.35}
-            scale={12}
-            blur={2}
-            far={4.5}
-          />
-
+          {/* Mappa riflessi */}
           <Environment preset="city" environmentIntensity={0.5} />
+
+          {/* Post-Processing: Bloom (Effetto Glow) */}
+          <EffectComposer>
+            <Bloom
+              luminanceThreshold={1.0} // Solo gli oggetti con emissive > 1 brillano
+              mipmapBlur              // Glow morbido e naturale
+              intensity={0.8}          // Forza dell'effetto
+              radius={0.3}             // Raggio di diffusione della luce
+            />
+          </EffectComposer>
+
         </Canvas>
       </Suspense>
     </div>

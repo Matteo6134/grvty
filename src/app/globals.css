@@ -11,6 +11,8 @@
   --gradient-mid: #e8d5a0;
   --gradient-end: #f5f0eb;
   --outside: #8e8a84;
+  --hud-line: rgba(26, 26, 26, 0.06);
+  --hud-text: rgba(26, 26, 26, 0.25);
 }
 
 .dark {
@@ -24,6 +26,8 @@
   --gradient-mid: #8b7530;
   --gradient-end: #0a0a0a;
   --outside: #1e1c1a;
+  --hud-line: rgba(240, 235, 229, 0.06);
+  --hud-text: rgba(240, 235, 229, 0.2);
 }
 
 @theme inline {
@@ -46,6 +50,7 @@ html {
   background: var(--outside);
   transition: background-color 500ms ease;
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
 }
 
 body {
@@ -65,6 +70,72 @@ h1, h2, h3 {
   text-transform: lowercase;
   letter-spacing: -0.06em;
   font-weight: 800;
+}
+
+/* ━━━ HUD System ━━━ */
+
+/* Technical monospace label used across the UI */
+.hud-label {
+  font-family: var(--font-space), 'SF Mono', 'Fira Code', monospace;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.22;
+  font-weight: 500;
+}
+
+/* Thin, precise border lines */
+.hud-border {
+  border-color: var(--hud-line);
+}
+
+/* Subtle crosshair corner marks */
+.hud-corner {
+  position: relative;
+}
+
+.hud-corner::before,
+.hud-corner::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--foreground);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.hud-corner::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.hud-corner::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Scanline overlay – very subtle horizontal line sweep */
+.hud-scanline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    var(--hud-line) 3px,
+    var(--hud-line) 4px
+  );
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
 }
 
 /* Watermark text style */
@@ -95,6 +166,18 @@ h1, h2, h3 {
   pointer-events: none;
   z-index: 4;
   transition: box-shadow 500ms ease;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --outside: var(--background);
+  }
+  .dark {
+    --outside: var(--background);
+  }
+  .card-frame {
+    display: none;
+  }
 }
 
 .dark .card-frame {
@@ -228,4 +311,36 @@ h1, h2, h3 {
 @keyframes rgb-breathe {
   0%, 100% { opacity: 0.55; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* HUD line draw animation */
+@keyframes hud-draw {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.hud-draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: hud-draw 2s ease forwards;
+}
+
+/* HUD fade up animation */
+@keyframes hud-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hud-fade-up {
+  animation: hud-fade-up 0.8s ease forwards;
+}
+
+/* HUD pulse dot */
+@keyframes hud-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.5); }
+}
+
+.hud-pulse-dot {
+  animation: hud-pulse 3s ease-in-out infinite;
 }

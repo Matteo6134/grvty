@@ -1,0 +1,62 @@
+
+> grvty@0.1.0 dev
+> next dev -p 5000 -H 0.0.0.0
+
+[1G[0K[1m[38;2;173;127;168m▲ Next.js 16.2.1[39m[22m (Turbopack)
+- Local:         http://localhost:5000
+- Network:       http://0.0.0.0:5000
+[32m[1m✓[22m[39m Ready in 547ms
+
+[33m[1m⚠[22m[39m metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:5000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET / [32m200[39m in 3.0s[2m (next.js: 2.3s, application-code: 733ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+ GET / [32m200[39m in 116ms[2m (next.js: 5ms, application-code: 111ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m
+[36m[browser][39m THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: . 
+[36m[browser][39m THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: . 
+[36m[browser][39m THREE.WebGLRenderer: Error creating WebGL context. 
+[36m[browser][39m [31m⨯ unhandledRejection: Error: Error creating WebGL context.[39m
+[36m[browser][39m [33mTHREE.WebGLProgram: Program Info Log:[39m [33mC:\fakepath(213,181-309): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+ GET / [32m200[39m in 58ms[2m (next.js: 4ms, application-code: 55ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m
+[36m[browser][39m THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: . 
+[36m[browser][39m THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x0000, ErrorMessage = BindToCurrentSequence failed: . 
+[36m[browser][39m THREE.WebGLRenderer: Error creating WebGL context. 
+[36m[browser][39m [31m⨯ unhandledRejection: Error: Error creating WebGL context.[39m
+[32m[1m✓[22m[39m Compiled in 1588ms
+ GET / [32m200[39m in 83ms[2m (next.js: 5ms, application-code: 78ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+[36m[browser][39m [33mTHREE.WebGLProgram: Program Info Log:[39m [33mC:\fakepath(213,181-309): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+[32m[1m✓[22m[39m Compiled in 605ms
+[32m[1m✓[22m[39m Compiled in 781ms
+ GET / [32m200[39m in 70ms[2m (next.js: 5ms, application-code: 66ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+[36m[browser][39m [33mTHREE.WebGLProgram: Program Info Log:[39m [33mC:\fakepath(213,181-309): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+[32m[1m✓[22m[39m Compiled in 597ms
+[32m[1m✓[22m[39m Compiled in 468ms
+[32m[1m✓[22m[39m Compiled in 585ms
+[32m[1m✓[22m[39m Compiled in 165ms
+[32m[1m✓[22m[39m Compiled in 350ms
+[32m[1m✓[22m[39m Compiled in 311ms
+[33m[1m⚠[22m[39m metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:5000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+ GET / [32m200[39m in 186ms[2m (next.js: 126ms, application-code: 60ms)[22m
+ GET / [32m200[39m in 28ms[2m (next.js: 3ms, application-code: 25ms)[22m
+ GET / [32m200[39m in 146ms[2m (next.js: 3ms, application-code: 143ms)[22m
+[36m[browser][39m [33mTHREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m
+[36m[browser][39m [33mTHREE.WebGLProgram: Program Info Log:[39m [33mC:\fakepath(213,181-309): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision
+C:\fakepath(212,78-142): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision
+C:\fakepath(213,182-246): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision[39m [2m(https://6efc3431-eaaa-4179-8eaa-6cb701ca38f0-00-9wetzguwlo8u.spock.replit.dev/__replco/static/devtools/injected.js:37:27)[22m

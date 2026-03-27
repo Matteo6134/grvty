@@ -9,7 +9,7 @@ interface ScrollState {
   readonly lightIntensity: number;
   readonly gradientOpacity: number;
   readonly rgbProgress: number;
-  readonly phase: "hero" | "levitation" | "details" | "rgb" | "cta";
+  readonly phase: "hero" | "levitation" | "details" | "photos" | "rgb" | "cta";
 }
 
 export function useScrollTimeline(): ScrollState {
@@ -41,28 +41,33 @@ export function useScrollTimeline(): ScrollState {
         lampX = 0;
         gradientOpacity = 0;
         lightIntensity = 0;
-      } else if (progress < 0.40) {
+      } else if (progress < 0.35) {
         phase = "levitation";
-        const t = (progress - 0.15) / 0.25;
+        const t = (progress - 0.15) / 0.20;
         lampY = t * 0.2;
         lampX = 0;
         gradientOpacity = 0;
         lightIntensity = Math.pow(Math.max(0, (t - 0.15) * 1.18), 1.8) * 0.5;
-      } else if (progress < 0.65) {
+      } else if (progress < 0.55) {
         phase = "details";
         lampY = 0.2;
         lampX = 0;
-        const t = (progress - 0.40) / 0.25;
-        lightIntensity = Math.min(1, 0.5 + t * 0.5);
-        // Gradient only in specs — fades in then back out
-        gradientOpacity = t < 0.5 ? t * 1.8 : Math.max(0, 1 - (t - 0.5) * 2);
+        lightIntensity = 1;
+        gradientOpacity = 1;
+      } else if (progress < 0.70) {
+        phase = "photos";
+        lampY = 0.2;
+        lampX = 0;
+        lightIntensity = 1;
+        gradientOpacity = 1; // Keep the same lighting as details
+        rgbProgress = 0;
       } else if (progress < 0.85) {
         phase = "rgb";
         lampY = 0.2;
         lampX = 0;
-        gradientOpacity = 0; // No yellow gradient in rgb section
+        gradientOpacity = 0;
         lightIntensity = 1;
-        rgbProgress = (progress - 0.65) / 0.2;
+        rgbProgress = (progress - 0.70) / 0.15;
       } else {
         phase = "cta";
         const t = (progress - 0.85) / 0.15;

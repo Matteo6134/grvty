@@ -29,7 +29,7 @@ export function HeroText({ opacity }: HeroTextProps) {
       </div>
 
       {/* Large split text flanking the 3D object */}
-      <div className="absolute inset-0 flex items-center justify-between px-14 md:px-20 lg:px-28">
+      <div className="absolute inset-0 flex items-center justify-between px-6 md:px-20 lg:px-28">
         <h1
           className="font-sans font-black leading-none"
           style={{
@@ -56,8 +56,7 @@ export function HeroText({ opacity }: HeroTextProps) {
 
       {/* Bottom left: subtitle + heading */}
       <div
-        className="absolute flex flex-col gap-2"
-        style={{ bottom: "2.5rem", left: "2.5rem", maxWidth: "280px" }}
+        className="absolute flex flex-col gap-2 left-[1.5rem] md:left-[2.5rem] bottom-[6.5rem] md:bottom-[2.5rem] max-w-[200px] md:max-w-[280px]"
       >
         <span
           className="text-[10px] tracking-[0.35em] uppercase font-medium"
@@ -77,39 +76,6 @@ export function HeroText({ opacity }: HeroTextProps) {
         </h2>
       </div>
 
-      {/* Bottom center: stat glass card */}
-      <div
-        className="glass-info absolute flex flex-col items-start gap-1 px-5 py-4 rounded-2xl"
-        style={{
-          bottom: "2.5rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        <span
-          className="font-sans font-black leading-none"
-          style={{
-            fontSize: "clamp(1.4rem, 2vw, 1.75rem)",
-            color: "var(--foreground)",
-          }}
-        >
-          16M
-        </span>
-        <div className="flex items-center gap-1.5">
-          <span
-            className="text-[10px] font-bold"
-            style={{ color: "var(--foreground)", opacity: 0.35 }}
-          >
-            +
-          </span>
-          <span
-            className="text-[10px] tracking-[0.25em] uppercase font-medium"
-            style={{ color: "var(--foreground)", opacity: 0.45 }}
-          >
-            Colors
-          </span>
-        </div>
-      </div>
 
       {/* Bottom right: description */}
       <p

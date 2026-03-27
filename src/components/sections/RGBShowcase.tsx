@@ -1,256 +1,117 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { RGB_COLORS } from "@/lib/constants";
-import { useState, useEffect, useRef } from "react";
 
-interface RGBShowcaseProps {
+export function RGBShowcase({
+  progress,
+  onManualColor,
+}: {
   readonly progress: number;
-  readonly onManualColor?: (color: string | null) => void;
-}
-
-const COLOR_NAMES: Record<string, string> = {
-  "#ef4444": "Ruby Red",
-  "#3b82f6": "Arctic Blue",
-  "#22c55e": "Forest Green",
-  "#a855f7": "Deep Violet",
-  "#c9a84c": "Warm Gold",
-};
-
-// D-shape geometry
-const R = 100;
-const SR = 20;
-const PAD = 12;
-const W = R + SR * 2 + PAD * 2;
-const H = R * 2 + SR * 2 + PAD * 2;
-const CX = W - SR - PAD;
-const CY = H / 2;
-
-function getSwatchPos(index: number, total: number) {
-  const angle = Math.PI / 2 + (index / (total - 1)) * Math.PI;
-  return { x: CX + Math.cos(angle) * R, y: CY + Math.sin(angle) * R };
-}
-
-export function RGBShowcase({ progress, onManualColor }: RGBShowcaseProps) {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [hoverColor, setHoverColor] = useState<string | null>(null);
-  const [autoIndex, setAutoIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  readonly onManualColor: (color: string) => void;
+}) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [activeColorIdx, setActiveColorIdx] = useState<number | null>(null);
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setMounted(true); },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  // Derive scroll-based active color when not manually interacting
+  const autoColorIndex = Math.min(
+    Math.floor(progress * RGB_COLORS.length),
+    RGB_COLORS.length - 1
+  );
 
-  useEffect(() => {
-    if (selectedColor || hoverColor) return;
-    const id = setInterval(() => {
-      setAutoIndex((p) => (p + 1) % RGB_COLORS.length);
-    }, 3200);
-    return () => clearInterval(id);
-  }, [selectedColor, hoverColor]);
-
-  const currentColor =
-    hoverColor ||
-    selectedColor ||
-    (progress > 0 && progress < 1
-      ? RGB_COLORS[Math.min(Math.floor(progress * RGB_COLORS.length), RGB_COLORS.length - 1)]
-      : RGB_COLORS[autoIndex]);
-
-  useEffect(() => {
-    onManualColor?.(selectedColor || hoverColor || currentColor);
-  }, [selectedColor, hoverColor, currentColor, onManualColor]);
-
-  const handleColorClick = (color: string) => {
-    setSelectedColor(selectedColor === color ? null : color);
-  };
+  const displayColorIdx = activeColorIdx !== null ? activeColorIdx : autoColorIndex;
+  const currentHex = RGB_COLORS[Math.max(0, displayColorIdx)];
 
   return (
     <div
       ref={sectionRef}
-      className="relative z-20 w-full min-h-screen flex flex-col justify-between px-10 md:px-16 py-24 overflow-hidden"
+      className="relative z-20 w-full min-h-screen flex flex-col justify-between px-6 pt-32 pb-12 md:px-16 md:pt-36 md:pb-24 overflow-hidden"
     >
-      {/* Sphere-like ambient gradient — breathes like the bulb inside the lamp */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          inset: 0,
-          background: `radial-gradient(circle 38% at 50% 50%, ${currentColor}30 0%, ${currentColor}10 45%, transparent 70%)`,
-          transition: "background 1.6s ease",
-          animation: "rgb-breathe 5s ease-in-out infinite",
-        }}
-      />
-
-      {/* Top: section label + headline */}
-      <div
-        style={{
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "none" : "translateY(20px)",
-          transition: "opacity 1s ease, transform 1s ease",
-        }}
-      >
-        <span
-          className="text-[10px] font-black uppercase block mb-5"
-          style={{ color: "var(--foreground)", opacity: 0.28, letterSpacing: "0.4em" }}
-        >
-          Chromatic Spectrum
-        </span>
-        <div
-          className="font-black font-sans leading-none lowercase"
-          style={{
-            fontSize: "clamp(3.5rem, 8vw, 7rem)",
-            letterSpacing: "-0.06em",
-            color: "var(--foreground)",
-            opacity: 0.07,
-            userSelect: "none",
-          }}
-        >
-          Custom color
+      {/* Main interactive area */}
+      <div className="flex-1 flex flex-col items-start justify-end md:justify-center w-full mt-10 pointer-events-none pb-12 md:pb-0 z-20">
+        
+        {/* Typography Block */}
+        <div className="w-full max-w-lg flex flex-col">
+          <h2
+            className="font-black leading-[0.9] text-[clamp(2.5rem,7vw,5rem)] tracking-tighter lowercase"
+            style={{ color: "var(--foreground)" }}
+          >
+            Chroma output.
+          </h2>
+          <p
+            className="mt-6 font-sans text-[13px] md:text-sm leading-[1.7] max-w-md"
+            style={{ color: "var(--foreground)", opacity: 0.6 }}
+          >
+            The internal high-density LED matrix projects flawless, blended frequencies directly through the raw 3D printed diffusion layer. Tap to alter the core emission.
+          </p>
+          
+          <div className="mt-8 font-sans text-[10px] tracking-[0.2em] uppercase font-bold" style={{ color: currentHex, transition: "color 0.4s ease", opacity: 0.9 }}>
+            Sys Target: {currentHex}
+          </div>
         </div>
       </div>
 
-      {/* Middle: left text | lamp center | D-wheel right */}
-      <div className="flex items-center justify-between w-full flex-1">
-
-        {/* Left: minimal descriptor */}
-        <div
-          style={{
-            opacity: mounted ? 1 : 0,
-            transition: "opacity 1.2s ease 0.2s",
-          }}
-        >
-          <p
-            className="font-sans lowercase font-bold"
-            style={{
-              fontSize: "clamp(0.95rem, 1.5vw, 1.2rem)",
-              letterSpacing: "-0.03em",
-              color: "var(--foreground)",
-              opacity: 0.45,
-              maxWidth: 200,
-              lineHeight: 1.5,
-            }}
-          >
-            Custom color.
-            <br />
-            <span style={{ opacity: 0.55 }}>Any mood. Any room.</span>
-          </p>
-
-          {/* Active color name */}
-          <div className="mt-6">
-            <span
-              className="font-black font-sans lowercase transition-all duration-700"
-              style={{
-                fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
-                letterSpacing: "-0.03em",
-                color: currentColor,
-                textShadow: `0 0 24px ${currentColor}60`,
-              }}
-            >
-              {COLOR_NAMES[currentColor] || currentColor}
-            </span>
-          </div>
-        </div>
-
-        {/* Center: lamp space */}
-        <div className="flex-1" />
-
-        {/* Right: D-wheel */}
-        <div
-          className="flex flex-col items-center gap-4"
-          style={{
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? "none" : "translateX(20px)",
-            transition: "opacity 1s ease 0.3s, transform 1s ease 0.3s",
-          }}
-        >
-          <div className="relative select-none" style={{ width: W, height: H }}>
-            <svg width={W} height={H} className="absolute inset-0 pointer-events-none" style={{ overflow: "visible" }}>
-              <path
-                d={`M ${CX},${CY - R} A ${R},${R} 0 0,0 ${CX},${CY + R}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeDasharray="2 8"
-                style={{ color: "var(--foreground)", opacity: 0.1 }}
-              />
-              <line x1={CX} y1={CY - R - SR} x2={CX} y2={CY + R + SR}
-                stroke="currentColor" strokeWidth="0.75"
-                style={{ color: "var(--foreground)", opacity: 0.05 }}
-              />
-              {RGB_COLORS.map((color, i) => {
-                const pos = getSwatchPos(i, RGB_COLORS.length);
-                const isActive = hoverColor === color || selectedColor === color ||
-                  (!hoverColor && !selectedColor && color === currentColor);
-                if (!isActive) return null;
-                return (
-                  <line key={color} x1={CX} y1={CY} x2={pos.x} y2={pos.y}
-                    stroke={color} strokeWidth="1" opacity="0.4" strokeDasharray="3 5"
-                  />
-                );
-              })}
-            </svg>
-
-            {RGB_COLORS.map((color, i) => {
-              const pos = getSwatchPos(i, RGB_COLORS.length);
-              const isActive = hoverColor === color || selectedColor === color ||
-                (!hoverColor && !selectedColor && color === currentColor);
-              return (
-                <button
-                  key={color}
-                  onMouseEnter={() => setHoverColor(color as string)}
-                  onMouseLeave={() => setHoverColor(null)}
-                  onClick={() => handleColorClick(color as string)}
-                  className="absolute outline-none transition-all duration-500"
+      {/* Technical Color Selector Panel */}
+      <div className="w-full relative pointer-events-auto z-30 mt-auto flex flex-col border-t border-[var(--foreground)]/10 pt-6">
+        <span className="font-sans font-bold text-[9px] tracking-[0.2em] uppercase mb-4" style={{ color: "var(--foreground)", opacity: 0.5 }}>
+          Spectrum Matrix ──
+        </span>
+        
+        <div className="flex w-full gap-2 md:gap-4 overflow-x-auto pb-4 hide-scrollbar select-none">
+          {RGB_COLORS.map((color, idx) => {
+            const isActive = displayColorIdx === idx;
+            return (
+              <button
+                key={color}
+                onMouseEnter={() => {
+                  setActiveColorIdx(idx);
+                  onManualColor(color);
+                }}
+                onMouseLeave={() => {
+                  setActiveColorIdx(null);
+                  onManualColor(""); // fallback to scroll
+                }}
+                onClick={() => {
+                  setActiveColorIdx(idx);
+                  onManualColor(color);
+                }}
+                className="group flex-1 min-w-[50px] md:min-w-0 flex flex-col items-center gap-3 transition-all duration-300"
+                aria-label={`Select color ${color}`}
+              >
+                {/* Visual Bar */}
+                <div
+                  className="w-full relative rounded-sm backdrop-blur-3xl transition-all duration-500 overflow-hidden"
                   style={{
-                    width: SR * 2, height: SR * 2,
-                    left: pos.x - SR, top: pos.y - SR,
-                    borderRadius: "50%",
+                    height: isActive ? 60 : 30,
+                    background: isActive ? `${color}80` : "rgba(100, 100, 100, 0.05)",
+                    border: `1px solid ${isActive ? color : "rgba(150, 150, 150, 0.2)"}`,
+                    boxShadow: isActive ? `0 0 30px ${color}60` : "none",
                   }}
-                  aria-label={COLOR_NAMES[color]}
                 >
-                  <span className="absolute inset-[-5px] rounded-full border transition-all duration-500"
-                    style={{ borderColor: color, opacity: isActive ? 0.6 : 0, transform: isActive ? "scale(1)" : "scale(0.3)" }}
-                  />
-                  <span className="absolute inset-0 rounded-full transition-all duration-500"
+                  <div
+                    className="absolute bottom-0 left-0 w-full transition-all duration-500"
                     style={{
-                      backgroundColor: color,
-                      boxShadow: isActive ? `0 0 32px 10px ${color}55` : "none",
-                      transform: isActive ? "scale(1.3)" : "scale(0.7)",
-                      filter: isActive ? "brightness(1.1)" : "brightness(0.4) saturate(0.4)",
+                      height: isActive ? "100%" : "2%",
+                      background: color,
+                      opacity: isActive ? 0.9 : 0.3
                     }}
                   />
-                </button>
-              );
-            })}
-
-            <div className="absolute rounded-full pointer-events-none"
-              style={{ width: 4, height: 4, left: CX - 2, top: CY - 2, background: "var(--foreground)", opacity: 0.1 }}
-            />
-          </div>
+                </div>
+                
+                {/* Wavelength Indicator */}
+                <span
+                  className="font-sans text-[9px] tracking-widest uppercase transition-all duration-300 font-bold"
+                  style={{ 
+                    opacity: isActive ? 0.9 : 0.3,
+                    color: isActive ? color : "var(--foreground)",
+                  }}
+                >
+                  {isActive ? "Locked" : `0${idx + 1}`}
+                </span>
+              </button>
+            );
+          })}
         </div>
-      </div>
-
-      {/* Bottom: thin divider only */}
-      <div
-        className="pt-5 border-t"
-        style={{
-          borderColor: "rgba(var(--foreground-rgb,26,26,26),0.07)",
-          opacity: mounted ? 1 : 0,
-          transition: "opacity 1s ease 0.5s",
-        }}
-      >
-        <span
-          className="text-[10px] uppercase tracking-[0.4em]"
-          style={{ color: "var(--foreground)", opacity: 0.18 }}
-        >
-          Color
-        </span>
       </div>
     </div>
   );
