@@ -224,3 +224,8 @@ h1, h2, h3 {
 .animate-float {
   animation: float 5s ease-in-out infinite;
 }
+
+@keyframes rgb-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}

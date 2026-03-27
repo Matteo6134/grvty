@@ -44,7 +44,7 @@ export function useScrollTimeline(): ScrollState {
       } else if (progress < 0.40) {
         phase = "levitation";
         const t = (progress - 0.15) / 0.25;
-        lampY = t * 0.2; 
+        lampY = t * 0.2;
         lampX = 0;
         gradientOpacity = 0;
         lightIntensity = Math.pow(Math.max(0, (t - 0.15) * 1.18), 1.8) * 0.5;
@@ -53,8 +53,7 @@ export function useScrollTimeline(): ScrollState {
         lampY = 0.2;
         lampX = 0;
         const t = (progress - 0.40) / 0.25;
-        const baseLight = 0.5 + t * 0.5;
-        lightIntensity = Math.min(1, baseLight);
+        lightIntensity = Math.min(1, 0.5 + t * 0.5);
         gradientOpacity = t * 0.9;
       } else if (progress < 0.85) {
         phase = "rgb";
@@ -66,11 +65,9 @@ export function useScrollTimeline(): ScrollState {
       } else {
         phase = "cta";
         const t = (progress - 0.85) / 0.15;
-        // Move to the left significantly
-        lampX = t * -3.5; 
-        lampY = 0.2 + t * 0.1;
-        
-        // Keep the lamp lit so it remains "white" and visible
+        // Reduced from -3.5 → -1.5 so lamp stays on screen
+        lampX = t * -1.5;
+        lampY = 0.2 + t * 0.05;
         lightIntensity = 0.65;
         gradientOpacity = Math.max(0.3, 1 - t);
         rgbProgress = 1;

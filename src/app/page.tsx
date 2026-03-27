@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useScrollTimeline } from "@/hooks/useScrollTimeline";
 import { HeroText } from "@/components/sections/HeroText";
 import { DetailsSection } from "@/components/sections/DetailsSection";
+import { PhotosSection } from "@/components/sections/PhotosSection";
 import { RGBShowcase } from "@/components/sections/RGBShowcase";
 import { ShopCTA } from "@/components/sections/ShopCTA";
 import { RGB_COLORS } from "@/lib/constants";
@@ -62,6 +63,11 @@ export default function Home() {
         {/* Specifications */}
         <section id="details" className="min-h-screen">
           <DetailsSection />
+        </section>
+
+        {/* Photos + Measurements */}
+        <section id="photos" className="min-h-screen">
+          <PhotosSection />
         </section>
 
         {/* RGB Showcase */}
