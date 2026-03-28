@@ -162,27 +162,10 @@ export function Navbar() {
           <a
             href="#cta"
             onClick={(e) => { e.preventDefault(); scrollTo("cta"); }}
-            className="ios-button flex items-center gap-2.5 px-4 md:pl-3 md:pr-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase"
+            className="ios-button flex items-center px-4 md:px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase"
             style={{ color: "var(--foreground)" }}
           >
-            <span className="hidden md:inline drop-shadow-md">Order yours</span>
-            <div
-              className="w-5 h-5 rounded-full flex items-center justify-center"
-              style={{ background: "rgba(255, 255, 255, 0.15)", border: "1px solid rgba(255, 255, 255, 0.2)" }}
-            >
-              <svg 
-                width="10" 
-                height="10" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2.5" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                <path d="M12 2L2 22h20L12 2z" />
-              </svg>
-            </div>
+            <span className="drop-shadow-md">order here</span>
           </a>
         </div>
       </nav>

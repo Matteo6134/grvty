@@ -69,13 +69,13 @@ export function DetailsSection() {
           ref={linesRef}
           className="relative pointer-events-none flex items-center justify-center md:mt-0 transition-transform duration-1000 ease-out"
           style={{ 
-            width: "clamp(160px, 38vw, 420px)",
-            height: "clamp(160px, 38vw, 420px)",
+            width: "clamp(240px, 60vw, 420px)",
+            height: "clamp(240px, 60vw, 420px)",
             transform: "translateY(0)" 
           }}
         >
           {/* ── Height Glass Pill (vertical, left side) ── */}
-          <div className="absolute left-[-2%] md:left-[-15%] bottom-[5%] w-[5px] md:w-[6px] h-[90%] pointer-events-none flex flex-col justify-end z-20">
+          <div className="absolute left-[-10%] md:left-[-15%] bottom-[5%] w-[5px] md:w-[6px] h-[90%] pointer-events-none flex flex-col justify-end z-20">
             <div
               className="w-full relative overflow-hidden rounded-full backdrop-blur-3xl"
               style={{
@@ -96,22 +96,27 @@ export function DetailsSection() {
 
             {/* Anchored Height Label */}
             <div
-              className="absolute top-1/2 right-[100%] mr-4 md:mr-8 -translate-y-1/2 whitespace-nowrap z-30 pointer-events-auto"
+              className="absolute top-1/2 md:right-[100%] right-auto left-[-1.5rem] md:left-auto mr-0 md:mr-8 -translate-y-1/2 whitespace-nowrap z-30 pointer-events-auto vertical-mobile"
               style={{
                 opacity: linesVisible ? 1 : 0,
                 transition: linesVisible ? "opacity 1s ease 1s" : "opacity 0.3s ease",
               }}
             >
               <div
-                className="font-black font-sans leading-none shadow-xl rounded-full bg-black/60 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/10"
+                className="font-black font-sans leading-none shadow-xl rounded-full bg-black/60 backdrop-blur-2xl px-1.5 py-3 md:py-2 md:px-4 border border-white/10"
                 style={{
-                  fontSize: "clamp(1rem, 4.5vw, 1.8rem)",
+                  fontSize: "clamp(0.9rem, 4vw, 1.8rem)",
                   letterSpacing: "-0.05em",
                   color: "var(--foreground)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                {SPECS[0].value}
-                <span style={{ fontSize: "0.45em", opacity: 0.6, paddingLeft: "4px" }}>{SPECS[0].unit}</span>
+                <div className="flex md:flex-row items-center md:items-baseline gap-0.5 md:gap-1">
+                  {SPECS[0].value}
+                  <span style={{ fontSize: "0.45em", opacity: 0.6 }}>{SPECS[0].unit}</span>
+                </div>
               </div>
             </div>
 
@@ -124,7 +129,7 @@ export function DetailsSection() {
           </div>
 
           {/* ── Width Glass Pill (horizontal) ── */}
-          <div className="absolute bottom-[-5%] md:bottom-[-15%] left-[5%] w-[90%] h-[5px] md:h-[6px] pointer-events-none flex items-center z-20">
+          <div className="absolute bottom-[-10%] md:bottom-[-15%] left-[5%] w-[90%] h-[5px] md:h-[6px] pointer-events-none flex items-center z-20">
             <div
               className="h-full relative overflow-hidden rounded-full backdrop-blur-3xl"
               style={{

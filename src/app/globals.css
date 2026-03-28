@@ -336,3 +336,16 @@ h1, h2, h3 {
 .hud-pulse-dot {
   animation: hud-pulse 3s ease-in-out infinite;
 }
+
+/* Responsive Utilities */
+.vertical-mobile {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+@media (min-width: 768px) {
+  .vertical-mobile {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+}
