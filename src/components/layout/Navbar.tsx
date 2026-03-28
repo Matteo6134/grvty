@@ -231,6 +231,9 @@ export function Navbar() {
                 @ma.tt._
               </a>
             </div>
+            <span className="mt-4 font-sans text-[8px] tracking-[0.2em] font-medium opacity-20 uppercase">
+              @grvty 2026 · all rights reserved
+            </span>
           </div>
         </div>
       )}
