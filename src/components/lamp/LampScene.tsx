@@ -100,7 +100,6 @@ export function LampScene({
         isolation: "isolate",
         transform: "translateZ(0)",
         WebkitMaskImage: "-webkit-radial-gradient(white, black)",
-        background: "var(--background)",
         opacity: hidden ? 0 : 1,
         transition: "opacity 0.7s ease, background-color 1.2s ease",
         pointerEvents: hidden ? "none" : "auto",

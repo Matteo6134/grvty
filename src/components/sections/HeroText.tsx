@@ -8,7 +8,6 @@ export function HeroText({ opacity }: HeroTextProps) {
   return (
     <div
       className="absolute inset-0 z-10 pointer-events-none select-none"
-      style={{ opacity }}
     >
       {/* Vertical side label */}
       <div
@@ -22,22 +21,22 @@ export function HeroText({ opacity }: HeroTextProps) {
       >
         <span
           className="text-[10px] tracking-[0.4em] uppercase font-medium"
-          style={{ color: "var(--foreground)", opacity: 0.35 }}
+          style={{ color: "var(--foreground)", opacity: 0.35 * opacity }}
         >
-          Discover the light
+          Discover the shape
         </span>
       </div>
 
-      {/* Large central text behind the 3D object */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Large central text overlapping the 3D object */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 overflow-hidden">
         <h1
-          className="font-sans font-black leading-none text-center"
+          className="font-sans font-black tracking-tighter lowercase mix-blend-difference text-center relative z-20"
           style={{
-            fontSize: "clamp(6rem, 26vw, 24rem)",
-            color: "var(--foreground)",
-            opacity: 0.12,
+            fontSize: "clamp(7rem, 25vw, 28rem)",
+            color: `rgba(178, 174, 176, ${opacity})`,
+            lineHeight: 0.85,
             letterSpacing: "-0.06em",
-            transform: "translateY(-5%)" // Shift slightly up to align well behind pyramid
+            transform: "translateY(-5%)",
           }}
         >
           grvty
@@ -50,7 +49,7 @@ export function HeroText({ opacity }: HeroTextProps) {
       >
         <span
           className="text-[10px] tracking-[0.35em] uppercase font-medium"
-          style={{ color: "var(--foreground)", opacity: 0.4 }}
+          style={{ color: "var(--foreground)", opacity: 0.4 * opacity }}
         >
           Objects with gravity
         </span>
@@ -59,10 +58,11 @@ export function HeroText({ opacity }: HeroTextProps) {
           style={{
             fontSize: "clamp(1.25rem, 2.5vw, 2rem)",
             color: "var(--foreground)",
+            opacity: opacity,
             letterSpacing: "-0.04em",
           }}
         >
-          bring grvty<br />to your space
+          bring gravity<br />to your space
         </h2>
       </div>
 
@@ -78,7 +78,7 @@ export function HeroText({ opacity }: HeroTextProps) {
           opacity: 0.4,
         }}
       >
-        Warm ambient illumination or focused brightness for work. Adjust the mood effortlessly.
+        Warm ambient illumination or focused brightness for work. Adjust the mood.
       </p>
     </div>
   );

@@ -72,7 +72,7 @@ export function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-6 md:top-8 left-0 right-0 z-50 flex items-center justify-start md:justify-between px-4 md:px-16 pointer-events-none gap-4"
+        className="fixed top-6 md:top-8 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-16 pointer-events-none"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
@@ -100,10 +100,9 @@ export function Navbar() {
 
         {/* Center — pill tabs (Desktop Only) */}
         <div
-          className="pointer-events-auto hidden md:flex items-center gap-0.5 px-1.5 py-1.5 rounded-full transition-all duration-300 shadow-xl"
+          className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:flex items-center gap-0.5 px-1.5 py-1.5 rounded-full transition-all duration-300 shadow-xl"
           style={{
             opacity: 1,
-            transform: "translateY(0) scale(1)",
             background: "rgba(255, 255, 255, 0.1)",
             backdropFilter: "blur(24px) saturate(180%)",
             border: "1px solid rgba(255, 255, 255, 0.15)",
@@ -154,7 +153,7 @@ export function Navbar() {
 
         {/* Right — theme + CTA */}
         <div
-          className="pointer-events-auto flex items-center gap-2.5 ml-auto md:ml-0"
+          className="pointer-events-auto flex items-center gap-2.5"
           style={{
             opacity: 1, // Always visible on mobile
             transition: "opacity 0.35s ease, transform 0.35s ease",
@@ -163,16 +162,27 @@ export function Navbar() {
           <a
             href="#cta"
             onClick={(e) => { e.preventDefault(); scrollTo("cta"); }}
-            className="ios-button flex items-center gap-2 pl-3 pr-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase"
+            className="ios-button flex items-center gap-2.5 px-4 md:pl-3 md:pr-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase"
             style={{ color: "var(--foreground)" }}
           >
             <span className="hidden md:inline drop-shadow-md">Order yours</span>
-            <span
-              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center"
               style={{ background: "rgba(255, 255, 255, 0.15)", border: "1px solid rgba(255, 255, 255, 0.2)" }}
             >
-              →
-            </span>
+              <svg 
+                width="10" 
+                height="10" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M12 2L2 22h20L12 2z" />
+              </svg>
+            </div>
           </a>
         </div>
       </nav>
