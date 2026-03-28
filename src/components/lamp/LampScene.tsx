@@ -41,7 +41,7 @@ function ResponsiveCamera() {
   
   // If it's a tall phone screen (aspect < 0.7), pull the camera closer to make it significantly bigger
   if (aspect < 0.7) {
-    targetZ *= 0.45; // Changed from 0.6 to 0.45 to make the lamp even bigger on mobile
+    targetZ *= 0.55; // Moderate zoom for mobile
   }
 
   // Y offset: keep centered on wide screens, shift up slightly on tall screens

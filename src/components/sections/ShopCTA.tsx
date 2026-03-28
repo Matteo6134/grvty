@@ -105,6 +105,43 @@ export function ShopCTA() {
           </div>
         </div>
       </div>
+
+      {/* Desktop Footer (Bottom Left) */}
+      <div 
+        className="absolute bottom-10 left-16 hidden md:flex flex-col gap-2 pointer-events-auto"
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: "opacity 1s ease 1s",
+        }}
+      >
+        <span className="font-sans text-[8px] tracking-[0.25em] font-bold opacity-20 uppercase">
+          Design & Direction
+        </span>
+        <div className="flex items-center gap-3">
+          <a 
+            href="https://instagram.com/grvty.std" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
+            style={{ color: "var(--foreground)" }}
+          >
+            @grvty.std
+          </a>
+          <span className="opacity-10 text-[10px]">•</span>
+          <a 
+            href="https://instagram.com/ma.tt._" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
+            style={{ color: "var(--foreground)" }}
+          >
+            @ma.tt._
+          </a>
+        </div>
+        <span className="mt-2 font-sans text-[8px] tracking-[0.2em] font-medium opacity-15 uppercase">
+          @grvty 2026 · all rights reserved
+        </span>
+      </div>
     </div>
   );
 }
