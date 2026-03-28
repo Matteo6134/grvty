@@ -16,6 +16,7 @@ interface LampSceneProps {
   readonly scrollProgress?: number;
   readonly phase?: string;
   readonly hidden?: boolean;
+  readonly introProgress?: number;
 }
 
 function LoadingFallback() {
@@ -64,6 +65,7 @@ export function LampScene({
   scrollProgress = 0,
   phase = "hero",
   hidden = false,
+  introProgress = 1,
 }: LampSceneProps) {
   const [hasError, setHasError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -186,6 +188,7 @@ export function LampScene({
             scrollProgress={scrollProgress}
             isRGBMode={isRGBMode}
             phase={phase}
+            introProgress={introProgress}
           />
 
           {/* Environment reflections — lighter on mobile */}

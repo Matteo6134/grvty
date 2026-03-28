@@ -27,6 +27,7 @@ export interface LampModelProps {
   scrollProgress?: number;
   isRGBMode?: boolean;
   phase?: string;
+  introProgress?: number;
 }
 
 function mapRange(val: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
@@ -51,7 +52,8 @@ export function LampModel({
   emissiveColor = "#ffdb58",
   scrollProgress = 0,
   isRGBMode = false,
-  phase = "hero"
+  phase = "hero",
+  introProgress = 1
 }: LampModelProps) {
   const glbPath = useMemo(() => getGlbPath(), []);
   const { scene } = useGLTF(glbPath, DRACO_PATH);
@@ -177,15 +179,30 @@ export function LampModel({
   const glowPulseRef = useRef(1);
 
   useFrame((_, delta) => {
-    if (prevColorRef.current !== emissiveColor) {
+    let finalIntensity = lightIntensity;
+    let finalColor = emissiveColor;
+    
+    // Intro Sequence overrides (0 to 1 over 2.8s)
+    if (introProgress < 1) {
+      finalColor = "#ff9500"; // warm yellow-orange tint
+      if (introProgress < 0.2) {
+        finalIntensity = mapRange(introProgress, 0.0, 0.2, 0, 1.5); // Fades up
+      } else if (introProgress < 0.6) {
+        finalIntensity = 1.5; // Max bright
+      } else {
+        finalIntensity = mapRange(introProgress, 0.6, 0.8, 1.5, 0); // Fades down
+      }
+    }
+
+    if (prevColorRef.current !== finalColor) {
       glowPulseRef.current = 0;
-      prevColorRef.current = emissiveColor;
+      prevColorRef.current = finalColor;
     }
     glowPulseRef.current = THREE.MathUtils.lerp(glowPulseRef.current, 1, 0.08);
 
-    const isOn = lightIntensity > 0.01;
-    const targetColor = new THREE.Color(emissiveColor);
-    const power = Math.min(lightIntensity * 1.5, 3) * glowPulseRef.current;
+    const isOn = finalIntensity > 0.01;
+    const targetColor = new THREE.Color(finalColor);
+    const power = Math.min(finalIntensity * 1.5, 3) * glowPulseRef.current;
 
     const justTurnedOn = isOn && !prevLightOnRef.current;
     const justTurnedOff = !isOn && prevLightOnRef.current;
@@ -275,6 +292,20 @@ export function LampModel({
       else if (phase === "rgb") targetRot = Math.PI / 6;
       else if (s < P6) targetRot = FRONT;
       else targetRot = mapRange(s, P6, 1, FRONT, TWO_PI);
+
+      // Intro overrides rotation
+      if (introProgress < 1) {
+        if (introProgress < 0.25) {
+          // move from ANGLE_L to FRONT
+          targetRot = mapRange(introProgress, 0.0, 0.25, ANGLE_L, FRONT);
+        } else if (introProgress < 0.6) {
+          // Hold FRONT
+          targetRot = FRONT;
+        } else {
+          // move from FRONT back to ANGLE_L
+          targetRot = mapRange(introProgress, 0.6, 1.0, FRONT, ANGLE_L);
+        }
+      }
 
       if (!initializedPosRef.current) {
         rotationGroupRef.current.rotation.y = targetRot;

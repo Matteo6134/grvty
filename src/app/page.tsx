@@ -10,6 +10,7 @@ import { PhotosSection } from "@/components/sections/PhotosSection";
 import { RGBShowcase } from "@/components/sections/RGBShowcase";
 import { ShopCTA } from "@/components/sections/ShopCTA";
 import { RGB_COLORS } from "@/lib/constants";
+import { useIntroAnimation } from "@/hooks/useIntroAnimation";
 
 const LampScene = dynamic(
   () => import("@/components/lamp/LampScene").then((mod) => ({ default: mod.LampScene })),
@@ -19,6 +20,7 @@ const LampScene = dynamic(
 export default function Home() {
   const [manualColor, setManualColor] = useState<string>(RGB_COLORS[0]);
   const scroll = useScrollTimeline();
+  const introProgress = useIntroAnimation();
 
   // The lamp automatically reacts to the room's lighting state
   const defaultBulbState = "#c9a84c";
@@ -28,7 +30,9 @@ export default function Home() {
       ? manualColor
       : defaultBulbState;
 
-  const heroAlpha = Math.max(0, 1 - Math.max(0, scroll.progress - 0.08) / 0.1);
+  // Text fades in smoothly at the end of the intro sequence
+  const introAlpha = Math.max(0, (introProgress - 0.8) / 0.2); // Fades in from 80% to 100% of intro
+  const heroAlpha = Math.min(introAlpha, Math.max(0, 1 - Math.max(0, scroll.progress - 0.08) / 0.1));
 
   return (
     <main className="relative">
@@ -41,10 +45,11 @@ export default function Home() {
         scrollProgress={scroll.progress}
         phase={scroll.phase}
         hidden={scroll.hidden}
+        introProgress={introProgress}
       />
 
-      <div className="card-frame" aria-hidden />
-      <div className="noise-overlay" />
+      <div className="card-frame" aria-hidden style={{ opacity: introAlpha, transition: "opacity 0.5s ease" }} />
+      <div className="noise-overlay" style={{ opacity: introAlpha * 0.04, transition: "opacity 0.5s ease" }} />
 
       <div className="relative">
         {/* Hero */}
