@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, PerspectiveCamera } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -28,25 +28,33 @@ function LoadingFallback() {
 
 function ResponsiveCamera() {
   const { size, camera } = useThree();
+  const initialized = useRef(false);
 
   // Baseline ottimizzata per vedere bene il fronte della lampada
   let targetZ = 35; // Default desktop size
   if (size.width < 1500) {
-    // Interpolation: mobile (58) → large-desktop (35). Further on mobile = smaller object
     const progress = Math.max(0, (size.width - 320) / (1500 - 320));
     targetZ = 58 - progress * (58 - 35);
   }
 
   let targetY = 0;
   if (size.width < 1024) {
-    targetY = -0.6; // Tablet offset
+    targetY = -0.6;
   }
   if (size.width < 768) {
-    targetY = -2; // Mobile offset — positions lamp in upper third
+    targetY = -2;
   }
 
-  // Movimento fluido della camera verso il target
-  camera.position.lerp(new THREE.Vector3(0, targetY, targetZ), 0.1);
+  const targetPos = new THREE.Vector3(0, targetY, targetZ);
+
+  // First frame: snap instantly. After that: smooth lerp for resize transitions.
+  if (!initialized.current) {
+    camera.position.copy(targetPos);
+    initialized.current = true;
+  } else {
+    camera.position.lerp(targetPos, 0.1);
+  }
+
   camera.lookAt(0, 0, 0);
   camera.updateProjectionMatrix();
 
