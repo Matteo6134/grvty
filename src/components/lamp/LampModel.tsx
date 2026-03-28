@@ -14,6 +14,7 @@ export interface LampModelProps {
   emissiveColor?: string;
   scrollProgress?: number;
   isRGBMode?: boolean;
+  phase?: string;
 }
 
 function mapRange(val: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
@@ -21,12 +22,24 @@ function mapRange(val: number, inMin: number, inMax: number, outMin: number, out
   return outMin + t * (outMax - outMin);
 }
 
+// Supporta sia i nomi originali che quelli rinominati (con o senza trattini bassi)
+const isBulbNode = (name: string) =>
+  name.includes("Area_(2)") || name.includes("Area (2)") || name.includes("E27-light-bulb");
+
+const isShellNode = (name: string) =>
+  name.includes("Area_(1)") || name.includes("Area (1)") || name.includes("gravity");
+
+const isLightNode = (name: string) =>
+  name.includes("Spherical");
+
 export function LampModel({
   positionY = 0,
   positionX = 0,
   lightIntensity = 0,
   emissiveColor = "#ffdb58",
   scrollProgress = 0,
+  isRGBMode = false,
+  phase = "hero"
 }: LampModelProps) {
   const { scene } = useGLTF(
     "/models/lamp.glb",
@@ -34,7 +47,6 @@ export function LampModel({
   );
   const { size } = useThree();
 
-  // Responsive scale: 0.07 for desktop, 0.055 for tablet, 0.045 for mobile
   const responsiveScale = useMemo(() => {
     if (size.width < 768) return 0.045;
     if (size.width < 1200) return 0.055;
@@ -43,27 +55,23 @@ export function LampModel({
 
   const groupRef = useRef<THREE.Group>(null);
   const rotationGroupRef = useRef<THREE.Group>(null);
-  const glbLightRef = useRef<THREE.PointLight | null>(null);
-  const bulbMeshesRef = useRef<THREE.Mesh[]>([]);
+  const pointLightRef = useRef<THREE.PointLight | null>(null);
+  const bulbMeshRef = useRef<THREE.Mesh | null>(null);
+  const shellMeshRef = useRef<THREE.Mesh | null>(null);
 
-  // Lampada parte SEMPRE spenta
   const warmupRef = useRef(0);
   const prevLightOnRef = useRef(false);
-
-  // Flag: centering già eseguito su questa istanza di scene
-  // Evita di ri-centrare se il componente re-renderizza (es. theme switch)
   const centeredRef = useRef(false);
 
   useLayoutEffect(() => {
-    bulbMeshesRef.current = [];
-    centeredRef.current = false; // reset al cambio scena
+    bulbMeshRef.current = null;
+    shellMeshRef.current = null;
+    pointLightRef.current = null;
+    centeredRef.current = false;
 
-    // Centering robusto: prova subito, poi ri-prova dopo 1 frame e dopo 100ms
-    // Copre sia cache hit (geometria già pronta) sia primo carico (geometria lazy)
     const applyCenter = () => {
       if (centeredRef.current) return;
       const box = new THREE.Box3().setFromObject(scene);
-      // Box vuota = geometria non ancora pronta, aspettiamo
       if (box.isEmpty()) return;
       const center = new THREE.Vector3();
       box.getCenter(center);
@@ -72,54 +80,77 @@ export function LampModel({
       centeredRef.current = true;
     };
 
-    // Tentativo 1: sincrono (funziona su hard refresh con cache)
     applyCenter();
-
-    // Tentativo 2: dopo 1 frame (funziona su primo carico senza cache)
     const raf1 = requestAnimationFrame(applyCenter);
-
-    // Tentativo 3: dopo 100ms (fallback per connessioni lente)
     const timer = setTimeout(applyCenter, 100);
 
     scene.traverse((child) => {
-      if (!(child instanceof THREE.Mesh || child instanceof THREE.PointLight)) return;
-      const name = child.name.toLowerCase();
+      const name = child.name;
 
-      if (name.includes("area") || name.includes("spherical") || name.includes("bulb")) {
-        if (child instanceof THREE.PointLight) {
-          glbLightRef.current = child;
-          child.castShadow = true;
-          child.decay = 2;
-          child.distance = 0;
+      // ── Luce point (Spherical) ──
+      if (child instanceof THREE.PointLight) {
+        if (isLightNode(name)) {
+          pointLightRef.current = child;
+          child.color.set(emissiveColor);
           child.intensity = 0;
-        } else if (child instanceof THREE.Mesh) {
-          bulbMeshesRef.current.push(child);
-          // Stato iniziale sempre OFF — niente flash bianco in light mode
-          child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color("#111111"),
-            emissive: new THREE.Color("#000000"),
-            emissiveIntensity: 0,
-            roughness: 0.1,
-            metalness: 0.1,
-            transparent: true,
-            opacity: 0.6,
-            toneMapped: false,
-          });
+          // MODIFICA: Migliora la dispersione nell'ambiente
+          child.distance = 25; // Raggio d'azione della luce (più grande = illumina di più la scena)
+          child.decay = 1.5;   // Falloff più dolce, la luce non muore subito
+        } else {
+          child.intensity = 0;
         }
-      } else if (name.includes("gravity") || name.includes("base")) {
-        if (child instanceof THREE.Mesh) {
-          child.material = new THREE.MeshPhysicalMaterial({
-            color: new THREE.Color("#fafae1"),
-            roughness: 0.6,
-            metalness: 0,
-            transmission: 0.8,
-            thickness: 2.0,
-            ior: 1.45,
-            attenuationDistance: 0.5,
-            attenuationColor: new THREE.Color("#fafae1"),
-            emissive: new THREE.Color("#fdfdd0"),
-            emissiveIntensity: 0,
-          });
+        return;
+      }
+
+      if (child instanceof THREE.Light) {
+        child.intensity = 0;
+        return;
+      }
+
+      if (!(child instanceof THREE.Mesh)) return;
+
+      // ── Bulbo di vetro ──
+      if (isBulbNode(name)) {
+        bulbMeshRef.current = child;
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: new THREE.Color("#ffffff"),
+          emissive: new THREE.Color("#000000"),
+          emissiveIntensity: 0,
+          // MODIFICA: Vetro "satinato", una via di mezzo, non completamente invisibile
+          roughness: 0.7,      // Dà una texture leggermente opaca
+          metalness: 0,
+          transmission: 0.6,   // 0.6 invece di 0.95: fa vedere la forma del bulbo
+          thickness: 2.0,
+          ior: 1.5,
+          transparent: true,
+          opacity: 0.4,        // Più presente visivamente
+          side: THREE.FrontSide,
+        });
+        return;
+      }
+
+      if (isShellNode(name)) {
+        shellMeshRef.current = child;
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: new THREE.Color("#ffffff"),
+          roughness: 0.80,
+          metalness: 0.0,
+          transmission: 0.75, // Leggermente aumentato per far "passare" meglio la luce
+          thickness: 1.0,
+          ior: 1.46,
+          attenuationDistance: 12.0,
+          attenuationColor: new THREE.Color("#fff5e0"),
+          emissive: new THREE.Color("#000000"),
+          emissiveIntensity: 0,
+        });
+        return;
+      }
+
+      if (child.material) {
+        const mat = child.material as THREE.MeshStandardMaterial;
+        if (mat.emissive) {
+          mat.emissive.set("#000000");
+          mat.emissiveIntensity = 0;
         }
       }
     });
@@ -127,7 +158,8 @@ export function LampModel({
     return () => {
       cancelAnimationFrame(raf1);
       clearTimeout(timer);
-      bulbMeshesRef.current = [];
+      bulbMeshRef.current = null;
+      shellMeshRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene]);
@@ -146,7 +178,6 @@ export function LampModel({
     const targetColor = new THREE.Color(emissiveColor);
     const power = Math.min(lightIntensity * 1.5, 3) * glowPulseRef.current;
 
-    // — Accensione realistica —
     const justTurnedOn = isOn && !prevLightOnRef.current;
     const justTurnedOff = !isOn && prevLightOnRef.current;
     prevLightOnRef.current = isOn;
@@ -160,74 +191,80 @@ export function LampModel({
       warmupRef.current = Math.max(warmupRef.current - delta * 2.0, 0);
     }
 
-    // EaseOut cubica
     const warmupEased = 1 - Math.pow(1 - warmupRef.current, 3);
 
-    // — Luce fisica —
-    if (glbLightRef.current) {
-      const targetIntensity = power * 50 * (isOn ? warmupEased : warmupRef.current);
-      glbLightRef.current.intensity = THREE.MathUtils.lerp(glbLightRef.current.intensity, targetIntensity, 0.15);
-      glbLightRef.current.color.lerp(targetColor, 0.1);
+    // Animazione Luce (Dispersione e Intensità bilanciati)
+    if (pointLightRef.current) {
+      // MODIFICA: Ridimensionato per non bruciare in Light Mode
+      const multiplier = 25; 
+      const targetIntensity = isOn
+        ? power * multiplier * warmupEased
+        : power * multiplier * warmupRef.current;
+
+      pointLightRef.current.intensity = THREE.MathUtils.lerp(
+        pointLightRef.current.intensity,
+        targetIntensity,
+        0.15
+      );
+      pointLightRef.current.color.lerp(targetColor, 0.1);
     }
 
-    // — Bulbo con warmup filamento —
-    bulbMeshesRef.current.forEach((mesh) => {
-      const mat = mesh.material as THREE.MeshStandardMaterial;
-      const filamentColor = new THREE.Color("#ff6a00");
-      const currentBulbColor = isOn
+    // Animazione Vetro Bulbo
+    if (bulbMeshRef.current) {
+      const mat = bulbMeshRef.current.material as THREE.MeshPhysicalMaterial;
+      const filamentColor = new THREE.Color("#ff9500");
+      const glowColor = isOn
         ? filamentColor.clone().lerp(targetColor, warmupEased)
         : new THREE.Color("#000000");
 
-      mat.emissive.lerp(currentBulbColor, 0.12);
-      mat.emissiveIntensity = power * 4 * (isOn ? warmupEased : warmupRef.current);
-      mat.opacity = THREE.MathUtils.lerp(mat.opacity, isOn ? THREE.MathUtils.lerp(0.6, 1.0, warmupEased) : 0.6, 0.1);
-      mat.color.lerp(isOn ? filamentColor.clone().lerp(targetColor, warmupEased) : new THREE.Color("#111111"), 0.1);
-    });
+      mat.emissive.lerp(glowColor, 0.15);
+      // Leggero bagliore del bulbo stesso
+      mat.emissiveIntensity = THREE.MathUtils.lerp(
+        mat.emissiveIntensity,
+        isOn ? power * 1.5 * warmupEased : 0,
+        0.12
+      );
+    }
 
-    // — Posizione —
+    // Animazione Plastica corpo (Glow diffuso)
+    if (shellMeshRef.current) {
+      const mat = shellMeshRef.current.material as THREE.MeshPhysicalMaterial;
+      mat.emissive.lerp(
+        isOn ? targetColor : new THREE.Color("#000000"),
+        0.04
+      );
+      // MODIFICA: Il corpo lampada "brilla" un po' di più per simulare diffusione
+      mat.emissiveIntensity = power * 0.15 * (isOn ? warmupEased : warmupRef.current);
+      mat.attenuationColor.lerp(
+        new THREE.Color(isOn ? emissiveColor : "#fff5e0"),
+        0.05
+      );
+      mat.color.lerp(new THREE.Color("#ffffff"), 0.05);
+      mat.roughness = THREE.MathUtils.lerp(mat.roughness, 0.80, 0.05);
+    }
+
     if (groupRef.current) {
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, positionY, 0.1);
       groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, positionX * 8, 0.08);
     }
 
-    // — Rotazione 7 fasi —
     if (rotationGroupRef.current) {
-      const OFFSET = 0;
-      const FRONT = 0 + OFFSET;
-      const ANGLE_L = -Math.PI / 5 + OFFSET;
-      const ANGLE_R = Math.PI / 5 + OFFSET;
+      const FRONT = 0;
+      const ANGLE_L = -Math.PI / 5;
       const TWO_PI = Math.PI * 2;
-
       const s = scrollProgress;
-      const P1 = 1 / 7;
-      const P2 = 2 / 7;
-      const P3 = 3 / 7;
-      const P4 = 4 / 7;
-      const P5 = 5 / 7;
-      const P6 = 6 / 7;
+      const P1 = 0.15, P2 = 0.35, P6 = 0.88;
 
       let targetRot: number;
-
-      if (s < P1) {
-        targetRot = ANGLE_L;
-      } else if (s < P2) {
-        targetRot = mapRange(s, P1, P2, ANGLE_L, FRONT);
-      } else if (s < P3) {
-        targetRot = FRONT;
-      } else if (s < P4) {
-        targetRot = FRONT;
-      } else if (s < P5) {
-        targetRot = FRONT;
-      } else if (s < P6) {
-        targetRot = FRONT;
-      } else {
-        targetRot = FRONT;
-      }
+      if (s < P1) targetRot = ANGLE_L;
+      else if (s < P2) targetRot = mapRange(s, P1, P2, ANGLE_L, FRONT);
+      else if (s < P6) targetRot = FRONT;
+      else targetRot = mapRange(s, P6, 1, FRONT, TWO_PI);
 
       rotationGroupRef.current.rotation.y = THREE.MathUtils.lerp(
         rotationGroupRef.current.rotation.y,
         targetRot,
-        0.05
+        0.08
       );
     }
   });

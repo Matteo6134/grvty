@@ -9,7 +9,8 @@ interface ScrollState {
   readonly lightIntensity: number;
   readonly gradientOpacity: number;
   readonly rgbProgress: number;
-  readonly phase: "hero" | "levitation" | "details" | "photos" | "rgb" | "cta";
+  readonly phase: "hero" | "levitation" | "details" | "photos" | "rgb_intro" | "rgb" | "cta";
+  readonly hidden: boolean;
 }
 
 export function useScrollTimeline(): ScrollState {
@@ -21,6 +22,7 @@ export function useScrollTimeline(): ScrollState {
     gradientOpacity: 0,
     rgbProgress: 0,
     phase: "hero",
+    hidden: false,
   });
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export function useScrollTimeline(): ScrollState {
       let lightIntensity = 0;
       let gradientOpacity = 0;
       let rgbProgress = 0;
+      let hidden = false;
       let phase: ScrollState["phase"] = "hero";
 
       if (progress < 0.15) {
@@ -51,34 +54,48 @@ export function useScrollTimeline(): ScrollState {
       } else if (progress < 0.55) {
         phase = "details";
         lampY = 0.2;
-        lampX = 0;
+        lampX = 0; // Re-centered to perfectly align with 2D bounds
         lightIntensity = 1;
         gradientOpacity = 1;
-      } else if (progress < 0.70) {
+      } else if (progress < 0.65) {
         phase = "photos";
         lampY = 0.2;
         lampX = 0;
-        lightIntensity = 1;
-        gradientOpacity = 1; // Keep the same lighting as details
+        lightIntensity = 0;
+        gradientOpacity = 0;
+        hidden = true;
         rgbProgress = 0;
-      } else if (progress < 0.85) {
+      } else if (progress < 0.75) {
+        phase = "rgb_intro";
+        lampY = 0.2;
+        lampX = 0; // Centered
+        gradientOpacity = 0;
+        lightIntensity = 1;
+        hidden = false;
+        rgbProgress = 0;
+      } else if (progress < 0.88) {
         phase = "rgb";
         lampY = 0.2;
-        lampX = 0;
+        lampX = -0.65; // Object moved to the left side smoothly
         gradientOpacity = 0;
         lightIntensity = 1;
-        rgbProgress = (progress - 0.70) / 0.15;
+        hidden = false;
+        rgbProgress = (progress - 0.75) / 0.13;
       } else {
         phase = "cta";
-        const t = (progress - 0.85) / 0.15;
-        lampX = t * -1.5;
-        lampY = 0.2 + t * 0.05;
-        lightIntensity = 0.65;
+        const t = (progress - 0.88) / 0.12;
+        // Continue moving further left seamlessly
+        lampX = -0.65 + t * -0.95;
+        // Subtle vertical float
+        lampY = 0.2 + t * 0.04;
+        // Maintain high light intensity for the final section
+        lightIntensity = 1.0; 
         gradientOpacity = 0;
+        hidden = false;
         rgbProgress = 1;
       }
 
-      setState({ progress, lampY, lampX, lightIntensity, gradientOpacity, rgbProgress, phase });
+      setState({ progress, lampY, lampX, lightIntensity, gradientOpacity, rgbProgress, phase, hidden });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });

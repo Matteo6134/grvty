@@ -11,31 +11,22 @@ import { RGBShowcase } from "@/components/sections/RGBShowcase";
 import { ShopCTA } from "@/components/sections/ShopCTA";
 import { RGB_COLORS } from "@/lib/constants";
 
-import { useTheme } from "@/hooks/useTheme";
-
 const LampScene = dynamic(
   () => import("@/components/lamp/LampScene").then((mod) => ({ default: mod.LampScene })),
   { ssr: false }
 );
 
 export default function Home() {
-  const { isDark } = useTheme();
-  const [manualColor, setManualColor] = useState<string | null>(null);
+  const [manualColor, setManualColor] = useState<string>(RGB_COLORS[0]);
   const scroll = useScrollTimeline();
 
-  const colorIndex = Math.min(
-    Math.floor(scroll.rgbProgress * RGB_COLORS.length),
-    RGB_COLORS.length - 1
-  );
-
-  // The lamp automatically reacts to the room's lighting state (UI Theme)
-  const defaultBulbState = isDark ? "#c9a84c" : "#e0dcd3";
+  // The lamp automatically reacts to the room's lighting state
+  const defaultBulbState = "#c9a84c";
 
   const currentEmissiveColor =
-    manualColor ||
-    (scroll.phase === "rgb" || scroll.phase === "cta"
-      ? RGB_COLORS[colorIndex]
-      : defaultBulbState);
+    scroll.phase === "rgb_intro" || scroll.phase === "rgb" || scroll.phase === "cta"
+      ? manualColor
+      : defaultBulbState;
 
   const heroAlpha = Math.max(0, 1 - Math.max(0, scroll.progress - 0.08) / 0.1);
 
@@ -46,16 +37,16 @@ export default function Home() {
         lampPositionX={scroll.lampX}
         lightIntensity={scroll.lightIntensity}
         emissiveColor={currentEmissiveColor}
-        gradientOpacity={scroll.gradientOpacity}
-        isRGBMode={scroll.phase === "rgb"}
+        isRGBMode={scroll.phase === "rgb_intro" || scroll.phase === "rgb"}
         scrollProgress={scroll.progress}
-        hidden={false}
+        phase={scroll.phase}
+        hidden={scroll.hidden}
       />
 
       <div className="card-frame" aria-hidden />
       <div className="noise-overlay" />
 
-      <div className="relative z-10">
+      <div className="relative">
         {/* Hero */}
         <section
           id="hero"
@@ -83,10 +74,19 @@ export default function Home() {
           <PhotosSection />
         </section>
 
-        {/* RGB Showcase */}
+        {/* RGB Intro */}
+        <section id="rgb-intro" className="min-h-screen snap-center flex items-center justify-center overflow-hidden pointer-events-none">
+          <h2 
+            className="font-black tracking-tighter lowercase text-white mix-blend-difference leading-[0.85] text-center relative z-20"
+            style={{ fontSize: "clamp(5rem, 15vw, 15rem)" }}
+          >
+            ambient<br />colors.
+          </h2>
+        </section>
+
+        {/* RGB Showcase / Action */}
         <section id="rgb" className="min-h-screen snap-center">
           <RGBShowcase
-            progress={scroll.rgbProgress}
             onManualColor={(color) => setManualColor(color)}
           />
         </section>

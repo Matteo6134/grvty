@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useTheme } from "@/hooks/useTheme";
 
 const NAV_LINKS = [
   { label: "Discover", id: "details" },
@@ -10,7 +9,6 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
-  const { isDark, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [activeId, setActiveId] = useState("hero");
@@ -169,26 +167,6 @@ export function Navbar() {
           transition: "opacity 0.35s ease, transform 0.35s ease",
         }}
       >
-        <button
-          onClick={toggleTheme}
-          className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
-          style={{
-            background: "rgba(255,255,255,0.5)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.7)",
-          }}
-          aria-label={isDark ? "Switch to light" : "Switch to dark"}
-        >
-          <div
-            className="w-3 h-3 rounded-full transition-all duration-500"
-            style={{
-              background: isDark
-                ? "linear-gradient(135deg, #f0ebe5 50%, transparent 50%)"
-                : "linear-gradient(135deg, #1a1a1a 50%, transparent 50%)",
-            }}
-          />
-        </button>
-
         <a
           href="#cta"
           onClick={(e) => { e.preventDefault(); scrollTo("cta"); }}
@@ -245,7 +223,6 @@ export function Navbar() {
           
           <div className="mt-auto pt-20 flex flex-col items-center gap-6">
              <a href="https://instagram.com/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans font-bold text-[10px] tracking-widest uppercase" style={{ color: "var(--foreground)", opacity: 0.5 }}>Instagram</a>
-             <button onClick={toggleTheme} className="font-sans font-bold text-[10px] tracking-widest uppercase" style={{ color: "var(--foreground)", opacity: 0.5 }}>Toggle Theme</button>
           </div>
         </div>
       )}

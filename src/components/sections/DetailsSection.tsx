@@ -26,6 +26,12 @@ const SPECS = [
   { label: "Voltage", value: "110–240", unit: "V" },
 ];
 
+const RIGHT_SPECS = [
+  { label: "Material", value: "ASA", unit: "White" },
+  { label: "Manufacture", value: "3D", unit: "Printed" },
+  { label: "Origin", value: "Italy", unit: "" },
+];
+
 export function DetailsSection() {
   const claim = useFadeIn(80);
   const statsLeft = useFadeIn(160);
@@ -61,7 +67,7 @@ export function DetailsSection() {
       <div className="absolute inset-0 md:relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[40vh] md:min-h-0 py-8 md:py-0">
         <div
           ref={linesRef}
-          className="relative pointer-events-none flex items-center justify-center mt-[-10vh] md:mt-0"
+          className="relative pointer-events-none flex items-center justify-center mt-[-10vh] md:mt-0 transition-transform duration-1000 ease-out"
           style={{ 
             width: "clamp(200px, 48vw, 420px)",  // Scaled down to guarantee no cutoffs
             height: "clamp(200px, 48vw, 420px)",
@@ -97,7 +103,7 @@ export function DetailsSection() {
               }}
             >
               <div
-                className="font-black font-sans leading-none shadow-xl rounded-full bg-[var(--background)]/80 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/5"
+                className="font-black font-sans leading-none shadow-xl rounded-full bg-black/60 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/10"
                 style={{
                   fontSize: "clamp(1rem, 4.5vw, 1.8rem)",
                   letterSpacing: "-0.05em",
@@ -109,11 +115,10 @@ export function DetailsSection() {
               </div>
             </div>
 
-            {/* Start/End Dots */}
-            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0s" }}>
+            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-black/5 border-black/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0s" }}>
               <div className="w-[4px] h-[4px] rounded-full bg-[var(--accent)]" />
             </div>
-            <div className="absolute -left-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ bottom: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "bottom 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, opacity 0.4s 0.8s", transform: "translateY(50%)" }}>
+            <div className="absolute -left-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-black/5 border-black/20" style={{ bottom: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "bottom 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, opacity 0.4s 0.8s", transform: "translateY(50%)" }}>
               <div className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]" />
             </div>
           </div>
@@ -147,7 +152,7 @@ export function DetailsSection() {
               }}
             >
               <div
-                className="font-black font-sans leading-none shadow-xl rounded-full bg-[var(--background)]/80 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/5"
+                className="font-black font-sans leading-none shadow-xl rounded-full bg-black/60 backdrop-blur-2xl px-3 py-1.5 md:py-2 md:px-4 border border-white/10"
                 style={{
                   fontSize: "clamp(1rem, 4.5vw, 1.8rem)",
                   letterSpacing: "-0.05em",
@@ -160,10 +165,10 @@ export function DetailsSection() {
             </div>
 
             {/* Start/End Dots */}
-            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0.3s" }}>
+            <div className="absolute -left-[4px] -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-black/5 border-black/20" style={{ opacity: linesVisible ? 1 : 0, transition: "opacity 0.4s 0.3s" }}>
               <div className="w-[4px] h-[4px] rounded-full bg-[var(--accent)]" />
             </div>
-            <div className="absolute -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-white/5 border-white/20" style={{ left: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "left 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s, opacity 0.4s 1.2s", transform: "translateX(-50%)" }}>
+            <div className="absolute -bottom-[4px] w-[12px] h-[12px] rounded-full backdrop-blur-3xl border flex items-center justify-center bg-black/5 border-black/20" style={{ left: linesVisible ? "100%" : "0%", opacity: linesVisible ? 1 : 0, transition: "left 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s, opacity 0.4s 1.2s", transform: "translateX(-50%)" }}>
               <div className="w-[6px] h-[6px] rounded-full bg-[var(--accent)] shadow-[0_0_15px_var(--accent)]" />
             </div>
           </div>
@@ -171,10 +176,12 @@ export function DetailsSection() {
       </div>
 
       {/* ── BOTTOM CONTENT AREA (Specs ONLY) ── */}
-      <div className="relative w-full flex flex-col justify-end pointer-events-auto z-10 mt-auto md:absolute md:bottom-24 md:left-16 md:right-16 md:flex-row md:items-end md:justify-between">
+      <div className="relative w-full md:w-auto flex flex-col justify-end pointer-events-auto z-10 mt-auto md:absolute md:bottom-24 md:left-16 md:right-16 md:flex-row md:items-end md:justify-between">
+        
+        {/* Left Side Info */}
         <div
           ref={statsRight.ref}
-          className="w-full flex flex-row flex-wrap md:flex-col justify-center md:justify-start items-center md:items-start gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0"
+          className="w-full md:w-auto flex flex-row flex-wrap md:flex-col justify-center md:justify-start items-center md:items-start gap-x-4 md:gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0"
           style={{
             opacity: statsRight.visible ? 1 : 0,
             transform: statsRight.visible ? "none" : "translateY(24px)",
@@ -182,7 +189,7 @@ export function DetailsSection() {
           }}
         >
           {SPECS.slice(2).map((s) => (
-            <div key={s.label} className="text-center md:text-left flex flex-col items-center md:items-start min-w-[28%] md:min-w-0">
+            <div key={s.label} className="text-center md:text-left flex flex-col items-center md:items-start min-w-[20%] md:min-w-0">
               <div
                 className="font-black font-sans leading-none whitespace-nowrap"
                 style={{
@@ -196,6 +203,36 @@ export function DetailsSection() {
                 <span style={{ fontSize: "0.42em", opacity: 0.4, paddingLeft: "1.5px" }}>{s.unit}</span>
               </div>
               <span className="hud-label mt-1 text-center md:text-left text-[9px] md:text-[10px]" style={{ fontFamily: "var(--font-sora), sans-serif", letterSpacing: "0.15em", color: "var(--foreground)", opacity: 0.5 }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Right Side Info (Engineering / Manufacturing) */}
+        <div 
+          className="w-full md:w-auto flex flex-row flex-wrap md:flex-col justify-center md:justify-end items-center md:items-end gap-x-4 md:gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0 md:pb-8"
+          style={{
+            opacity: statsRight.visible ? 1 : 0,
+            transform: statsRight.visible ? "none" : "translateY(24px)",
+            transition: "opacity 1s ease 0.4s, transform 1s ease 0.4s",
+          }}
+        >
+          {RIGHT_SPECS.map((s) => (
+            <div key={s.label} className="text-center md:text-right flex flex-col items-center md:items-end min-w-[20%] md:min-w-0">
+              <div
+                className="font-black font-sans leading-none whitespace-nowrap"
+                style={{
+                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  letterSpacing: "-0.04em",
+                  color: "var(--foreground)",
+                  fontFamily: "var(--font-sora), system-ui, sans-serif"
+                }}
+              >
+                {s.value}
+                <span style={{ fontSize: "0.42em", opacity: 0.4, paddingLeft: "1.5px" }}>{s.unit}</span>
+              </div>
+              <span className="hud-label mt-1 text-center md:text-right text-[9px] md:text-[10px]" style={{ fontFamily: "var(--font-sora), sans-serif", letterSpacing: "0.15em", color: "var(--foreground)", opacity: 0.5 }}>
                 {s.label}
               </span>
             </div>
