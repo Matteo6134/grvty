@@ -39,9 +39,9 @@ function ResponsiveCamera() {
   // We use a smaller exponent or explicit boost to make it larger on mobile.
   let targetZ = 55 / Math.pow(aspect, 0.55);
   
-  // If it's a tall phone screen (aspect < 0.7), pull the camera closer to make it bigger
+  // If it's a tall phone screen (aspect < 0.7), pull the camera closer to make it significantly bigger
   if (aspect < 0.7) {
-    targetZ *= 0.75; 
+    targetZ *= 0.6; // Changed from 0.75 to 0.6 to make the lamp massive on mobile
   }
 
   // Y offset: keep centered on wide screens, shift up slightly on tall screens
@@ -153,9 +153,9 @@ export function LampScene({
 
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
-          dpr={isMobile ? [1, 1.5] : [1, 2]}
+          dpr={isMobile ? [1, 2.5] : [1, 2]} // Allowed higher resolution limit to fix pixelation on iPhones
           gl={{
-            antialias: false, // Disabilitato per massime prestazioni con Bloom
+            antialias: true, // Enabled for smooth edges on high-DPI displays
             alpha: true,
             powerPreference: "high-performance",
             stencil: false,
