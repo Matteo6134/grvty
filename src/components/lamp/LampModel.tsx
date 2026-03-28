@@ -72,6 +72,7 @@ export function LampModel({
   const warmupRef = useRef(0);
   const prevLightOnRef = useRef(false);
   const centeredRef = useRef(false);
+  const initializedPosRef = useRef(false);
 
   useLayoutEffect(() => {
     bulbMeshRef.current = null;
@@ -104,7 +105,7 @@ export function LampModel({
           child.color.set(emissiveColor);
           child.intensity = 0;
           // MODIFICA: Migliora la dispersione nell'ambiente
-          child.distance = 25; // Raggio d'azione della luce (più grande = illumina di più la scena)
+          child.distance = 35; // Raggio d'azione della luce (più grande = illumina di più la scena)
           child.decay = 1.5;   // Falloff più dolce, la luce non muore subito
         } else {
           child.intensity = 0;
@@ -252,8 +253,13 @@ export function LampModel({
     }
 
     if (groupRef.current) {
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, positionY, 0.1);
-      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, positionX * 8, 0.08);
+      if (!initializedPosRef.current) {
+        groupRef.current.position.y = positionY;
+        groupRef.current.position.x = positionX * 8;
+      } else {
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, positionY, 0.1);
+        groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, positionX * 8, 0.08);
+      }
     }
 
     if (rotationGroupRef.current) {
@@ -266,15 +272,20 @@ export function LampModel({
       let targetRot: number;
       if (s < P1) targetRot = ANGLE_L;
       else if (s < P2) targetRot = mapRange(s, P1, P2, ANGLE_L, FRONT);
-      else if (phase === "rgb") targetRot = Math.PI / 6; // Turns Left!
+      else if (phase === "rgb") targetRot = Math.PI / 6;
       else if (s < P6) targetRot = FRONT;
       else targetRot = mapRange(s, P6, 1, FRONT, TWO_PI);
 
-      rotationGroupRef.current.rotation.y = THREE.MathUtils.lerp(
-        rotationGroupRef.current.rotation.y,
-        targetRot,
-        0.08
-      );
+      if (!initializedPosRef.current) {
+        rotationGroupRef.current.rotation.y = targetRot;
+        initializedPosRef.current = true; // all initial setups done
+      } else {
+        rotationGroupRef.current.rotation.y = THREE.MathUtils.lerp(
+          rotationGroupRef.current.rotation.y,
+          targetRot,
+          0.08
+        );
+      }
     }
   });
 

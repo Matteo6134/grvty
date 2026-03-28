@@ -30,19 +30,16 @@ function ResponsiveCamera() {
   const { size, camera } = useThree();
   const initialized = useRef(false);
 
-  let targetZ = 50; // Desktop
-  if (size.width < 1500) {
-    const progress = Math.max(0, (size.width - 320) / (1500 - 320));
-    targetZ = 72 - progress * (72 - 50);
-  }
+  // Aspect ratio drives everything — works for any screen shape
+  const aspect = size.width / size.height; // wide desktop ~1.78, phone portrait ~0.46
 
-  let targetY = 0;
-  if (size.width < 1024) {
-    targetY = -0.6;
-  }
-  if (size.width < 768) {
-    targetY = -2;
-  }
+  // MODEL_SIZE controls how big the model looks (lower = bigger model on screen)
+  // The formula: tall/narrow screens (low aspect) need more Z to avoid overfill
+  const MODEL_SIZE = 60;
+  const targetZ = MODEL_SIZE / Math.pow(aspect, 0.7);
+
+  // Y offset: keep centered on wide screens, shift up slightly on tall screens
+  const targetY = aspect < 0.8 ? -1.5 : aspect < 1.2 ? -0.6 : 0;
 
   const targetPos = new THREE.Vector3(0, targetY, targetZ);
 
@@ -104,7 +101,7 @@ export function LampScene({
     >
       {/* ── Dynamic Flowing Radial Glows ── */}
       {/* 1. Details Section (Warm Gold) */}
-      <div 
+      <div
         className="absolute top-1/2 left-1/2 pointer-events-none transition-all duration-[1500ms] ease-out z-[-1]"
         style={{
           width: "200%",
@@ -114,7 +111,7 @@ export function LampScene({
           mixBlendMode: "screen",
         }}
       >
-        <div 
+        <div
           className="w-full h-full"
           style={{
             background: "radial-gradient(ellipse at 40% 45%, rgba(201, 168, 76, 0.12) 0%, rgba(201, 168, 76, 0.03) 30%, rgba(201, 168, 76, 0) 50%)",
@@ -126,7 +123,7 @@ export function LampScene({
       </div>
 
       {/* 2. RGB Section (Dynamic Hex Match) */}
-      <div 
+      <div
         className="absolute top-1/2 left-1/2 pointer-events-none transition-all duration-700 ease-out z-[-1]"
         style={{
           width: "200%",
@@ -136,7 +133,7 @@ export function LampScene({
           mixBlendMode: "screen",
         }}
       >
-        <div 
+        <div
           className="w-full h-full"
           style={{
             background: `radial-gradient(ellipse at 50% 50%, ${emissiveColor}22 0%, ${emissiveColor}07 35%, ${emissiveColor}00 55%)`,
@@ -172,13 +169,13 @@ export function LampScene({
           <ambientLight intensity={0.4} />
 
           {/* Photo Fill Lights — Highlights the product edges */}
-          <directionalLight 
-            position={[10, 10, 8]} 
-            intensity={1.2} 
+          <directionalLight
+            position={[10, 10, 8]}
+            intensity={1.2}
           />
-          <directionalLight 
-            position={[-10, 5, 5]} 
-            intensity={0.5} 
+          <directionalLight
+            position={[-10, 5, 5]}
+            intensity={0.5}
           />
 
           {/* Il Modello 3D della Lampada */}
