@@ -5,7 +5,19 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-useGLTF.preload("/models/lamp.glb", "https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
+const DRACO_PATH = "https://www.gstatic.com/draco/versioned/decoders/1.5.7/";
+const GLB_DESKTOP = "/models/lamp.glb";
+const GLB_MOBILE = "/models/lamp_draco.glb";
+
+// Preload both so the correct one is cached
+useGLTF.preload(GLB_DESKTOP, DRACO_PATH);
+useGLTF.preload(GLB_MOBILE, DRACO_PATH);
+
+// Determine which GLB to load (runs once at module init, before hooks)
+const getGlbPath = () => {
+  if (typeof window === "undefined") return GLB_DESKTOP;
+  return window.innerWidth < 768 ? GLB_MOBILE : GLB_DESKTOP;
+};
 
 export interface LampModelProps {
   positionY?: number;
@@ -41,10 +53,8 @@ export function LampModel({
   isRGBMode = false,
   phase = "hero"
 }: LampModelProps) {
-  const { scene } = useGLTF(
-    "/models/lamp.glb",
-    "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
-  );
+  const glbPath = useMemo(() => getGlbPath(), []);
+  const { scene } = useGLTF(glbPath, DRACO_PATH);
   const { size } = useThree();
 
   const responsiveScale = useMemo(() => {

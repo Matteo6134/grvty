@@ -30,10 +30,10 @@ function ResponsiveCamera() {
   const { size, camera } = useThree();
   const initialized = useRef(false);
 
-  let targetZ = 70; // Desktop — proper distance to see the full model
+  let targetZ = 50; // Desktop
   if (size.width < 1500) {
     const progress = Math.max(0, (size.width - 320) / (1500 - 320));
-    targetZ = 100 - progress * (100 - 70);
+    targetZ = 72 - progress * (72 - 50);
   }
 
   let targetY = 0;
