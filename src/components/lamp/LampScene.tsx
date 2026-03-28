@@ -35,11 +35,17 @@ function ResponsiveCamera() {
   const aspect = size.width / size.height;
   
   // The formula controls the size
-  const MODEL_SIZE = 60;
-  const targetZ = MODEL_SIZE / Math.pow(aspect, 0.7);
+  // Desktop (~1.78) calculation ends up around 40-42.
+  // We use a smaller exponent or explicit boost to make it larger on mobile.
+  let targetZ = 55 / Math.pow(aspect, 0.55);
+  
+  // If it's a tall phone screen (aspect < 0.7), pull the camera closer to make it bigger
+  if (aspect < 0.7) {
+    targetZ *= 0.75; 
+  }
 
   // Y offset: keep centered on wide screens, shift up slightly on tall screens
-  const targetY = aspect < 0.8 ? -1.5 : aspect < 1.2 ? -0.6 : 0;
+  const targetY = aspect < 0.7 ? -1.5 : aspect < 1.2 ? -0.6 : 0;
 
   useFrame(() => {
     const targetPos = new THREE.Vector3(0, targetY, targetZ);

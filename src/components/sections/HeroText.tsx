@@ -28,29 +28,19 @@ export function HeroText({ opacity }: HeroTextProps) {
         </span>
       </div>
 
-      {/* Large split text flanking the 3D object */}
-      <div className="absolute inset-0 flex items-center justify-between px-6 md:px-20 lg:px-28">
+      {/* Large central text behind the 3D object */}
+      <div className="absolute inset-0 flex items-center justify-center">
         <h1
-          className="font-sans font-black leading-none"
+          className="font-sans font-black leading-none text-center"
           style={{
-            fontSize: "clamp(3.5rem, 9vw, 8.5rem)",
+            fontSize: "clamp(6rem, 26vw, 24rem)",
             color: "var(--foreground)",
-            opacity: 0.13,
-            letterSpacing: "-0.04em",
+            opacity: 0.12,
+            letterSpacing: "-0.06em",
+            transform: "translateY(-5%)" // Shift slightly up to align well behind pyramid
           }}
         >
-          raw
-        </h1>
-        <h1
-          className="font-sans font-black leading-none text-right"
-          style={{
-            fontSize: "clamp(3.5rem, 9vw, 8.5rem)",
-            color: "var(--foreground)",
-            opacity: 0.13,
-            letterSpacing: "-0.04em",
-          }}
-        >
-          matter
+          grvty
         </h1>
       </div>
 
