@@ -32,10 +32,9 @@ function ResponsiveCamera() {
   // Baseline ottimizzata per vedere bene il fronte della lampada
   let targetZ = 35; // Default desktop size
   if (size.width < 1500) {
-    // Interpolazione fluida tra mobile (65) e large-desktop (35)
-    // Ensures the 3D model continuously maps to the viewport geometry perfectly
+    // Interpolation: mobile (50) → large-desktop (35). Closer on mobile = bigger object
     const progress = Math.max(0, (size.width - 320) / (1500 - 320));
-    targetZ = 65 - progress * (65 - 35);
+    targetZ = 50 - progress * (50 - 35);
   }
 
   let targetY = 0;
@@ -43,7 +42,7 @@ function ResponsiveCamera() {
     targetY = -0.6; // Tablet offset
   }
   if (size.width < 768) {
-    targetY = -1.2; // Mobile offset
+    targetY = -3; // Mobile offset — pushes lamp higher on screen
   }
 
   // Movimento fluido della camera verso il target
@@ -78,11 +77,8 @@ export function LampScene({
 
   return (
     <div
-      className="fixed z-0"
+      className="fixed z-0 inset-0 md:inset-[1.25rem_2rem] md:rounded-[2rem] overflow-hidden"
       style={{
-        inset: "1.25rem 2rem",
-        borderRadius: "2rem",
-        overflow: "hidden",
         isolation: "isolate",
         transform: "translateZ(0)",
         WebkitMaskImage: "-webkit-radial-gradient(white, black)",
@@ -92,19 +88,50 @@ export function LampScene({
         pointerEvents: hidden ? "none" : "auto",
       }}
     >
-      {/* ── Dynamic Flowing Radial Glow (Details Section) ── */}
+      {/* ── Dynamic Flowing Radial Glows ── */}
+      {/* 1. Details Section (Warm Gold) */}
       <div 
         className="absolute top-1/2 left-1/2 pointer-events-none transition-all duration-[1500ms] ease-out z-[-1]"
         style={{
           width: "200%",
           height: "200%",
-          background: "radial-gradient(ellipse at 40% 45%, rgba(201, 168, 76, 0.25) 0%, rgba(201, 168, 76, 0.05) 30%, rgba(201, 168, 76, 0) 50%)",
           opacity: phase === "details" ? 1 : 0,
           transform: `translate(-50%, -50%) scale(${phase === "details" ? 1 : 0.8})`,
           mixBlendMode: "screen",
-          animation: "spin 20s linear infinite",
         }}
-      />
+      >
+        <div 
+          className="w-full h-full"
+          style={{
+            background: "radial-gradient(ellipse at 40% 45%, rgba(201, 168, 76, 0.12) 0%, rgba(201, 168, 76, 0.03) 30%, rgba(201, 168, 76, 0) 50%)",
+            animation: "spin 20s linear infinite",
+          }}
+        />
+        {/* Grain overlay */}
+        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
+      </div>
+
+      {/* 2. RGB Section (Dynamic Hex Match) */}
+      <div 
+        className="absolute top-1/2 left-1/2 pointer-events-none transition-all duration-700 ease-out z-[-1]"
+        style={{
+          width: "200%",
+          height: "200%",
+          opacity: phase === "rgb" || phase === "rgb_intro" ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${phase === "rgb" || phase === "rgb_intro" ? 1 : 0.8})`,
+          mixBlendMode: "screen",
+        }}
+      >
+        <div 
+          className="w-full h-full"
+          style={{
+            background: `radial-gradient(ellipse at 50% 50%, ${emissiveColor}22 0%, ${emissiveColor}07 35%, ${emissiveColor}00 55%)`,
+            animation: "spin 20s linear reverse infinite",
+          }}
+        />
+        {/* Grain overlay */}
+        <div className="absolute inset-0 opacity-[0.10]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
+      </div>
 
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
@@ -157,10 +184,10 @@ export function LampScene({
           {/* Post-Processing: Bloom (Effetto Glow) */}
           <EffectComposer>
             <Bloom
-              luminanceThreshold={1.0} // Solo gli oggetti con emissive > 1 brillano
-              mipmapBlur              // Glow morbido e naturale
-              intensity={0.55}         // Softer effect as requested
-              radius={0.3}             // Raggio di diffusione della luce
+              luminanceThreshold={1.0}
+              mipmapBlur
+              intensity={0.35}
+              radius={0.3}
             />
           </EffectComposer>
 

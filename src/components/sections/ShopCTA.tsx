@@ -89,17 +89,14 @@ export function ShopCTA() {
             href="https://instagram.com/grvty.std"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center p-5 rounded-[1.25rem] font-sans font-black text-[12px] uppercase tracking-[0.2em] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shadow-xl group mt-2 relative overflow-hidden"
+            className="w-full flex items-center justify-center p-5 rounded-[1.25rem] font-sans font-black text-[12px] uppercase tracking-[0.2em] ios-button group mt-2"
             style={{ 
-              background: "var(--foreground)", 
-              color: "var(--background)",
+              color: "var(--foreground)",
             }}
           >
-            {/* Button Highlight Effect */}
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center gap-3 drop-shadow-md">
               DM @grvty.std 
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span className="transition-transform duration-300 group-hover:translate-x-1 font-sans">→</span>
             </span>
           </a>
 

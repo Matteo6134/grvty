@@ -62,15 +62,15 @@ export function DetailsSection() {
   }, []);
 
   return (
-    <div className="relative z-10 w-full min-h-screen flex flex-col justify-center px-6 md:px-16 md:pt-36 pb-24">
+    <div className="relative z-10 w-full min-h-screen flex flex-col justify-center px-4 md:px-16 pt-20 md:pt-36 pb-16 md:pb-24">
       {/* ── CENTRAL HUD AREA (Pushes text away from the center) ── */}
-      <div className="absolute inset-0 md:relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[40vh] md:min-h-0 py-8 md:py-0">
+      <div className="absolute inset-0 md:relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[35vh] md:min-h-0 py-4 md:py-0">
         <div
           ref={linesRef}
-          className="relative pointer-events-none flex items-center justify-center mt-[-10vh] md:mt-0 transition-transform duration-1000 ease-out"
+          className="relative pointer-events-none flex items-center justify-center md:mt-0 transition-transform duration-1000 ease-out"
           style={{ 
-            width: "clamp(200px, 48vw, 420px)",  // Scaled down to guarantee no cutoffs
-            height: "clamp(200px, 48vw, 420px)",
+            width: "clamp(180px, 42vw, 420px)",
+            height: "clamp(180px, 42vw, 420px)",
             transform: "translateY(0)" 
           }}
         >
@@ -178,10 +178,10 @@ export function DetailsSection() {
       {/* ── BOTTOM CONTENT AREA (Specs ONLY) ── */}
       <div className="relative w-full md:w-auto flex flex-col justify-end pointer-events-auto z-10 mt-auto md:absolute md:bottom-24 md:left-16 md:right-16 md:flex-row md:items-end md:justify-between">
         
-        {/* Left Side Info */}
+        {/* Technical Specs Row */}
         <div
           ref={statsRight.ref}
-          className="w-full md:w-auto flex flex-row flex-wrap md:flex-col justify-center md:justify-start items-center md:items-start gap-x-4 md:gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0"
+          className="w-full md:w-auto grid grid-cols-3 md:flex md:flex-row gap-y-2 gap-x-0 md:gap-x-8 mt-10 md:mt-0"
           style={{
             opacity: statsRight.visible ? 1 : 0,
             transform: statsRight.visible ? "none" : "translateY(24px)",
@@ -189,11 +189,11 @@ export function DetailsSection() {
           }}
         >
           {SPECS.slice(2).map((s) => (
-            <div key={s.label} className="text-center md:text-left flex flex-col items-center md:items-start min-w-[20%] md:min-w-0">
+            <div key={s.label} className="text-center md:text-left flex flex-col items-center md:items-start">
               <div
                 className="font-black font-sans leading-none whitespace-nowrap"
                 style={{
-                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  fontSize: "clamp(1.4rem, 4vw, 2.5rem)",
                   letterSpacing: "-0.04em",
                   color: "var(--foreground)",
                   fontFamily: "var(--font-sora), system-ui, sans-serif"
@@ -209,9 +209,12 @@ export function DetailsSection() {
           ))}
         </div>
 
-        {/* Right Side Info (Engineering / Manufacturing) */}
+        {/* Divider — mobile only */}
+        <div className="w-2/3 mx-auto h-px bg-white/10 my-6 md:hidden" />
+
+        {/* Manufacturing Specs Row */}
         <div 
-          className="w-full md:w-auto flex flex-row flex-wrap md:flex-col justify-center md:justify-end items-center md:items-end gap-x-4 md:gap-x-8 gap-y-6 md:gap-y-8 mt-12 md:mt-0 md:pb-8"
+          className="w-full md:w-auto grid grid-cols-3 md:flex md:flex-row gap-y-2 gap-x-0 md:gap-x-8 md:mt-0 md:pb-8"
           style={{
             opacity: statsRight.visible ? 1 : 0,
             transform: statsRight.visible ? "none" : "translateY(24px)",
@@ -219,11 +222,11 @@ export function DetailsSection() {
           }}
         >
           {RIGHT_SPECS.map((s) => (
-            <div key={s.label} className="text-center md:text-right flex flex-col items-center md:items-end min-w-[20%] md:min-w-0">
+            <div key={s.label} className="text-center md:text-right flex flex-col items-center md:items-end">
               <div
                 className="font-black font-sans leading-none whitespace-nowrap"
                 style={{
-                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  fontSize: "clamp(1.4rem, 4vw, 2.5rem)",
                   letterSpacing: "-0.04em",
                   color: "var(--foreground)",
                   fontFamily: "var(--font-sora), system-ui, sans-serif"

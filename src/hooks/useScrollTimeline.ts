@@ -76,7 +76,9 @@ export function useScrollTimeline(): ScrollState {
       } else if (progress < 0.88) {
         phase = "rgb";
         lampY = 0.2;
-        lampX = -0.65; // Object moved to the left side smoothly
+        const isMobile = window.innerWidth < 768;
+        // On mobile: center the lamp. On desktop: shift left for side-by-side layout
+        lampX = isMobile ? 0 : -0.85; 
         gradientOpacity = 0;
         lightIntensity = 1;
         hidden = false;
@@ -84,8 +86,8 @@ export function useScrollTimeline(): ScrollState {
       } else {
         phase = "cta";
         const t = (progress - 0.88) / 0.12;
-        // Continue moving further left seamlessly
-        lampX = -0.65 + t * -0.95;
+        const isMobile = window.innerWidth < 768;
+        lampX = isMobile ? 0 : -0.85 + t * -0.95;
         // Subtle vertical float
         lampY = 0.2 + t * 0.04;
         // Maintain high light intensity for the final section

@@ -27,34 +27,28 @@ export function RGBShowcase({
   };
 
   return (
-    <div className="relative z-20 w-full min-h-screen flex items-center px-6 pt-32 pb-12 md:px-16 md:pt-36 md:pb-20 pointer-events-none overflow-hidden">
+    <div className="relative z-20 w-full min-h-screen flex flex-col justify-end md:flex-row md:items-center px-6 pt-32 pb-16 md:px-16 md:pt-36 md:pb-20 pointer-events-none overflow-hidden">
       
       {/* Left: Space for 3D Lamp */}
       <div className="hidden md:block flex-1" />
 
       {/* Right: Interaction Panel */}
-      <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left pointer-events-auto">
-        
+      <div className="w-full md:w-[40%] flex flex-col items-center md:items-start text-center md:text-left pointer-events-auto md:pr-8 lg:pr-12 md:ml-auto">
         <h3 className="font-black text-3xl md:text-4xl tracking-tighter lowercase text-foreground">
           limitless combinations.
         </h3>
-        
         <p className="mt-6 font-sans text-sm md:text-base outline-none text-foreground/60 leading-relaxed max-w-sm">
           Press the button to generate an endless spectrum of atmospheres. The internal 3D printed diffusion layer seamlessly blends the frequencies.
         </p>
-
-        {/* Randomize Button */}
         <button
           onClick={handleRandomize}
-          className="mt-10 group relative px-8 py-4 rounded-full overflow-hidden backdrop-blur-3xl border border-white/20 transition-all duration-500 hover:border-white/50 active:scale-95"
-          style={{ background: "rgba(255,255,255,0.05)" }}
+          className="mt-10 group relative px-8 py-4 rounded-full ios-button text-foreground font-bold font-sans tracking-widest uppercase text-xs"
         >
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-red-500/20 via-purple-500/20 to-blue-500/20" />
-          <span className="relative font-bold font-sans tracking-widest uppercase text-xs text-foreground">
+          <span className="relative z-10 drop-shadow-md">
             Randomize Hue
           </span>
         </button>
-        
       </div>
     </div>
   );

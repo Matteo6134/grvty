@@ -113,17 +113,17 @@ export function LampModel({
       if (isBulbNode(name)) {
         bulbMeshRef.current = child;
         child.material = new THREE.MeshPhysicalMaterial({
-          color: new THREE.Color("#ffffff"),
+          color: new THREE.Color("#7272723b"),
           emissive: new THREE.Color("#000000"),
           emissiveIntensity: 0,
-          // MODIFICA: Vetro "satinato", una via di mezzo, non completamente invisibile
-          roughness: 0.7,      // Dà una texture leggermente opaca
+          // Vetro molto satinato per massima diffusione morbida
+          roughness: 0.9,
           metalness: 0,
-          transmission: 0.6,   // 0.6 invece di 0.95: fa vedere la forma del bulbo
+          transmission: 0.5,   // Minore trasmissione per disperdere più luce 
           thickness: 2.0,
           ior: 1.5,
-          transparent: true,
-          opacity: 0.4,        // Più presente visivamente
+          transparent: false,
+          opacity: 0.8,        // Più presente visivamente
           side: THREE.FrontSide,
         });
         return;
@@ -133,13 +133,11 @@ export function LampModel({
         shellMeshRef.current = child;
         child.material = new THREE.MeshPhysicalMaterial({
           color: new THREE.Color("#ffffff"),
-          roughness: 0.80,
+          roughness: 0.85,  // Slight bump to handle direct light softer
           metalness: 0.0,
-          transmission: 0.75, // Leggermente aumentato per far "passare" meglio la luce
+          transmission: 0.0, // Removes the transparent bleed-through from the background
           thickness: 1.0,
           ior: 1.46,
-          attenuationDistance: 12.0,
-          attenuationColor: new THREE.Color("#fff5e0"),
           emissive: new THREE.Color("#000000"),
           emissiveIntensity: 0,
         });
@@ -195,8 +193,8 @@ export function LampModel({
 
     // Animazione Luce (Dispersione e Intensità bilanciati)
     if (pointLightRef.current) {
-      // MODIFICA: Ridimensionato per non bruciare in Light Mode
-      const multiplier = 25; 
+      // Significantly reduced multiplier to prevent harsh artificial burn
+      const multiplier = isRGBMode ? 4 : 16;
       const targetIntensity = isOn
         ? power * multiplier * warmupEased
         : power * multiplier * warmupRef.current;
@@ -218,10 +216,10 @@ export function LampModel({
         : new THREE.Color("#000000");
 
       mat.emissive.lerp(glowColor, 0.15);
-      // Leggero bagliore del bulbo stesso
+      // Very subtle inner glow to avoid fake burn
       mat.emissiveIntensity = THREE.MathUtils.lerp(
         mat.emissiveIntensity,
-        isOn ? power * 1.5 * warmupEased : 0,
+        isOn ? power * 0.3 * warmupEased : 0,
         0.12
       );
     }
@@ -233,8 +231,8 @@ export function LampModel({
         isOn ? targetColor : new THREE.Color("#000000"),
         0.04
       );
-      // MODIFICA: Il corpo lampada "brilla" un po' di più per simulare diffusione
-      mat.emissiveIntensity = power * 0.15 * (isOn ? warmupEased : warmupRef.current);
+      // Shell diffusion glow — deliberately subtle
+      mat.emissiveIntensity = power * (isRGBMode ? 0.10 : 0.12) * (isOn ? warmupEased : warmupRef.current);
       mat.attenuationColor.lerp(
         new THREE.Color(isOn ? emissiveColor : "#fff5e0"),
         0.05
@@ -258,6 +256,7 @@ export function LampModel({
       let targetRot: number;
       if (s < P1) targetRot = ANGLE_L;
       else if (s < P2) targetRot = mapRange(s, P1, P2, ANGLE_L, FRONT);
+      else if (phase === "rgb") targetRot = Math.PI / 6; // Turns Left!
       else if (s < P6) targetRot = FRONT;
       else targetRot = mapRange(s, P6, 1, FRONT, TWO_PI);
 
