@@ -30,11 +30,10 @@ function ResponsiveCamera() {
   const { size, camera } = useThree();
   const initialized = useRef(false);
 
-  // Baseline ottimizzata per vedere bene il fronte della lampada
-  let targetZ = 35; // Default desktop size
+  let targetZ = 70; // Desktop — proper distance to see the full model
   if (size.width < 1500) {
     const progress = Math.max(0, (size.width - 320) / (1500 - 320));
-    targetZ = 58 - progress * (58 - 35);
+    targetZ = 100 - progress * (100 - 70);
   }
 
   let targetY = 0;
@@ -47,7 +46,6 @@ function ResponsiveCamera() {
 
   const targetPos = new THREE.Vector3(0, targetY, targetZ);
 
-  // First frame: snap instantly. After that: smooth lerp for resize transitions.
   if (!initialized.current) {
     camera.position.copy(targetPos);
     initialized.current = true;
