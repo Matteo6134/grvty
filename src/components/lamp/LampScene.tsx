@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useEffect, useRef } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { Environment, PerspectiveCamera } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
@@ -31,27 +31,26 @@ function ResponsiveCamera() {
   const initialized = useRef(false);
 
   // Aspect ratio drives everything — works for any screen shape
-  const aspect = size.width / size.height; // wide desktop ~1.78, phone portrait ~0.46
-
-  // MODEL_SIZE controls how big the model looks (lower = bigger model on screen)
-  // The formula: tall/narrow screens (low aspect) need more Z to avoid overfill
+  const aspect = size.width / size.height;
+  
+  // The formula controls the size
   const MODEL_SIZE = 60;
   const targetZ = MODEL_SIZE / Math.pow(aspect, 0.7);
 
   // Y offset: keep centered on wide screens, shift up slightly on tall screens
   const targetY = aspect < 0.8 ? -1.5 : aspect < 1.2 ? -0.6 : 0;
 
-  const targetPos = new THREE.Vector3(0, targetY, targetZ);
-
-  if (!initialized.current) {
-    camera.position.copy(targetPos);
-    initialized.current = true;
-  } else {
-    camera.position.lerp(targetPos, 0.1);
-  }
-
-  camera.lookAt(0, 0, 0);
-  camera.updateProjectionMatrix();
+  useFrame(() => {
+    const targetPos = new THREE.Vector3(0, targetY, targetZ);
+    // On the very first frame loop, instantly snap the camera to position
+    if (!initialized.current) {
+      camera.position.copy(targetPos);
+      initialized.current = true;
+    } else {
+      camera.position.lerp(targetPos, 0.1);
+    }
+    camera.lookAt(0, 0, 0);
+  });
 
   return null;
 }
