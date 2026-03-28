@@ -181,14 +181,13 @@ export function Navbar() {
         >
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="absolute top-8 right-6 w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+            className="absolute top-8 right-6 w-12 h-12 rounded-full flex items-center justify-center text-2xl z-[110]"
             style={{ color: "var(--foreground)", border: "1px solid rgba(150,150,150,0.2)" }}
           >
             ×
           </button>
 
-          <div className="flex flex-col gap-8 text-center w-full">
-            <span className="font-sans text-[10px] tracking-[0.3em] uppercase mb-4 font-bold" style={{ color: "var(--foreground)", opacity: 0.3 }}>Menu</span>
+          <div className="flex-1 flex flex-col items-center justify-center gap-8 text-center w-full">
             {[{ label: 'Concept', id: 'hero' }, ...NAV_LINKS].map((link) => (
               <button
                 key={link.id}
@@ -198,7 +197,7 @@ export function Navbar() {
                 }}
                 className="text-4xl font-black lowercase tracking-tighter"
                 style={{
-                  color: activeId === link.id ? "var(--foreground)" : "var(--foreground)",
+                  color: "var(--foreground)",
                   opacity: activeId === link.id ? 1 : 0.4
                 }}
               >
@@ -207,8 +206,31 @@ export function Navbar() {
             ))}
           </div>
 
-          <div className="mt-auto pt-20 flex flex-col items-center gap-6">
-            <a href="https://instagram.com/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans font-bold text-[10px] tracking-widest uppercase" style={{ color: "var(--foreground)", opacity: 0.5 }}>Instagram</a>
+          <div className="mt-auto pb-12 flex flex-col items-center gap-2">
+            <span className="font-sans text-[9px] tracking-[0.25em] font-bold opacity-20 uppercase mb-1">
+              Design & Direction
+            </span>
+            <div className="flex items-center gap-3">
+              <a 
+                href="https://instagram.com/grvty.std" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
+                style={{ color: "var(--foreground)" }}
+              >
+                @grvty.std
+              </a>
+              <span className="opacity-10 text-[10px]">•</span>
+              <a 
+                href="https://instagram.com/ma.tt._" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
+                style={{ color: "var(--foreground)" }}
+              >
+                @ma.tt._
+              </a>
+            </div>
           </div>
         </div>
       )}
