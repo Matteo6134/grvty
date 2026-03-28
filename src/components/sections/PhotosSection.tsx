@@ -25,7 +25,7 @@ export function PhotosSection() {
   const side3 = useFadeIn(320);
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col justify-between px-6 pt-32 pb-12 md:px-16 md:pt-36 md:pb-24">
+    <div className="relative w-full min-h-[70vh] md:min-h-screen flex flex-col justify-between px-4 pt-20 pb-8 md:px-16 md:pt-36 md:pb-24 overflow-hidden">
 
       {/* Photo grid - Now 4 photos */}
       <div className="flex flex-col md:flex-row gap-4 flex-1 my-10 h-full">
@@ -37,7 +37,7 @@ export function PhotosSection() {
             opacity: main.visible ? 1 : 0,
             transform: main.visible ? "none" : "translateY(28px)",
             transition: "opacity 1.1s ease, transform 1.1s ease",
-            minHeight: "45vh",
+            minHeight: "30vh",
             background: "var(--surface)",
             border: "1px solid rgba(var(--foreground-rgb,26,26,26),0.06)",
           }}
@@ -51,7 +51,7 @@ export function PhotosSection() {
         </div>
 
         {/* Side photos column (Photos 2, 3, 4) */}
-        <div className="grid grid-cols-3 md:grid-cols-1 md:grid-rows-3 gap-4 w-full md:w-[32%] h-[15vh] md:h-auto">
+        <div className="grid grid-cols-3 md:grid-cols-1 md:grid-rows-3 gap-4 w-full md:w-[32%] h-[12vh] md:h-auto">
           {/* Photo 2 */}
           <div
             ref={side1.ref}

@@ -62,15 +62,15 @@ export function DetailsSection() {
   }, []);
 
   return (
-    <div className="relative z-10 w-full min-h-screen flex flex-col justify-center px-4 md:px-16 pt-20 md:pt-36 pb-16 md:pb-24">
-      {/* ── CENTRAL HUD AREA (Pushes text away from the center) ── */}
-      <div className="absolute inset-0 md:relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[35vh] md:min-h-0 py-4 md:py-0">
+    <div className="relative z-10 w-full min-h-screen flex flex-col justify-center px-4 md:px-16 pt-16 md:pt-36 pb-10 md:pb-24 overflow-hidden">
+      {/* ── CENTRAL HUD AREA ── */}
+      <div className="relative w-full flex-1 flex justify-center items-center pointer-events-none z-0 min-h-[30vh] md:min-h-0 py-2 md:py-0">
         <div
           ref={linesRef}
           className="relative pointer-events-none flex items-center justify-center md:mt-0 transition-transform duration-1000 ease-out"
           style={{ 
-            width: "clamp(180px, 42vw, 420px)",
-            height: "clamp(180px, 42vw, 420px)",
+            width: "clamp(160px, 38vw, 420px)",
+            height: "clamp(160px, 38vw, 420px)",
             transform: "translateY(0)" 
           }}
         >

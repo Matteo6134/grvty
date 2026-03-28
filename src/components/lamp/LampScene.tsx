@@ -32,9 +32,9 @@ function ResponsiveCamera() {
   // Baseline ottimizzata per vedere bene il fronte della lampada
   let targetZ = 35; // Default desktop size
   if (size.width < 1500) {
-    // Interpolation: mobile (50) → large-desktop (35). Closer on mobile = bigger object
+    // Interpolation: mobile (58) → large-desktop (35). Further on mobile = smaller object
     const progress = Math.max(0, (size.width - 320) / (1500 - 320));
-    targetZ = 50 - progress * (50 - 35);
+    targetZ = 58 - progress * (58 - 35);
   }
 
   let targetY = 0;
@@ -42,7 +42,7 @@ function ResponsiveCamera() {
     targetY = -0.6; // Tablet offset
   }
   if (size.width < 768) {
-    targetY = -3; // Mobile offset — pushes lamp higher on screen
+    targetY = -2; // Mobile offset — positions lamp in upper third
   }
 
   // Movimento fluido della camera verso il target

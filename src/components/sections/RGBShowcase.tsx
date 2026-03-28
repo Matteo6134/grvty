@@ -27,7 +27,7 @@ export function RGBShowcase({
   };
 
   return (
-    <div className="relative z-20 w-full min-h-screen flex flex-col justify-end md:flex-row md:items-center px-6 pt-32 pb-16 md:px-16 md:pt-36 md:pb-20 pointer-events-none overflow-hidden">
+    <div className="relative z-20 w-full min-h-screen flex flex-col justify-end md:flex-row md:items-center px-6 pt-20 pb-24 md:px-16 md:pt-36 md:pb-20 pointer-events-none overflow-hidden">
       
       {/* Left: Space for 3D Lamp */}
       <div className="hidden md:block flex-1" />

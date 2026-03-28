@@ -20,7 +20,7 @@ export function ShopCTA() {
   return (
     <div
       ref={ref}
-      className="relative z-10 w-full min-h-screen flex items-center px-6 pt-32 pb-12 md:px-16 md:pt-36 md:pb-20"
+      className="relative z-10 w-full min-h-screen flex items-center px-6 pt-24 pb-12 md:px-16 md:pt-36 md:pb-20"
     >
       {/* Left: lamp space */}
       <div className="hidden md:block flex-1" />
