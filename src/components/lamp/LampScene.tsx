@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, PerspectiveCamera } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -64,6 +64,14 @@ export function LampScene({
   hidden = false,
 }: LampSceneProps) {
   const [hasError, setHasError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Fallback in caso di errore WebGL
   if (hasError) {
@@ -135,7 +143,7 @@ export function LampScene({
 
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
-          dpr={[1, 2]} // Supporto Retina
+          dpr={isMobile ? [1, 1.5] : [1, 2]}
           gl={{
             antialias: false, // Disabilitato per massime prestazioni con Bloom
             alpha: true,
@@ -178,18 +186,20 @@ export function LampScene({
             phase={phase}
           />
 
-          {/* Mappa riflessi */}
-          <Environment preset="city" environmentIntensity={0.5} />
+          {/* Environment reflections — lighter on mobile */}
+          <Environment preset={isMobile ? "apartment" : "city"} environmentIntensity={isMobile ? 0.3 : 0.5} />
 
-          {/* Post-Processing: Bloom (Effetto Glow) */}
-          <EffectComposer>
-            <Bloom
-              luminanceThreshold={1.0}
-              mipmapBlur
-              intensity={0.35}
-              radius={0.3}
-            />
-          </EffectComposer>
+          {/* Post-Processing: Bloom — disabled on mobile for GPU savings */}
+          {!isMobile && (
+            <EffectComposer>
+              <Bloom
+                luminanceThreshold={1.0}
+                mipmapBlur
+                intensity={0.35}
+                radius={0.3}
+              />
+            </EffectComposer>
+          )}
 
         </Canvas>
       </Suspense>

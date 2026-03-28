@@ -57,7 +57,7 @@ export default function Home() {
         </section>
 
         {/* Spacer — lets the 3D object levitate before story section */}
-        <div className="h-[40vh]" aria-hidden />
+        <div className="h-[20vh] md:h-[40vh]" aria-hidden />
 
         {/* Story Section */}
         <section id="story" className="min-h-screen snap-center">
@@ -75,7 +75,7 @@ export default function Home() {
         </section>
 
         {/* RGB Intro */}
-        <section id="rgb-intro" className="min-h-screen snap-center flex items-center justify-center overflow-hidden pointer-events-none">
+        <section id="rgb-intro" className="min-h-[60vh] md:min-h-screen snap-center flex items-center justify-center overflow-hidden pointer-events-none">
           <h2 
             className="font-black tracking-tighter lowercase text-white mix-blend-difference leading-[0.85] text-center relative z-20"
             style={{ fontSize: "clamp(5rem, 15vw, 15rem)" }}

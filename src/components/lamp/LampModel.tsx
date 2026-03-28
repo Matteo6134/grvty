@@ -121,9 +121,9 @@ export function LampModel({
           metalness: 0,
           transmission: 0.5,   // Minore trasmissione per disperdere più luce 
           thickness: 2.0,
-          ior: 1.5,
+          ior: 1,
           transparent: false,
-          opacity: 0.8,        // Più presente visivamente
+          opacity: 0.6,        // Più presente visivamente
           side: THREE.FrontSide,
         });
         return;

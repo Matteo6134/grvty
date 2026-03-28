@@ -38,6 +38,17 @@ html {
   scroll-snap-type: y proximity;
 }
 
+/* Disable snap scroll on mobile — fights touch gestures */
+@media (max-width: 767px) {
+  html {
+    scroll-snap-type: none;
+  }
+  /* Remove snap from all sections on mobile */
+  .snap-center {
+    scroll-snap-align: unset;
+  }
+}
+
 body {
   background: transparent;
   color: var(--foreground);
@@ -258,6 +269,13 @@ h1, h2, h3 {
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: overlay;
+}
+
+/* Disable heavy GPU overlays on mobile */
+@media (max-width: 767px) {
+  .noise-overlay {
+    display: none;
+  }
 }
 
 .premium-border {
