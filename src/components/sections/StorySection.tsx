@@ -60,7 +60,9 @@ export function StorySection() {
           transition: "opacity 1.2s ease 0.2s, transform 1.2s ease 0.2s",
         }}
       >
-        <div className="flex flex-col gap-3 md:gap-5 max-w-[450px] text-center md:text-right bg-[var(--background)]/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 md:p-0 rounded-3xl pb-12">
+        <div 
+          id="story-manufacturing"
+          className="flex flex-col gap-3 md:gap-5 max-w-[450px] text-center md:text-right bg-[var(--background)]/40 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-6 md:p-0 rounded-3xl pb-12">
           <span
             className="font-black uppercase tracking-[0.25em]"
             style={{

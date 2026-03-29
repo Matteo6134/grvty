@@ -33,7 +33,9 @@ export function RGBShowcase({
       <div className="hidden md:block flex-1" />
 
       {/* Right: Interaction Panel */}
-      <div className="w-full md:w-[40%] flex flex-col items-center md:items-start text-center md:text-left pointer-events-auto md:pr-8 lg:pr-12 md:ml-auto">
+      <div 
+        id="rgb-panel"
+        className="w-full md:w-[40%] flex flex-col items-center md:items-start text-center md:text-left pointer-events-auto md:pr-8 lg:pr-12 md:ml-auto">
         <h3 className="font-black text-3xl md:text-4xl tracking-tighter lowercase text-foreground">
           limitless combinations.
         </h3>

@@ -101,7 +101,9 @@ export function LampScene({
         transform: "translateZ(0)",
         WebkitMaskImage: "-webkit-radial-gradient(white, black)",
         opacity: hidden ? 0 : 1,
-        transition: "opacity 0.7s ease, background-color 1.2s ease",
+        transition: hidden
+          ? "opacity 0.3s ease, background-color 1.2s ease"
+          : "opacity 0.7s ease, background-color 1.2s ease",
         pointerEvents: hidden ? "none" : "auto",
       }}
     >
