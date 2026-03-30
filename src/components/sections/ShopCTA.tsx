@@ -52,54 +52,70 @@ export function ShopCTA() {
 
         {/* Premium E-commerce Card */}
         <div
-          className="w-full bg-[var(--surface)] rounded-[2rem] p-8 md:p-10 flex flex-col gap-8 w-full max-w-[420px]"
+          className="w-full bg-[var(--surface)] rounded-[2rem] p-5 md:p-6 flex flex-col gap-5 w-full max-w-[420px]"
           style={{
             border: "1px solid rgba(150, 150, 150, 0.1)",
             boxShadow: "0 24px 60px -12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)"
           }}
         >
           {/* Header & Price */}
-          <div className="flex justify-between items-end border-b pb-6" style={{ borderColor: "rgba(150, 150, 150, 0.15)" }}>
-            <div className="font-sans text-3xl tracking-tighter font-black" style={{ color: "var(--foreground)" }}>
-              160€
-            </div>
+          {/* Product Header */}
+          <div className="flex justify-between items-center border-b pb-4" style={{ borderColor: "rgba(150, 150, 150, 0.1)" }}>
+            <h3 className="font-sans font-black text-2xl tracking-tighter lowercase leading-none">
+              grvty.
+            </h3>
+            <a
+              href="https://instagram.com/grvty.std"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center px-5 py-3 rounded-xl font-sans font-black text-[9px] uppercase tracking-[0.2em] ios-button group"
+              style={{
+                color: "var(--foreground)",
+              }}
+            >
+              <span className="relative z-10 flex items-center gap-2 drop-shadow-md">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                SEND REQUEST NOW
+              </span>
+            </a>
           </div>
 
-          {/* Value Prop List */}
-          <ul className="flex flex-col gap-4 text-[13px] font-sans text-left" style={{ color: "var(--foreground)", opacity: 0.65 }}>
-            <li className="flex items-center gap-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              Smart Bulb included
-            </li>
-            <li className="flex items-center gap-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              Hand-finished & assembled in Italy
-            </li>
-            <li className="flex items-center gap-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              1–2 weeks manufacturing lead time
-            </li>
-            <li className="flex items-center gap-4">
-              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              Express shipping available
-            </li>
-          </ul>
+          {/* Line Items for Value Proof */}
+          <div className="flex flex-col gap-3 py-1">
+            {[
+              { label: "1 x grvty", value: "160€" },
+              { label: "1 x Smart RGB Bulb", value: "Incl." },
+              { label: "1 x E27 Socket", value: "Incl." },
+              { label: "1 x EU/US Plug with Switch", value: "Incl." },
+              { label: "1 x Textile Power Cable (2m)", value: "Incl." },
+            ].map((item, idx) => (
+              <div key={item.label} className="flex justify-between items-end border-b pb-2 border-white/[0.03]">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[8px] opacity-20">0{idx + 1}</span>
+                  <span className="font-sans text-[11px] font-bold opacity-60 lowercase">{item.label}</span>
+                </div>
+                <span className="font-sans text-[12px] font-black tracking-tight lowercase">{item.value}</span>
+              </div>
+            ))}
+          </div>
 
-          {/* Action Button */}
-          <a
-            href="https://instagram.com/grvty.std"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center p-5 rounded-[1.25rem] font-sans font-black text-[12px] uppercase tracking-[0.2em] ios-button group mt-2"
-            style={{
-              color: "var(--foreground)",
-            }}
-          >
-            <span className="relative z-10 flex items-center gap-3 drop-shadow-md">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              SEND REQUEST NOW
-            </span>
-          </a>
+          {/* Total & Shipping Note */}
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center">
+              <span className="font-sans font-black text-[9px] uppercase tracking-[0.2em] opacity-30">Total Price</span>
+              <div className="flex flex-col items-end leading-none">
+                <span className="font-sans text-2xl font-black tracking-tighter">160€</span>
+                <span className="font-sans text-[8px] font-black opacity-20 uppercase tracking-widest mt-1">Excl. Shipping</span>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+              <span className="font-sans text-[11px] font-bold opacity-45 uppercase tracking-wider">
+                Hand-finished in Italy · 14-day lead time
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 

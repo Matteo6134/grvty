@@ -20,11 +20,7 @@ interface LampSceneProps {
 }
 
 function LoadingFallback() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="w-10 h-10 border-[3px] border-foreground/20 border-t-foreground/60 rounded-full animate-spin" />
-    </div>
-  );
+  return <div className="absolute inset-0" />;
 }
 
 function ResponsiveCamera() {

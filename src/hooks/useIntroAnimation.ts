@@ -6,6 +6,12 @@ export function useIntroAnimation() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    // If the user reloads while scrolled down, skip the intro ceremony to prevent position jumps
+    if (window.scrollY > 50) {
+      setProgress(1);
+      return;
+    }
+
     let start: number | null = null;
     const duration = 4500; // 4.5 seconds for a slower, more graceful intro
 
