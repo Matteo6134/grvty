@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import SplitText from "../ui/SplitText";
+
 function useFadeIn(delay = 0, threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -26,16 +28,16 @@ export function StorySection() {
     <div className="relative z-10 w-full min-h-screen flex flex-col justify-between px-6 md:px-16 pt-32 pb-24 text-[var(--foreground)]">
       {/* Top: claim text */}
       <div
-        ref={claim.ref}
-        style={{
-          opacity: claim.visible ? 1 : 0,
-          transform: claim.visible ? "none" : "translateY(24px)",
-          transition: "opacity 1.2s ease, transform 1.2s ease",
-        }}
-        className="w-full flex justify-center md:justify-start"
+        className="w-full flex flex-col items-center md:items-start"
       >
-        <p
+        <SplitText
+          text="Form follows function."
           className="font-sans leading-[1.1] lowercase text-center md:text-left"
+          delay={35}
+          duration={1.2}
+          splitType="chars"
+          tag="h2"
+          textAlign="left"
           style={{
             fontSize: "clamp(2rem, 5vw, 4rem)",
             fontWeight: 700,
@@ -43,11 +45,24 @@ export function StorySection() {
             color: "var(--foreground)",
             fontFamily: "var(--font-sora), system-ui, sans-serif",
           }}
-        >
-          Form follows function.
-          <br />
-          <span style={{ opacity: 0.35 }}>The pyramid, re-imagined as light.</span>
-        </p>
+        />
+        <SplitText
+          text="The pyramid, re-imagined as light."
+          className="font-sans leading-[1.1] lowercase text-center md:text-left"
+          delay={25}
+          duration={1.5}
+          splitType="words"
+          tag="p"
+          textAlign="left"
+          style={{
+            fontSize: "clamp(2rem, 5vw, 4rem)",
+            fontWeight: 700,
+            letterSpacing: "-0.04em",
+            color: "var(--foreground)",
+            opacity: 0.35,
+            fontFamily: "var(--font-sora), system-ui, sans-serif",
+          }}
+        />
       </div>
 
       {/* Bottom: Manufacturing */}

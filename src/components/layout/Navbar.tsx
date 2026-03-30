@@ -160,12 +160,13 @@ export function Navbar() {
           }}
         >
           <a
-            href="#cta"
-            onClick={(e) => { e.preventDefault(); scrollTo("cta"); }}
-            className="ios-button flex items-center px-4 md:px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase"
+            href="https://ig.me/m/grvty.std"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ios-button flex items-center px-4 md:px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase pointer-events-auto"
             style={{ color: "var(--foreground)" }}
           >
-            <span className="drop-shadow-md">order here</span>
+            <span className="drop-shadow-md">order now</span>
           </a>
         </div>
       </nav>
@@ -212,7 +213,7 @@ export function Navbar() {
             </span>
             <div className="flex items-center gap-3">
               <a 
-                href="https://instagram.com/grvty.std" 
+                href="https://ig.me/m/grvty.std" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 

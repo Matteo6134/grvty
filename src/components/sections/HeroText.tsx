@@ -1,5 +1,7 @@
 "use client";
 
+import BlurText from "../ui/BlurText";
+
 interface HeroTextProps {
   readonly opacity: number;
 }
@@ -29,8 +31,13 @@ export function HeroText({ opacity }: HeroTextProps) {
 
       {/* Large central text overlapping the 3D object */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 overflow-hidden">
-        <h1
-          className="font-sans font-black tracking-tighter lowercase mix-blend-difference text-center relative z-20"
+        <BlurText
+          text="grvty"
+          delay={150}
+          animateBy="letters"
+          direction="top"
+          inView={opacity > 0}
+          className="font-sans font-black tracking-tighter lowercase mix-blend-difference text-center relative z-20 justify-center"
           style={{
             fontSize: "clamp(7rem, 25vw, 28rem)",
             color: `rgba(178, 174, 176, ${opacity})`,
@@ -38,9 +45,7 @@ export function HeroText({ opacity }: HeroTextProps) {
             letterSpacing: "-0.06em",
             transform: "translateY(-5%)",
           }}
-        >
-          grvty
-        </h1>
+        />
       </div>
 
       {/* Bottom left: subtitle + heading */}

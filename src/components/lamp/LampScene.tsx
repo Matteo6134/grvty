@@ -71,13 +71,17 @@ export function LampScene({
 }: LampSceneProps) {
   const [hasError, setHasError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
+    setMounted(true);
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  if (!mounted) return null;
 
   // Fallback in caso di errore WebGL
   if (hasError) {
@@ -152,18 +156,20 @@ export function LampScene({
         <Canvas
           dpr={isMobile ? [1, 2.5] : [1, 2]} // Allowed higher resolution limit to fix pixelation on iPhones
           gl={{
-            antialias: true, // Enabled for smooth edges on high-DPI displays
+            antialias: true,
             alpha: true,
-            powerPreference: "high-performance",
             stencil: false,
             depth: true,
           }}
           onCreated={(state) => {
-            if (!state.gl.capabilities.isWebGL2) {
+            if (state?.gl && !state.gl.capabilities.isWebGL2) {
               setHasError(true);
             }
           }}
-          onError={() => setHasError(true)}
+          onError={(e) => {
+            console.error("Canvas Error:", e);
+            setHasError(true);
+          }}
         >
           {/* Camera Setup */}
           <PerspectiveCamera makeDefault fov={45} />
