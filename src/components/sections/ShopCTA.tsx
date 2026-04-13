@@ -121,40 +121,53 @@ export function ShopCTA() {
         </div>
       </div>
 
-      {/* Desktop Footer (Bottom Left) */}
+      {/* Responsive Footer (Bottom Left) */}
       <div
-        className="absolute bottom-10 left-16 hidden md:flex flex-col gap-2 pointer-events-auto"
+        className="absolute bottom-10 left-6 md:left-16 flex flex-col gap-8 md:gap-6 pointer-events-auto"
         style={{
           opacity: visible ? 1 : 0,
           transition: "opacity 1s ease 1s",
         }}
       >
-        <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.35 }}>
-          Design & Direction
-        </span>
-        <div className="flex items-center gap-3">
-          <a
-            href="https://ig.me/m/grvty.std"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-sans text-[11px] tracking-[0.08em] font-black hover:opacity-100 transition-opacity lowercase"
-            style={{ color: "var(--foreground)", opacity: 0.7 }}
-          >
-            @grvty.std
-          </a>
-          <span style={{ color: "var(--foreground)", opacity: 0.25 }} className="text-[10px]">•</span>
-          <a
-            href="https://instagram.com/ma.tt._"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-sans text-[11px] tracking-[0.08em] font-black hover:opacity-100 transition-opacity lowercase"
-            style={{ color: "var(--foreground)", opacity: 0.7 }}
-          >
-            @ma.tt._
-          </a>
+        <div className="flex flex-col md:flex-row gap-8 md:gap-16">
+          {/* Project */}
+          <div className="flex flex-col gap-3">
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+               Project
+             </span>
+             <div className="flex flex-col gap-1.5">
+               <Link href="/#hero" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">The Lamp</Link>
+               <Link href="/#story" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Story</Link>
+             </div>
+          </div>
+
+          {/* Legal */}
+          <div className="flex flex-col gap-3">
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+               Legal
+             </span>
+             <div className="flex flex-col gap-1.5">
+               <Link href="/legal/privacy" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Privacy</Link>
+               <Link href="/legal/terms" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Terms</Link>
+               <Link href="/legal/shipping" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Shipping</Link>
+               <Link href="/legal/returns" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Returns</Link>
+             </div>
+          </div>
+
+          {/* Connect */}
+          <div className="flex flex-col gap-3">
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+               Connect
+             </span>
+             <div className="flex flex-col gap-1.5">
+               <a href="https://ig.me/m/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">@grvty.std</a>
+               <a href="https://instagram.com/ma.tt._" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">@ma.tt._</a>
+             </div>
+          </div>
         </div>
-        <span className="mt-2 font-sans text-[8px] tracking-[0.2em] font-medium uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
-          @grvty 2026 · all rights reserved
+
+        <span className="font-sans text-[8px] tracking-[0.2em] font-medium uppercase" style={{ color: "var(--foreground)", opacity: 0.2 }}>
+          @grvty 2026 · objects with gravity · all rights reserved
         </span>
       </div>
     </div>

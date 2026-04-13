@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Sora, Syne, Space_Grotesk, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const sora = Sora({
@@ -64,7 +63,6 @@ export default function RootLayout({
           <div className="noise-overlay" aria-hidden />
           <Navbar />
           {children}
-          <Footer />
         </ThemeProvider>
       </body>
     </html>
