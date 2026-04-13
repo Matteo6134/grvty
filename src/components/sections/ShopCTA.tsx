@@ -136,8 +136,8 @@ export function ShopCTA() {
                Project
              </span>
              <div className="flex flex-col gap-1.5">
-               <Link href="/#hero" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">The Lamp</Link>
-               <Link href="/#story" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Story</Link>
+               <Link href="/#hero" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">The Lamp</Link>
+               <Link href="/#story" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Story</Link>
              </div>
           </div>
 
@@ -147,10 +147,10 @@ export function ShopCTA() {
                Legal
              </span>
              <div className="flex flex-col gap-1.5">
-               <Link href="/legal/privacy" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Privacy</Link>
-               <Link href="/legal/terms" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Terms</Link>
-               <Link href="/legal/shipping" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Shipping</Link>
-               <Link href="/legal/returns" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">Returns</Link>
+               <Link href="/legal/privacy" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Privacy</Link>
+               <Link href="/legal/terms" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Terms</Link>
+               <Link href="/legal/shipping" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Shipping</Link>
+               <Link href="/legal/returns" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Returns</Link>
              </div>
           </div>
 
@@ -160,8 +160,8 @@ export function ShopCTA() {
                Connect
              </span>
              <div className="flex flex-col gap-1.5">
-               <a href="https://ig.me/m/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">@grvty.std</a>
-               <a href="https://instagram.com/ma.tt._" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 transition-opacity lowercase">@ma.tt._</a>
+               <a href="https://ig.me/m/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@grvty.std</a>
+               <a href="https://instagram.com/ma.tt._" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@ma.tt._</a>
              </div>
           </div>
         </div>
