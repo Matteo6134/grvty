@@ -114,22 +114,21 @@ export function Navbar() {
 
             {NAV_LINKS.map((link) => {
               const isActive = activeId === link.id;
-              const isShop = link.id === 'cta';
               
-              const activeBg = isShop ? 'var(--accent)' : 'rgba(255, 255, 255, 0.12)';
-              const activeColor = isShop ? '#000000' : 'var(--foreground)';
-              const hoverBg = isShop ? 'rgba(201, 168, 76, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+              const activeBg = 'var(--accent)';
+              const activeColor = '#000000';
+              const hoverBg = 'rgba(201, 168, 76, 0.2)';
 
               return (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
-                  className="px-4 py-2 rounded-full text-[11px] font-medium transition-all duration-300 active:scale-95 group"
+                  className="px-4 py-2 rounded-full text-[11px] font-medium transition-all duration-300 active:scale-95 group flex items-center gap-2"
                   style={{
                     background: isActive ? activeBg : "transparent",
                     backdropFilter: isActive ? "blur(12px)" : "none",
-                    border: isActive ? `1px solid ${isShop ? 'var(--accent)' : 'rgba(255, 255, 255, 0.15)'}` : "1px solid transparent",
-                    boxShadow: isActive ? `0 4px 12px ${isShop ? 'rgba(201, 168, 76, 0.3)' : 'rgba(0,0,0,0.1)'}` : "none",
+                    border: isActive ? "1px solid var(--accent)" : "1px solid transparent",
+                    boxShadow: isActive ? "0 4px 12px rgba(201, 168, 76, 0.3)" : "none",
                     color: isActive ? activeColor : "var(--foreground)",
                     opacity: isActive ? 1 : 0.6,
                     transform: "scale(1)",
@@ -140,17 +139,22 @@ export function Navbar() {
                     if (!isActive) {
                       (e.currentTarget as HTMLButtonElement).style.opacity = "1";
                       (e.currentTarget as HTMLButtonElement).style.background = hoverBg;
-                      if (isShop) (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
                       (e.currentTarget as HTMLButtonElement).style.opacity = "0.6";
                       (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                      if (isShop) (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground)";
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground)";
                     }
                   }}
                 >
+                  {link.id === 'cta' && (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={isActive ? 'opacity-100' : 'opacity-40'}>
+                      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                  )}
                   {link.label}
                 </button>
               );
@@ -159,23 +163,24 @@ export function Navbar() {
         </div>
 
 
-        {/* Right — theme + CTA */}
+        {/* Right — CTA */}
         <div
           className="pointer-events-auto flex items-center gap-2.5"
           style={{
-            opacity: 1, // Always visible on mobile
+            opacity: 1,
             transition: "opacity 0.35s ease, transform 0.35s ease",
           }}
         >
-          <a
-            href="https://ig.me/m/grvty.std"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ios-button flex items-center px-4 md:px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase pointer-events-auto"
-            style={{ color: "var(--foreground)" }}
+          <Link
+            href="/checkout"
+            className="ios-button flex items-center gap-2 px-4 md:px-5 py-2.5 rounded-full text-[11px] font-black tracking-widest uppercase pointer-events-auto"
+            style={{ color: "var(--accent-dark)", background: "rgba(201, 168, 76, 0.05)", borderColor: "rgba(201, 168, 76, 0.2)" }}
           >
-            <span className="drop-shadow-md">order now</span>
-          </a>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-md">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span className="drop-shadow-md">Order</span>
+          </Link>
         </div>
       </nav>
 
@@ -204,10 +209,11 @@ export function Navbar() {
                   scrollTo(link.id);
                   setIsMenuOpen(false);
                 }}
-                className="text-4xl font-black lowercase tracking-tighter"
+                className="text-4xl font-black lowercase tracking-tighter transition-all"
                 style={{
-                  color: "var(--foreground)",
-                  opacity: activeId === link.id ? 1 : 0.4
+                  color: activeId === link.id ? "var(--accent)" : "var(--foreground)",
+                  opacity: activeId === link.id ? 1 : 0.4,
+                  transform: activeId === link.id ? "scale(1.1)" : "scale(1)",
                 }}
               >
                 {link.label}
