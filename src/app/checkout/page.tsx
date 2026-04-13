@@ -4,7 +4,7 @@ import { useEffect, useCallback, useState } from "react";
 import {
   CheckoutElementsProvider,
   EmbeddedCheckout,
-} from "@stripe/react-stripe-js";
+} from "@stripe/react-stripe-js/checkout";
 import { getStripe } from "@/lib/stripe-client";
 import Link from "next/link";
 
