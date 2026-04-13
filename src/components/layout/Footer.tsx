@@ -4,9 +4,9 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full px-6 py-20 md:px-16 md:py-32 relative z-10">
-      <div className="flex flex-col gap-8 md:gap-12">
-        <div className="flex flex-col md:flex-row gap-12 md:gap-24">
+    <footer className="w-full px-6 py-20 md:px-16 md:py-32 relative z-10 border-t border-white/5">
+      <div className="flex flex-col gap-16 md:gap-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-24 w-full">
           {/* Project */}
           <div className="flex flex-col gap-4">
             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
