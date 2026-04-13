@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { stripe, GRVTY_PRODUCT } from "@/lib/stripe";
+import { getStripe, GRVTY_PRODUCT } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 
@@ -15,7 +15,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const origin = getOrigin(request);
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       // 'embedded_page' is the current name (was 'embedded') for the iframe UI
       // used with @stripe/react-stripe-js's <EmbeddedCheckout />.
       ui_mode: "embedded_page",

@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import Link from "next/link";
 
 export function ShopCTA() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -66,9 +65,8 @@ export function ShopCTA() {
             <h3 className="font-sans font-black text-2xl tracking-tighter lowercase leading-none">
               grvty.
             </h3>
-            <button
-              type="button"
-              onClick={() => setCheckoutOpen(true)}
+            <Link
+              href="/checkout"
               className="flex items-center justify-center px-5 py-3 rounded-xl font-sans font-black text-[9px] uppercase tracking-[0.2em] ios-button group cursor-pointer"
               style={{
                 color: "var(--foreground)",
@@ -81,7 +79,7 @@ export function ShopCTA() {
                 </svg>
                 ORDER NOW
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Line Items for Value Proof */}
@@ -159,8 +157,7 @@ export function ShopCTA() {
           @grvty 2026 · all rights reserved
         </span>
       </div>
-
-      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
+
   );
 }
