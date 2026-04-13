@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   PaymentElement,
   AddressElement,
+  ExpressCheckoutElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
@@ -38,10 +39,25 @@ export function CheckoutForm() {
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-8">
 
-      {/* Shipping section */}
+      {/* Express Checkout section */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <span className="font-mono text-[8px] opacity-20">01</span>
+          <span className="hud-label" style={{ opacity: 0.35 }}>express checkout</span>
+        </div>
+        <ExpressCheckoutElement onConfirm={handleSubmit} />
+      </div>
+
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-[1px]" style={{ background: "rgba(150,150,150,0.06)" }} />
+        <span className="hud-label" style={{ opacity: 0.15, letterSpacing: '0.5em' }}>OR</span>
+        <div className="flex-1 h-[1px]" style={{ background: "rgba(150,150,150,0.06)" }} />
+      </div>
+
+      {/* Shipping section */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[8px] opacity-20">02</span>
           <span className="hud-label" style={{ opacity: 0.35 }}>shipping address</span>
         </div>
         <AddressElement options={{ mode: "shipping" }} />
@@ -53,8 +69,8 @@ export function CheckoutForm() {
       {/* Payment section */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[8px] opacity-20">02</span>
-          <span className="hud-label" style={{ opacity: 0.35 }}>payment method</span>
+          <span className="font-mono text-[8px] opacity-20">03</span>
+          <span className="hud-label" style={{ opacity: 0.35 }}>detailed payment</span>
         </div>
         <PaymentElement options={{ layout: "tabs" }} />
       </div>

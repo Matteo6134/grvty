@@ -296,7 +296,7 @@ export default function CheckoutPage() {
                       colorBackground: "#1a1715",
                       colorText: "#f0ebe5",
                       colorDanger: "#ff3b30",
-                      fontFamily: "var(--font-sora), system-ui, sans-serif",
+                      fontFamily: "Sora, system-ui, sans-serif",
                       spacingUnit: "5px",
                       borderRadius: "16px",
                       colorTextPlaceholder: "#6b6055",
@@ -318,7 +318,7 @@ export default function CheckoutPage() {
                         border: "1px solid rgba(150,150,150,0.2)",
                       },
                       ".Label": {
-                        fontFamily: "var(--font-space), monospace",
+                        fontFamily: "Space Grotesk, monospace",
                         fontSize: "9px",
                         textTransform: "uppercase",
                         fontWeight: "500",
