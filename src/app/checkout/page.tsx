@@ -102,7 +102,7 @@ export default function CheckoutPage() {
                         fontFamily: "var(--font-space), monospace",
                         spacingUnit: "4px",
                         borderRadius: "20px",
-                        colorPlaceholder: "#444444",
+                        colorTextPlaceholder: "#444444",
                       },
                       rules: {
                         ".Input": {
