@@ -15,9 +15,11 @@ const LEGAL_LINKS = [
   { label: "Returns & Refunds", href: "/legal/returns" },
 ];
 
+import { Footer } from "@/components/layout/Footer";
+
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen relative" style={{ background: "var(--background)" }}>
+    <div className="min-h-screen relative flex flex-col" style={{ background: "var(--background)" }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[40%] rounded-full blur-[150px] opacity-[0.04]"
@@ -25,8 +27,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 md:py-32">
-
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 md:py-32 flex-1">
         {/* Header */}
         <div className="mb-14 flex flex-col gap-5">
           <Link href="/" className="hud-label hover:opacity-50 transition-opacity w-fit">
@@ -56,6 +57,8 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
           {children}
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
