@@ -13,56 +13,25 @@ function getOrigin(request: Request): string {
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const origin = getOrigin(request);
-
-    const session = await getStripe().checkout.sessions.create({
-      // 'embedded_page' is the current name (was 'embedded') for the iframe UI
-      // used with @stripe/react-stripe-js's <EmbeddedCheckout />.
-      ui_mode: "embedded_page",
-      mode: "payment",
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: GRVTY_PRODUCT.currency,
-            unit_amount: GRVTY_PRODUCT.unitAmount,
-            product_data: {
-              name: GRVTY_PRODUCT.name,
-              description: GRVTY_PRODUCT.description,
-              images: GRVTY_PRODUCT.images,
-            },
-          },
-        },
-      ],
-      shipping_address_collection: {
-        // Sandbox-friendly default — adjust to your real shipping geography.
-        allowed_countries: [
-          "IT", "FR", "DE", "ES", "NL", "BE", "AT", "PT", "IE", "FI",
-          "GR", "LU", "DK", "SE", "PL", "CZ", "HU", "RO", "SK", "SI",
-          "EE", "LV", "LT", "BG", "HR", "MT", "CY",
-          "GB", "CH", "NO",
-          "US", "CA",
-        ],
-      },
-      phone_number_collection: { enabled: true },
-      billing_address_collection: "auto",
-      automatic_tax: { enabled: false },
-      return_url: `${origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+    const paymentIntent = await getStripe().paymentIntents.create({
+      amount: GRVTY_PRODUCT.unitAmount,
+      currency: GRVTY_PRODUCT.currency.toLowerCase(),
+      automatic_payment_methods: { enabled: true },
       metadata: {
         product: "grvty.lamp.v1",
         source: "shop_cta",
       },
+      // Note: We'll collect shipping on the frontend with the Address Element
     });
 
-    if (!session.client_secret) {
+    if (!paymentIntent.client_secret) {
       return NextResponse.json(
         { error: "Stripe did not return a client_secret." },
         { status: 502 }
       );
     }
 
-    return NextResponse.json({ clientSecret: session.client_secret });
+    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Unable to create checkout session.";

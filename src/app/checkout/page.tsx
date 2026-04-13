@@ -1,11 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout,
-} from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { getStripe } from "@/lib/stripe-client";
+import { CheckoutForm } from "@/components/checkout/PaymentForm";
 import Link from "next/link";
 
 export default function CheckoutPage() {
@@ -205,9 +203,9 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* ── Right: Stripe embedded checkout ── */}
+        {/* ── Right: Stripe elements checkout ── */}
         <div
-          className="w-full md:flex-1 min-h-[640px] rounded-[2.5rem] overflow-hidden shadow-2xl relative"
+          className="w-full md:flex-1 min-h-[640px] rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-y-auto"
           style={{
             background: "#111111",
             border: "1px solid rgba(255,255,255,0.06)",
@@ -238,12 +236,48 @@ export default function CheckoutPage() {
               </button>
             </div>
           ) : (
-            <EmbeddedCheckoutProvider
-              stripe={getStripe()}
-              options={{ fetchClientSecret }}
-            >
-              <EmbeddedCheckout />
-            </EmbeddedCheckoutProvider>
+            <div className="w-full">
+              {/* @ts-ignore */}
+              <Elements
+                stripe={getStripe()}
+                options={{
+                  fetchClientSecret,
+                  appearance: {
+                    theme: "night",
+                    variables: {
+                      colorPrimary: "#c9a84c",
+                      colorBackground: "#111111",
+                      colorText: "#f0ebe5",
+                      colorDanger: "#ff3b30",
+                      fontFamily: "var(--font-sora), sans-serif",
+                      spacingUnit: "4px",
+                      borderRadius: "16px",
+                      colorPlaceholder: "#444444",
+                    },
+                    rules: {
+                      ".Input": {
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        boxShadow: "none",
+                        fontSize: "13px",
+                      },
+                      ".Input:focus": {
+                        border: "1px solid var(--accent)",
+                      },
+                      ".Label": {
+                        fontSize: "9px",
+                        textTransform: "uppercase",
+                        fontWeight: "800",
+                        letterSpacing: "0.15em",
+                        marginBottom: "8px",
+                        opacity: "0.35",
+                      },
+                    },
+                  },
+                }}
+              >
+                <CheckoutForm />
+              </Elements>
+            </div>
           )}
         </div>
       </div>
