@@ -53,22 +53,6 @@ export async function POST(request: Request): Promise<NextResponse> {
         product: "grvty.lamp.v1",
         source: "shop_cta",
       },
-      // Move appearance to the backend session creation
-      // Note: In some API versions it might be 'ui_mode': 'embedded' and appearance is handled there.
-      // For ui_mode: 'embedded_page' (Embedded Checkout), we can pass custom parameters.
-      // @ts-ignore - Stripe types can be laggy with newest beta/preview features
-      appearance: {
-        theme: 'night',
-        variables: {
-          colorPrimary: '#c9a84c',
-          colorBackground: '#111111',
-          colorText: '#f0ebe5',
-          colorDanger: '#ff3b30',
-          fontFamily: 'Sora, system-ui, sans-serif',
-          spacingUnit: '4px',
-          borderRadius: '12px',
-        },
-      },
     });
 
     if (!session.client_secret) {
