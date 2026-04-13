@@ -289,6 +289,11 @@ export default function CheckoutPage() {
                 stripe={getStripe()}
                 options={{
                   clientSecret,
+                  fonts: [
+                    {
+                      cssSrc: "https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap",
+                    },
+                  ],
                   appearance: {
                     theme: "night",
                     variables: {
