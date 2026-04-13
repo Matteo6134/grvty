@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 
 export function ShopCTA() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -64,20 +66,22 @@ export function ShopCTA() {
             <h3 className="font-sans font-black text-2xl tracking-tighter lowercase leading-none">
               grvty.
             </h3>
-            <a
-              href="https://ig.me/m/grvty.std"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center px-5 py-3 rounded-xl font-sans font-black text-[9px] uppercase tracking-[0.2em] ios-button group"
+            <button
+              type="button"
+              onClick={() => setCheckoutOpen(true)}
+              className="flex items-center justify-center px-5 py-3 rounded-xl font-sans font-black text-[9px] uppercase tracking-[0.2em] ios-button group cursor-pointer"
               style={{
                 color: "var(--foreground)",
               }}
             >
               <span className="relative z-10 flex items-center gap-2 drop-shadow-md">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
                 ORDER NOW
               </span>
-            </a>
+            </button>
           </div>
 
           {/* Line Items for Value Proof */}
@@ -155,6 +159,8 @@ export function ShopCTA() {
           @grvty 2026 · all rights reserved
         </span>
       </div>
+
+      <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
     </div>
   );
 }

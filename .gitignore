@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# replit cache
+/.local/
+
+# misc local artifacts
+/lint_output.txt
