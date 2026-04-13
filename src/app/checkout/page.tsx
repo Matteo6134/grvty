@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckoutElementsProvider } from "@stripe/react-stripe-js/checkout";
+import { Elements } from "@stripe/react-stripe-js";
 import { getStripe } from "@/lib/stripe-client";
 import { CheckoutForm } from "@/components/checkout/PaymentForm";
 import Link from "next/link";
@@ -86,48 +86,45 @@ export default function CheckoutPage() {
             </div>
           ) : clientSecret ? (
             <div className="w-full">
-              {/* @ts-ignore */}
-              <CheckoutElementsProvider
+              <Elements
                 stripe={getStripe()}
                 options={{
                   clientSecret,
-                  elementsOptions: {
-                    appearance: {
-                      theme: "night",
-                      variables: {
-                        colorPrimary: "#c9a84c",
-                        colorBackground: "#111111",
-                        colorText: "#f0ebe5",
-                        colorDanger: "#ff3b30",
-                        fontFamily: "var(--font-space), monospace",
-                        spacingUnit: "4px",
-                        borderRadius: "20px",
-                        colorTextPlaceholder: "#444444",
+                  appearance: {
+                    theme: "night",
+                    variables: {
+                      colorPrimary: "#c9a84c",
+                      colorBackground: "#111111",
+                      colorText: "#f0ebe5",
+                      colorDanger: "#ff3b30",
+                      fontFamily: "var(--font-space), monospace",
+                      spacingUnit: "4px",
+                      borderRadius: "20px",
+                      colorTextPlaceholder: "#444444",
+                    },
+                    rules: {
+                      ".Input": {
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        boxShadow: "none",
+                        fontSize: "13px",
                       },
-                      rules: {
-                        ".Input": {
-                          border: "1px solid rgba(255,255,255,0.08)",
-                          boxShadow: "none",
-                          fontSize: "13px",
-                        },
-                        ".Input:focus": {
-                          border: "1px solid var(--accent)",
-                        },
-                        ".Label": {
-                          fontSize: "10px",
-                          textTransform: "uppercase",
-                          fontWeight: "800",
-                          letterSpacing: "0.15em",
-                          marginBottom: "8px",
-                          opacity: "0.4",
-                        },
+                      ".Input:focus": {
+                        border: "1px solid var(--accent)",
+                      },
+                      ".Label": {
+                        fontSize: "10px",
+                        textTransform: "uppercase",
+                        fontWeight: "800",
+                        letterSpacing: "0.15em",
+                        marginBottom: "8px",
+                        opacity: "0.4",
                       },
                     },
                   },
                 }}
               >
                 <CheckoutForm />
-              </CheckoutElementsProvider>
+              </Elements>
             </div>
           ) : (
             <div className="flex items-center justify-center p-20">
