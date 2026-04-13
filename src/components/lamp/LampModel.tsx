@@ -126,7 +126,7 @@ export function LampModel({
       if (isBulbNode(name)) {
         bulbMeshRef.current = child;
         child.material = new THREE.MeshPhysicalMaterial({
-          color: new THREE.Color("#7272723b"),
+          color: new THREE.Color("#727272"),
           emissive: new THREE.Color("#000000"),
           emissiveIntensity: 0,
           // Vetro molto satinato per massima diffusione morbida
