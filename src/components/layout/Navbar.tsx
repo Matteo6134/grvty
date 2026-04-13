@@ -114,17 +114,23 @@ export function Navbar() {
 
             {NAV_LINKS.map((link) => {
               const isActive = activeId === link.id;
+              const isShop = link.id === 'cta';
+              
+              const activeBg = isShop ? 'var(--accent)' : 'rgba(255, 255, 255, 0.12)';
+              const activeColor = isShop ? '#000000' : 'var(--foreground)';
+              const hoverBg = isShop ? 'rgba(201, 168, 76, 0.2)' : 'rgba(255, 255, 255, 0.05)';
+
               return (
                 <button
                   key={link.id}
                   onClick={() => scrollTo(link.id)}
                   className="px-4 py-2 rounded-full text-[11px] font-medium transition-all duration-300 active:scale-95 group"
                   style={{
-                    background: isActive ? "rgba(255, 255, 255, 0.12)" : "transparent",
+                    background: isActive ? activeBg : "transparent",
                     backdropFilter: isActive ? "blur(12px)" : "none",
-                    border: isActive ? "1px solid rgba(255, 255, 255, 0.15)" : "1px solid transparent",
-                    boxShadow: isActive ? "inset 0 1px 0 rgba(255,255,255,0.1)" : "none",
-                    color: "var(--foreground)",
+                    border: isActive ? `1px solid ${isShop ? 'var(--accent)' : 'rgba(255, 255, 255, 0.15)'}` : "1px solid transparent",
+                    boxShadow: isActive ? `0 4px 12px ${isShop ? 'rgba(201, 168, 76, 0.3)' : 'rgba(0,0,0,0.1)'}` : "none",
+                    color: isActive ? activeColor : "var(--foreground)",
                     opacity: isActive ? 1 : 0.6,
                     transform: "scale(1)",
                     fontFamily: "var(--font-space), monospace",
@@ -132,14 +138,16 @@ export function Navbar() {
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      (e.currentTarget as HTMLButtonElement).style.opacity = "0.9";
-                      (e.currentTarget as HTMLButtonElement).style.background = "rgba(255, 255, 255, 0.05)";
+                      (e.currentTarget as HTMLButtonElement).style.opacity = "1";
+                      (e.currentTarget as HTMLButtonElement).style.background = hoverBg;
+                      if (isShop) (e.currentTarget as HTMLButtonElement).style.color = "var(--accent)";
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
                       (e.currentTarget as HTMLButtonElement).style.opacity = "0.6";
                       (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                      if (isShop) (e.currentTarget as HTMLButtonElement).style.color = "var(--foreground)";
                     }
                   }}
                 >
