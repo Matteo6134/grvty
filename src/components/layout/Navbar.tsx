@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "Discover", id: "details" },
