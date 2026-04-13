@@ -19,8 +19,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Hide Navbar on legal and checkout pages
-  if (pathname?.startsWith("/legal") || pathname?.startsWith("/checkout")) return null;
+  const isLegalOrCheckout = pathname?.startsWith("/legal") || pathname?.startsWith("/checkout");
 
   useEffect(() => {
     if (activeId === 'hero') {
@@ -105,15 +104,16 @@ export function Navbar() {
         </button>
 
         {/* Center — pill tabs (Desktop Only) */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:flex items-center gap-0.5 px-1.5 py-1.5 rounded-full transition-all duration-300 shadow-xl"
-          style={{
-            opacity: 1,
-            background: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(24px) saturate(180%)",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
-          }}
-        >
+        {!isLegalOrCheckout && (
+          <div
+            className="absolute left-1/2 -translate-x-1/2 pointer-events-auto hidden md:flex items-center gap-0.5 px-1.5 py-1.5 rounded-full transition-all duration-300 shadow-xl"
+            style={{
+              opacity: 1,
+              background: "rgba(255, 255, 255, 0.1)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+            }}
+          >
           {/* Desktop nav links */}
           <div className="flex items-center gap-0.5">
             {/* Navigation Links */}
@@ -166,7 +166,8 @@ export function Navbar() {
               );
             })}
           </div>
-        </div>
+         </div>
+        )}
 
 
         {/* Right — CTA */}

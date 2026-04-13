@@ -27,26 +27,6 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         
         {/* Header */}
         <div className="mb-14 flex flex-col gap-6">
-          {/* Logo Button */}
-          <Link
-            href="/"
-            className="flex items-center justify-center ios-button cursor-pointer w-fit"
-            style={{
-              height: 40,
-              padding: "0 18px",
-              borderRadius: 999,
-              background: "rgba(255, 255, 255, 0.05)",
-            }}
-            aria-label="Back to home"
-          >
-            <span
-              className="font-black tracking-tighter"
-              style={{ fontSize: 13, color: "var(--foreground)", letterSpacing: "-0.04em" }}
-            >
-              grvty
-            </span>
-          </Link>
-
           {/* Legal nav pills */}
           <div className="flex flex-wrap gap-2 mt-2">
             {LEGAL_LINKS.map(({ label, href }) => {
