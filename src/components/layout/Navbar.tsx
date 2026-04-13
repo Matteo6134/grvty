@@ -229,8 +229,6 @@ export function Navbar() {
             <div className="flex items-center gap-3">
               <a 
                 href="https://ig.me/m/grvty.std" 
-                target="_blank" 
-                rel="noopener noreferrer" 
                 className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
                 style={{ color: "var(--foreground)" }}
               >
@@ -239,8 +237,6 @@ export function Navbar() {
               <span className="opacity-10 text-[10px]">•</span>
               <a 
                 href="https://instagram.com/ma.tt._" 
-                target="_blank" 
-                rel="noopener noreferrer" 
                 className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase" 
                 style={{ color: "var(--foreground)" }}
               >

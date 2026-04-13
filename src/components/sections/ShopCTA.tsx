@@ -160,8 +160,8 @@ export function ShopCTA() {
                Connect
              </span>
              <div className="flex flex-col gap-1.5">
-               <a href="https://ig.me/m/grvty.std" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@grvty.std</a>
-               <a href="https://instagram.com/ma.tt._" target="_blank" rel="noopener noreferrer" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@ma.tt._</a>
+               <a href="https://ig.me/m/grvty.std" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@grvty.std</a>
+               <a href="https://instagram.com/ma.tt._" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@ma.tt._</a>
              </div>
           </div>
         </div>
