@@ -129,7 +129,7 @@ export function ShopCTA() {
           transition: "opacity 1s ease 1s",
         }}
       >
-        <span className="font-sans text-[8px] tracking-[0.25em] font-bold opacity-20 uppercase">
+        <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.35 }}>
           Design & Direction
         </span>
         <div className="flex items-center gap-3">
@@ -137,23 +137,23 @@ export function ShopCTA() {
             href="https://ig.me/m/grvty.std"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase"
-            style={{ color: "var(--foreground)" }}
+            className="font-sans text-[11px] tracking-[0.08em] font-black hover:opacity-100 transition-opacity lowercase"
+            style={{ color: "var(--foreground)", opacity: 0.7 }}
           >
             @grvty.std
           </a>
-          <span className="opacity-10 text-[10px]">•</span>
+          <span style={{ color: "var(--foreground)", opacity: 0.25 }} className="text-[10px]">•</span>
           <a
             href="https://instagram.com/ma.tt._"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-sans text-[10px] tracking-[0.1em] font-black opacity-40 hover:opacity-100 transition-opacity lowercase"
-            style={{ color: "var(--foreground)" }}
+            className="font-sans text-[11px] tracking-[0.08em] font-black hover:opacity-100 transition-opacity lowercase"
+            style={{ color: "var(--foreground)", opacity: 0.7 }}
           >
             @ma.tt._
           </a>
         </div>
-        <span className="mt-2 font-sans text-[8px] tracking-[0.2em] font-medium opacity-15 uppercase">
+        <span className="mt-2 font-sans text-[8px] tracking-[0.2em] font-medium uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
           @grvty 2026 · all rights reserved
         </span>
       </div>

@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <main className="relative">
-      <div 
+      <div
         className="fixed z-[-10] inset-0 md:inset-[1.25rem_2rem] md:rounded-[2rem]"
         style={{
           background: "var(--background)",
@@ -102,6 +102,7 @@ export default function Home() {
             onManualColor={(color) => setManualColor(color)}
           />
         </section>
+
 
         {/* CTA */}
         <section id="cta" className="min-h-screen snap-center">

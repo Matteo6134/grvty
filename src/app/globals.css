@@ -43,6 +43,7 @@ html {
   html {
     scroll-snap-type: none;
   }
+
   /* Remove snap from all sections on mobile */
   .snap-center {
     scroll-snap-align: unset;
@@ -61,7 +62,9 @@ html.transitioning * {
   transition: background-color 500ms ease, color 500ms ease, border-color 500ms ease !important;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-sora), sans-serif;
   text-transform: lowercase;
   letter-spacing: -0.06em;
@@ -121,13 +124,11 @@ h1, h2, h3 {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    var(--hud-line) 3px,
-    var(--hud-line) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 3px,
+      var(--hud-line) 3px,
+      var(--hud-line) 4px);
   opacity: 0.3;
   pointer-events: none;
   z-index: 1;
@@ -168,9 +169,11 @@ h1, h2, h3 {
   :root {
     --outside: var(--background);
   }
+
   .dark {
     --outside: var(--background);
   }
+
   .card-frame {
     display: none;
   }
@@ -204,13 +207,13 @@ h1, h2, h3 {
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
+  box-shadow:
     0 8px 32px 0 rgba(0, 0, 0, 0.3),
     inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .ios-button {
-  @apply relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)];
+  @apply relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34, 1.56, 0.64, 1)];
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -226,7 +229,7 @@ h1, h2, h3 {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
   transform: scale(0.5);
   transition: transform 0.8s ease;
   pointer-events: none;
@@ -236,7 +239,7 @@ h1, h2, h3 {
   transform: translateY(-8px) scale(1.05);
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 
+  box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.6),
     0 0 15px rgba(255, 255, 255, 0.1);
 }
@@ -280,7 +283,7 @@ h1, h2, h3 {
 
 .premium-border {
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.05),
     0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
@@ -292,8 +295,15 @@ h1, h2, h3 {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .animate-float {
@@ -301,14 +311,28 @@ h1, h2, h3 {
 }
 
 @keyframes rgb-breathe {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.08); }
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
 }
 
 /* HUD line draw animation */
 @keyframes hud-draw {
-  from { stroke-dashoffset: 1000; }
-  to { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 1000;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .hud-draw-line {
@@ -319,8 +343,15 @@ h1, h2, h3 {
 
 /* HUD fade up animation */
 @keyframes hud-fade-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hud-fade-up {
@@ -329,12 +360,114 @@ h1, h2, h3 {
 
 /* HUD pulse dot */
 @keyframes hud-pulse {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.5); }
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.5);
+  }
 }
 
 .hud-pulse-dot {
   animation: hud-pulse 3s ease-in-out infinite;
+}
+
+/* ━━━ Legal Page Content ━━━ */
+
+.legal-content h1 {
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.05em;
+  text-transform: lowercase;
+  line-height: 0.95;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.legal-content .meta {
+  font-family: var(--font-space), monospace;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.25;
+  margin-bottom: 2.5rem;
+  display: block;
+}
+
+.legal-content h2 {
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: var(--foreground);
+  opacity: 0.9;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.legal-content p,
+.legal-content li {
+  font-family: var(--font-sora), sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--foreground);
+  opacity: 0.5;
+}
+
+.legal-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0;
+}
+
+.legal-content li {
+  padding-left: 1.2rem;
+  position: relative;
+  margin-bottom: 0.4rem;
+}
+
+.legal-content li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  opacity: 0.4;
+}
+
+.legal-content a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.legal-content a:hover {
+  border-bottom-color: var(--accent);
+}
+
+.legal-content .divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 2rem 0;
+}
+
+/* ━━━ Checkout Animations ━━━ */
+
+@keyframes checkoutAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Responsive Utilities */
