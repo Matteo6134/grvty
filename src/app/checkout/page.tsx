@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
-import {
-  CheckoutElementsProvider,
-  EmbeddedCheckout,
-} from "@stripe/react-stripe-js/checkout";
+import { useEffect, useState } from "react";
+import { CheckoutElementsProvider } from "@stripe/react-stripe-js/checkout";
 import { getStripe } from "@/lib/stripe-client";
+import { CheckoutForm } from "@/components/checkout/PaymentForm";
 import Link from "next/link";
 
 export default function CheckoutPage() {
@@ -56,7 +54,7 @@ export default function CheckoutPage() {
 
         {/* Checkout Container */}
         <div
-          className="w-full h-full min-h-[700px] rounded-[3rem] overflow-hidden shadow-2xl relative"
+          className="w-full max-w-[800px] rounded-[3rem] p-8 md:p-12 shadow-2xl relative"
           style={{
             background: "#111111",
             border: "1px solid rgba(255,255,255,0.06)",
@@ -87,7 +85,7 @@ export default function CheckoutPage() {
               </button>
             </div>
           ) : clientSecret ? (
-            <div className="w-full h-full">
+            <div className="w-full">
               {/* @ts-ignore */}
               <CheckoutElementsProvider
                 stripe={getStripe()}
@@ -106,15 +104,33 @@ export default function CheckoutPage() {
                         borderRadius: "20px",
                         colorPlaceholder: "#444444",
                       },
+                      rules: {
+                        ".Input": {
+                          border: "1px solid rgba(255,255,255,0.08)",
+                          boxShadow: "none",
+                          fontSize: "13px",
+                        },
+                        ".Input:focus": {
+                          border: "1px solid var(--accent)",
+                        },
+                        ".Label": {
+                          fontSize: "10px",
+                          textTransform: "uppercase",
+                          fontWeight: "800",
+                          letterSpacing: "0.15em",
+                          marginBottom: "8px",
+                          opacity: "0.4",
+                        },
+                      },
                     },
                   },
                 }}
               >
-                <EmbeddedCheckout />
+                <CheckoutForm />
               </CheckoutElementsProvider>
             </div>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex items-center justify-center p-20">
               <div className="w-8 h-8 border-2 border-[var(--accent)]/20 border-t-[var(--accent)] rounded-full animate-spin" />
             </div>
           )}

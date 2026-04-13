@@ -16,7 +16,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     const origin = getOrigin(request);
 
     const session = await getStripe().checkout.sessions.create({
-      ui_mode: "embedded",
+      ui_mode: "elements",
       mode: "payment",
       line_items: [
         {
