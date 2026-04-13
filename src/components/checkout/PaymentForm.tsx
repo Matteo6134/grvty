@@ -15,9 +15,7 @@ export function CheckoutForm() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
+  const handleConfirm = async () => {
     if (!stripe || !elements) return;
 
     setLoading(true);
@@ -36,6 +34,11 @@ export function CheckoutForm() {
     }
   };
 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await handleConfirm();
+  };
+
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-8">
 
@@ -45,7 +48,7 @@ export function CheckoutForm() {
           <span className="font-mono text-[8px] opacity-20">01</span>
           <span className="hud-label" style={{ opacity: 0.35 }}>express checkout</span>
         </div>
-        <ExpressCheckoutElement onConfirm={handleSubmit} />
+        <ExpressCheckoutElement onConfirm={handleConfirm} />
       </div>
 
       <div className="flex items-center gap-4">
