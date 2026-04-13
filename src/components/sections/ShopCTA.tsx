@@ -21,8 +21,36 @@ export function ShopCTA() {
   return (
     <div
       ref={ref}
-      className="relative z-10 w-full min-h-screen flex items-center px-6 pt-24 pb-12 md:px-16 md:pt-36 md:pb-20"
+      className="relative z-10 w-full min-h-screen flex items-center px-6 pt-12 pb-12 md:px-16 md:pt-24 md:pb-20 overflow-hidden"
     >
+      {/* Dynamic Background Text (Hero Style) */}
+      <div 
+        className="absolute inset-x-0 bottom-0 pointer-events-none select-none overflow-hidden h-[60%] flex items-end justify-center z-0"
+        style={{ opacity: visible ? 0.04 : 0, transition: "opacity 2s ease" }}
+      >
+        <span 
+          className="font-black leading-none translate-y-[20%] text-[40vw] tracking-[-0.08em] whitespace-nowrap"
+          style={{ 
+            fontFamily: "var(--font-syne), sans-serif",
+            color: "var(--foreground)",
+          }}
+        >
+          grvty
+        </span>
+      </div>
+
+      {/* Frosted Glass Overlay for Background Text */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-[1]" 
+        style={{ 
+          backdropFilter: "blur(40px) saturate(150%)",
+          background: "linear-gradient(to bottom, transparent 40%, var(--background) 95%)"
+        }} 
+      />
+
+      {/* Noise Texture for that premium look */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-[2] mix-blend-overlay" style={{ backgroundImage: "url('/noise.png')" }} />
+
       {/* Left: lamp space */}
       <div className="hidden md:block flex-1" />
 
@@ -56,7 +84,8 @@ export function ShopCTA() {
           className="w-full bg-[var(--surface)] rounded-[2rem] p-5 md:p-6 flex flex-col gap-5 w-full max-w-[420px]"
           style={{
             border: "1px solid rgba(150, 150, 150, 0.1)",
-            boxShadow: "0 24px 60px -12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)"
+            boxShadow: "0 24px 60px -12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.2)",
+            backdropFilter: "blur(20px)",
           }}
         >
           {/* Header & Price */}
@@ -72,7 +101,7 @@ export function ShopCTA() {
                 color: "var(--foreground)",
               }}
             >
-              <span className="relative z-10 flex items-center gap-2 drop-shadow-md">
+              <span className="relative z-10 flex items-center gap-2 drop-shadow-md text-[10px]">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -123,7 +152,7 @@ export function ShopCTA() {
 
       {/* Responsive Footer (Bottom Left) */}
       <div
-        className="absolute bottom-10 left-6 md:left-16 flex flex-col gap-8 md:gap-6 pointer-events-auto"
+        className="absolute bottom-10 left-6 md:left-16 flex flex-col gap-8 md:gap-6 pointer-events-auto z-20"
         style={{
           opacity: visible ? 1 : 0,
           transition: "opacity 1s ease 1s",
@@ -132,41 +161,41 @@ export function ShopCTA() {
         <div className="flex flex-col md:flex-row gap-8 md:gap-16">
           {/* Project */}
           <div className="flex flex-col gap-3">
-             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.3 }}>
                Project
              </span>
-             <div className="flex flex-col gap-1.5">
-               <Link href="/#hero" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">The Lamp</Link>
-               <Link href="/#story" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Story</Link>
+             <div className="flex flex-col gap-2">
+               <Link href="/#hero" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">The Lamp</Link>
+               <Link href="/#story" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Story</Link>
              </div>
           </div>
 
           {/* Legal */}
           <div className="flex flex-col gap-3">
-             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.3 }}>
                Legal
              </span>
-             <div className="flex flex-col gap-1.5">
-               <Link href="/legal/privacy" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Privacy</Link>
-               <Link href="/legal/terms" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Terms</Link>
-               <Link href="/legal/shipping" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Shipping</Link>
-               <Link href="/legal/returns" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Returns</Link>
+             <div className="flex flex-col gap-2">
+               <Link href="/legal/privacy" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Privacy</Link>
+               <Link href="/legal/terms" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Terms</Link>
+               <Link href="/legal/shipping" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Shipping</Link>
+               <Link href="/legal/returns" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">Returns</Link>
              </div>
           </div>
 
           {/* Connect */}
           <div className="flex flex-col gap-3">
-             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.25 }}>
+             <span className="font-sans text-[8px] tracking-[0.25em] font-bold uppercase" style={{ color: "var(--foreground)", opacity: 0.3 }}>
                Connect
              </span>
-             <div className="flex flex-col gap-1.5">
-               <a href="https://ig.me/m/grvty.std" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@grvty.std</a>
-               <a href="https://instagram.com/ma.tt._" className="font-sans text-[10px] font-black opacity-60 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@ma.tt._</a>
+             <div className="flex flex-col gap-2">
+               <a href="https://ig.me/m/grvty.std" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@grvty.std</a>
+               <a href="https://instagram.com/ma.tt._" className="font-sans text-[11.5px] font-black opacity-75 hover:opacity-100 hover:text-[var(--accent)] transition-all lowercase">@ma.tt._</a>
              </div>
           </div>
         </div>
 
-        <span className="font-sans text-[8px] tracking-[0.2em] font-medium uppercase" style={{ color: "var(--foreground)", opacity: 0.2 }}>
+        <span className="font-sans text-[9px] tracking-[0.2em] font-medium uppercase" style={{ color: "var(--foreground)", opacity: 0.3 }}>
           @grvty 2026 · objects with gravity · all rights reserved
         </span>
       </div>
