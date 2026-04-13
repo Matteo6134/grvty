@@ -240,22 +240,7 @@ export default function CheckoutPage() {
           ) : (
             <EmbeddedCheckoutProvider
               stripe={getStripe()}
-              // @ts-ignore
-              options={{ 
-                fetchClientSecret,
-                appearance: {
-                  theme: 'night',
-                  variables: {
-                    colorPrimary: '#c9a84c',
-                    colorBackground: '#111111',
-                    colorText: '#f0ebe5',
-                    colorDanger: '#ff3b30',
-                    fontFamily: 'Sora, system-ui, sans-serif',
-                    spacingUnit: '4px',
-                    borderRadius: '12px',
-                  },
-                }
-              }}
+              options={{ fetchClientSecret }}
             >
               <EmbeddedCheckout />
             </EmbeddedCheckoutProvider>
