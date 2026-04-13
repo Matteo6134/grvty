@@ -1,12 +1,8 @@
-import Link from "next/link";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: {
-    template: "%s — grvty",
-    default: "Legal — grvty",
-  },
-};
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Footer } from "@/components/layout/Footer";
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "/legal/privacy" },
@@ -15,9 +11,9 @@ const LEGAL_LINKS = [
   { label: "Returns & Refunds", href: "/legal/returns" },
 ];
 
-import { Footer } from "@/components/layout/Footer";
-
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   return (
     <div className="min-h-screen relative flex flex-col" style={{ background: "var(--background)" }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -28,27 +24,61 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 md:py-32 flex-1">
+        
         {/* Header */}
-        <div className="mb-14 flex flex-col gap-5">
-          <Link href="/" className="hud-label hover:opacity-50 transition-opacity w-fit">
-            ← grvty
+        <div className="mb-14 flex flex-col gap-6">
+          {/* Logo Button */}
+          <Link
+            href="/"
+            className="flex items-center justify-center ios-button cursor-pointer w-fit"
+            style={{
+              height: 40,
+              padding: "0 18px",
+              borderRadius: 999,
+              background: "rgba(255, 255, 255, 0.05)",
+            }}
+            aria-label="Back to home"
+          >
+            <span
+              className="font-black tracking-tighter"
+              style={{ fontSize: 13, color: "var(--foreground)", letterSpacing: "-0.04em" }}
+            >
+              grvty
+            </span>
           </Link>
 
           {/* Legal nav pills */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {LEGAL_LINKS.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className="px-4 py-1.5 rounded-full font-sans text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:opacity-80"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                }}
-              >
-                {label}
-              </Link>
-            ))}
+          <div className="flex flex-wrap gap-2 mt-2">
+            {LEGAL_LINKS.map(({ label, href }) => {
+              const isActive = pathname === href;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className="px-4 py-2 rounded-full font-sans text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+                  style={{
+                    background: isActive ? "var(--accent)" : "rgba(255,255,255,0.04)",
+                    border: isActive ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.07)",
+                    color: isActive ? "#000000" : "var(--foreground)",
+                    opacity: isActive ? 1 : 0.4,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.opacity = "1";
+                      e.currentTarget.style.color = "var(--accent)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.opacity = "0.4";
+                      e.currentTarget.style.color = "var(--foreground)";
+                    }
+                  }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </div>
         </div>
 

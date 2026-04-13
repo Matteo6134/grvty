@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
   { label: "Discover", id: "details" },
@@ -10,12 +11,16 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [activeId, setActiveId] = useState("hero");
   const [displayText, setDisplayText] = useState("grvty");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Hide Navbar on legal and checkout pages
+  if (pathname?.startsWith("/legal") || pathname?.startsWith("/checkout")) return null;
 
   useEffect(() => {
     if (activeId === 'hero') {
